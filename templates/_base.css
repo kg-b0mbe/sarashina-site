@@ -1,0 +1,125 @@
+/* 3ページ共通のスタイル。色は :root の変数だけを変えれば全体に反映される。 */
+/* 書体：見出しは筆の「Yuji Syuku」、本文は「Shippori Mincho」（どちらもGoogle Fonts） */
+@import url("https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Shippori+Mincho:wght@400;600;700&display=swap");
+
+:root {
+  color-scheme: light;     /* スマホがダークモードでも、和紙の明るい地で見せる */
+
+  /* 地と墨 */
+  --paper: #F6F1E6;        /* 生成りの和紙 */
+  --paper-2: #EEE6D6;      /* 練色（ねりいろ） */
+  --ink: #2B2620;          /* 墨 */
+  --sub: #6E6455;          /* 枯茶（からちゃ）寄りの灰 */
+  --rule: #D8CDB8;         /* 砥粉（とのこ）寄り */
+
+  /* 平安装束の色。帯（--juni）と、年譜の色分けに使う */
+  --suou: #8E354A;         /* 蘇芳（すおう） */
+  --kobai: #D9798A;        /* 紅梅（こうばい） */
+  --usubeni: #EFC3C3;      /* 薄紅（うすべに） */
+  --shiro: #FBF8F0;        /* 白 */
+  --moegi: #9AAE3E;        /* 萌黄（もえぎ） */
+  --usuhanada: #9DBCD6;    /* 薄縹（うすはなだ） */
+  --hanada: #2F6E9C;       /* 縹（はなだ） */
+  --futaai: #6E4F86;       /* 二藍（ふたあい） */
+  --kikuchiba: #B4862E;    /* 黄朽葉（きくちば） */
+  --aokuchiba: #6B7A33;    /* 青朽葉（あおくちば） */
+  --nibi: #9A9387;         /* 鈍色（にびいろ） */
+
+  --brand: var(--hanada);
+  --accent: var(--suou);
+  /* 「紅梅の匂」と「縹の匂」を白で分けたかさね（同じ色の濃淡を重ねる） */
+  --juni: linear-gradient(180deg,
+    var(--suou) 0 3px, var(--kobai) 3px 6px, var(--usubeni) 6px 9px, var(--shiro) 9px 11px,
+    var(--usuhanada) 11px 14px, var(--hanada) 14px 17px);
+  --kasane-v: linear-gradient(180deg, var(--kobai), var(--hanada));
+  --c-company: var(--futaai);
+  --c-release: var(--hanada);
+  --c-service: var(--kikuchiba);
+  --c-hf: var(--aokuchiba);
+  --c-world: var(--nibi);
+  --fude: "Yuji Syuku", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --mincho: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --gothic: var(--mincho);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--mincho); font-size: 16px; line-height: 1.9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  font-feature-settings: "palt"; letter-spacing: .02em;
+}
+a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--brand); }
+
+/* ---- 柱（サイト共通の見出し帯） ---- */
+.masthead { position: relative; }
+.masthead::after { content: ""; display: block; height: 17px; background: var(--juni); }
+.masthead-inner {
+  max-width: 980px; margin: 0 auto; padding: 18px 22px 14px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.site-name { font-family: var(--fude); font-weight: 400; font-size: 24px; letter-spacing: .08em; text-decoration: none; }
+.site-name small { font-family: var(--gothic); font-weight: 400; font-size: 11px; color: var(--sub); letter-spacing: .1em; margin-left: 10px; }
+.site-nav { display: flex; gap: 22px; font-size: 14px; }
+.site-nav a { text-decoration: none; color: var(--sub); padding-bottom: 3px; border-bottom: 2px solid transparent; }
+.site-nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--brand); }
+
+/* ---- ページ見出し ---- */
+.page-head {
+  max-width: 980px; margin: 0 auto; padding: 46px 22px 26px;
+  display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start;
+}
+.tate {
+  writing-mode: vertical-rl; font-family: var(--fude); font-size: 15px; letter-spacing: .35em;
+  color: var(--brand); padding-left: 10px; line-height: 1;
+  border-left: 2px solid transparent; border-image: var(--kasane-v) 1;
+}
+.page-head h1 {
+  font-family: var(--fude); font-weight: 400; font-size: clamp(34px, 8vw, 52px);
+  line-height: 1.2; margin: 0 0 14px; letter-spacing: .08em;
+}
+.page-head p { margin: 0; color: var(--sub); max-width: 40em; }
+
+main { max-width: 980px; margin: 0 auto; padding: 0 22px 72px; }
+
+/* ---- 絞り込み（ボタンではなく文字の並び） ---- */
+.filters { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 10px 0; margin-bottom: 8px; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding: 4px 0; font-size: 14px; }
+.filter-row .label { color: var(--sub); font-size: 12px; min-width: 4.5em; }
+.opt {
+  font: inherit; background: none; border: 0; padding: 0 0 2px; cursor: pointer; color: var(--sub);
+  border-bottom: 1px solid transparent; letter-spacing: inherit;
+}
+.opt[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--brand); }
+.opt:focus-visible, .search:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.search {
+  width: 100%; font: inherit; color: var(--ink); background: transparent;
+  border: 0; border-bottom: 1px solid var(--rule); padding: 6px 0; margin-bottom: 6px;
+}
+.search::placeholder { color: var(--sub); }
+.count { font-size: 12px; color: var(--sub); margin: 10px 0 0; }
+
+/* ---- 目録の一項目 ---- */
+.entry { border-bottom: 1px solid var(--rule); padding: 22px 0; }
+.entry-meta { font-size: 12px; color: var(--sub); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.entry-meta .kind { color: var(--accent); }
+.entry h2 { font-family: var(--mincho); font-weight: 700; color: var(--ink); font-size: 21px; line-height: 1.45; margin: 4px 0 8px; letter-spacing: .03em; }
+.entry p { margin: 6px 0; }
+.mark { font-size: 11px; color: var(--sub); border: 1px solid var(--rule); padding: 0 6px; }
+.mark.warn { color: var(--c-service); border-color: currentColor; }
+.unk { color: var(--sub); }
+.links { font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; color: var(--sub); }
+
+.note { font-size: 12px; color: var(--sub); margin-top: 32px; line-height: 1.9; }
+
+/* ---- 奥付 ---- */
+.colophon::before { content: ""; display: block; height: 17px; background: var(--juni); transform: scaleY(-1); }
+.colophon-inner { max-width: 980px; margin: 0 auto; padding: 18px 22px 40px; font-size: 12px; color: var(--sub); }
+
+.irome { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
+.irome span { display: inline-flex; align-items: center; gap: 6px; }
+.irome i { width: 14px; height: 14px; display: inline-block; background: var(--c); }
+.irome-title { margin-top: 14px; font-family: var(--fude); font-size: 14px; color: var(--ink); }
+.irome i { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }

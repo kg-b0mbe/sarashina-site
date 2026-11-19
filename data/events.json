@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-18",
+  "field_notes": {
+    "date": "発表日・提供開始日。YYYY-MM-DD か YYYY-MM。",
+    "kind": "company=会社・体制 / release=モデル公開 / service=サービス・API提供 / milestone=その他の節目",
+    "models": "この出来事で公開・提供されたモデルのid（models.json）。ここに入れたモデルは年表上で出来事の下にまとめて表示され、単独の行には出ない。",
+    "world": "同じ時期の海外の主要な動き（OpenAI・Anthropic・Google）。company は openai / anthropic / google。日付は現地時間の発表日。"
+  },
+  "events": [
+    {
+      "id": "founded",
+      "date": "2023-08-04",
+      "kind": "company",
+      "title": "SB Intuitions が本格稼働",
+      "summary": "2023年3月に準備会社として設立され、8月1日に社名をSB Intuitionsに変更。日本語に特化した国産LLMの研究開発会社として本格稼働を発表。",
+      "models": [],
+      "sources": [
+        "https://www.softbank.jp/corp/news/press/sbkk/2023/20230804_02"
+      ]
+    },
+    {
+      "id": "sarashina1-2-open",
+      "date": "2024-06-14",
+      "kind": "release",
+      "title": "Sarashina1・Sarashina2 を同時公開",
+      "summary": "条件の異なる2系統の事前学習モデルを研究開発の促進のために公開。どちらも指示チューニングなしのモデル。",
+      "models": [
+        "sarashina1-7b",
+        "sarashina1-13b",
+        "sarashina1-65b",
+        "sarashina2-7b",
+        "sarashina2-13b"
+      ],
+      "sources": [
+        "https://www.sbintuitions.co.jp/en/news/press/20240614_01/"
+      ]
+    },
+    {
+      "id": "sarashina2-70b-open",
+      "date": "2024-08-07",
+      "kind": "release",
+      "title": "Sarashina2-70B を公開",
+      "summary": "700億パラメータのモデルをMITライセンスで公開。のちの8x70Bのベースになる。",
+      "models": [
+        "sarashina2-70b"
+      ],
+      "sources": [
+        "https://www.sbintuitions.co.jp/en/news/press/20240614_01/"
+      ]
+    },
+    {
+      "id": "sarashina2-8x70b-open",
+      "date": "2024-11-08",
+      "kind": "release",
+      "title": "Sarashina2-8x70B（4,600億パラメータ級MoE）を公開",
+      "summary": "Sarashina2-70Bをsparse upcyclingで拡張したMixture-of-Expertsモデル。社内の複数の日本語ベンチマークで最高性能。",
+      "models": [
+        "sarashina2-8x70b"
+      ],
+      "sources": [
+        "https://www.sbintuitions.co.jp/en/news/press/20241108_01"
+      ]
+    },
+    {
+      "id": "sarashina2-mini-api",
+      "date": "2025-11",
+      "kind": "service",
+      "title": "Sarashina2 mini の商用API提供を開始",
+      "summary": "Sarashinaシリーズとして初めて、商用APIとして提供。",
+      "models": [
+        "sarashina2-mini"
+      ],
+      "sources": [
+        "https://weel.co.jp/media/tech/sarashina/"
+      ]
+    },
+    {
+      "id": "cloud-pf-type-a",
+      "date": "2026-04-17",
+      "kind": "service",
+      "title": "ソフトバンクが「Cloud PF Type A」でのSarashina提供を発表",
+      "summary": "Oracle Alloyを採用したソブリンクラウドで、Sarashinaを使った生成AIサービスを6月から順次提供すると発表。",
+      "models": [],
+      "sources": [
+        "https://internet.watch.impress.co.jp/docs/news/2102336.html"
+      ]
+    },
+    {
+      "id": "sarashina3-launch",
+      "date": "2026-06-30",
+      "kind": "release",
+      "title": "Sarashina3 シリーズ提供開始",
+      "summary": "約30兆トークンで学習したフルスクラッチの第3世代。mini・nano・guard・embedding・rerankの5モデルを、国内データセンターのCloud PF Type Aで提供。",
+      "models": [
+        "sarashina3-mini",
+        "sarashina3-nano",
+        "sarashina3-guard",
+        "sarashina3-embedding",
+        "sarashina3-rerank"
+      ],
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/06/30/100000/",
+        "https://www.sbbit.jp/article/cont1/185977"
+      ]
+    },
+    {
+      "id": "sarashina-service-beta",
+      "date": "2026-10-13",
+      "kind": "service",
+      "title": "「Sarashinaサービス」無償ベータ版を公開",
+      "summary": "Googleアカウントで誰でも使えるAPIとチャットを無料で公開。translateを加えた6モデルが利用可能に。",
+      "models": [
+        "sarashina3-translate"
+      ],
+      "sources": [
+        "https://www.watch.impress.co.jp/docs/news/2147706.html"
+      ]
+    },
+    {
+      "id": "sarashina3.2-thinking",
+      "date": "2026-10-29",
+      "kind": "release",
+      "title": "初の思考モデル「Sarashina3.2 mini thinking」を発表",
+      "summary": "回答前に推論するSarashina初の思考モデル。思考の深さを3段階で指定でき、ツール呼び出し・Web検索・コーディングが向上。",
+      "models": [
+        "sarashina3.2-mini-thinking"
+      ],
+      "sources": [
+        "https://www.sbbit.jp/article/cont1/187994"
+      ]
+    }
+  ],
+  "world": [
+    {
+      "id": "gpt-4",
+      "date": "2023-03-14",
+      "company": "openai",
+      "title": "GPT-4 発表",
+      "summary": "画像入力にも対応したマルチモーダルモデル。有料のChatGPT Plusで提供開始。",
+      "sources": [
+        "https://openai.com/GPT-4",
+        "https://forest.watch.impress.co.jp/docs/news/1485848.html"
+      ]
+    },
+    {
+      "id": "gemini-1",
+      "date": "2023-12-06",
+      "company": "google",
+      "title": "Gemini 1.0 発表",
+      "summary": "Ultra・Pro・Nanoの3サイズ。最初からマルチモーダルで学習したモデルとして登場し、Bardに搭載。",
+      "sources": [
+        "https://news.mynavi.jp/article/20231207-2834930/"
+      ]
+    },
+    {
+      "id": "gpt-4o",
+      "date": "2024-05-13",
+      "company": "openai",
+      "title": "GPT-4o 発表",
+      "summary": "テキスト・音声・画像をリアルタイムに扱うモデル。ChatGPTの無料ユーザーにも提供。",
+      "sources": [
+        "https://openai.com/ja-JP/index/hello-gpt-4o/"
+      ]
+    },
+    {
+      "id": "claude-3-5-sonnet",
+      "date": "2024-06-20",
+      "company": "anthropic",
+      "title": "Claude 3.5 Sonnet 発表",
+      "summary": "Claude 3 Opusの2倍の速度で、多くのベンチマークでGPT-4oと同等以上。",
+      "sources": [
+        "https://forest.watch.impress.co.jp/docs/news/1602260.html"
+      ]
+    },
+    {
+      "id": "gpt-5",
+      "date": "2025-08-07",
+      "company": "openai",
+      "title": "GPT-5 発表",
+      "summary": "高速応答と深い推論を自動で切り替える統合システム。無料ユーザーを含む全ユーザーに提供。",
+      "sources": [
+        "https://openai.com/ja-JP/index/gpt-5-new-era-of-work/"
+      ]
+    },
+    {
+      "id": "gemini-3",
+      "date": "2025-11-18",
+      "company": "google",
+      "title": "Gemini 3 発表",
+      "summary": "Gemini 3 Proを公開。推論とマルチモーダル理解で前世代のGemini 2.5 Proを大きく上回る。",
+      "sources": [
+        "https://news.mynavi.jp/article/20251119-3687422/"
+      ]
+    },
+    {
+      "id": "claude-opus-4-6",
+      "date": "2026-02-05",
+      "company": "anthropic",
+      "title": "Claude Opus 4.6 発表",
+      "summary": "コーディングと長時間の作業継続を強化。Opusクラスで初めて100万トークンの文脈（ベータ）に対応。",
+      "sources": [
+        "https://itbrief.co.uk/story/anthropic-unveils-claude-opus-4-6-for-deeper-coding-work"
+      ]
+    },
+    {
+      "id": "claude-mythos-preview",
+      "date": "2026-04-07",
+      "company": "anthropic",
+      "title": "Claude Mythos Preview 発表",
+      "summary": "高度なサイバー能力を持つため、一部の組織に限定して提供された最上位モデル。",
+      "sources": [
+        "https://gigazine.net/news/20260610-claude-mythos-fable/"
+      ]
+    },
+    {
+      "id": "gemini-3-5-flash",
+      "date": "2026-05",
+      "company": "google",
+      "title": "Gemini 3.5 Flash 発表（Google I/O 2026）",
+      "summary": "Gemini 3.5ファミリーの第一弾。高速なFlash系ながらGemini 3.1 Pro並みの賢さ。",
+      "sources": [
+        "https://k-tai.watch.impress.co.jp/docs/news/2110020.html"
+      ]
+    },
+    {
+      "id": "claude-fable-5",
+      "date": "2026-06-09",
+      "company": "anthropic",
+      "title": "Claude Fable 5・Mythos 5 発表",
+      "summary": "Mythosクラスの能力をセーフガード付きで初めて一般公開。",
+      "sources": [
+        "https://www.itmedia.co.jp/news/article/2606/10/1260610058/"
+      ]
+    },
+    {
+      "id": "gpt-5-6",
+      "date": "2026-06-26",
+      "company": "openai",
+      "title": "GPT-5.6（Sol・Terra・Luna）発表",
+      "summary": "米国政府の要請により、限定プレビューから段階的に提供。",
+      "sources": [
+        "https://openai.com/ja-JP/index/previewing-gpt-5-6-sol/"
+      ]
+    },
+    {
+      "id": "gemini-3-6-flash",
+      "date": "2026-07-21",
+      "company": "google",
+      "title": "Gemini 3.6 Flash など3モデル発表",
+      "summary": "効率と価格を重視した新モデル群。Gemini 4の事前学習も予告。",
+      "sources": [
+        "https://forest.watch.impress.co.jp/docs/news/2126740.html"
+      ]
+    },
+    {
+      "id": "gpt-6-astra",
+      "date": "2026-09-03",
+      "company": "openai",
+      "title": "GPT-6 Astra 発表",
+      "summary": "コンピューター操作やコーディングを大きく強化した新世代モデル。一部の組織から提供開始。",
+      "sources": [
+        "https://openai.com/ja-JP/index/gpt-6-astra/"
+      ]
+    }
+  ]
+}

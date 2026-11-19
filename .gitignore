@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+updater/.env
+.state/
+.DS_Store

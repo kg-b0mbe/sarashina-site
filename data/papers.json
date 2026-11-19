@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-18",
+  "field_notes": {
+    "topic": "pretraining=事前学習・モデル設計 / evaluation=評価・ベンチマーク / speech=音声 / dialogue=対話 / trust=安全・信頼",
+    "authors_note": "SB Intuitions所属（発表時）の著者を含む論文だけを載せる。",
+    "summary": "解説文は論文・公式ブログを読んで書いた要約。引用ではなく言い換え。"
+  },
+  "papers": [
+    {
+      "id": "kana-reward-rl",
+      "title": "Pronunciation-Oriented Reinforcement Learning for Japanese Text-to-Speech with Kana-Domain ASR Rewards",
+      "title_ja": "「かな」で採点する強化学習で、音声合成の読み間違いを減らす",
+      "authors": ["Shiao Zhu", "Lianbo Liu", "Kai Washizaki", "Koki Nikaido", "Yui Sudo"],
+      "venue": "arXiv",
+      "date": "2026-10",
+      "topic": "speech",
+      "summary": "音声合成の強化学習で、漢字かな交じりの文字起こしではなく「かな」の読みで正誤を採点する方法を提案。",
+      "points": [
+        "漢字は文脈で読みが変わり、同じ読みでも書き方が複数あるため、普通の文字起こしで採点すると読み間違いを見逃しやすい。",
+        "かなで書き起こす音声認識モデルを使って報酬を計算し、GRPOで学習させた。",
+        "狙った漢字の読み誤りが相対的に約26%減り、良い状態に達するまでの学習量も大幅に少なくて済んだ。"
+      ],
+      "sarashina": "Sarashina2.2-TTSの言語モデル部分をそのまま学習の出発点にした、TTSの続編にあたる研究。",
+      "models": ["sarashina2.2-tts"],
+      "links": { "paper": "https://arxiv.org/abs/2610.07575" },
+      "sources": ["https://arxiv.org/html/2610.07575v1"]
+    },
+    {
+      "id": "sarashina2.2-tts",
+      "title": "Sarashina2.2-TTS: Tackling Kanji Polyphony in Japanese Speech Generation via Data Scaling and Targeted Data Synthesis",
+      "title_ja": "漢字の「読み分け」に挑む、日本語のための音声合成",
+      "authors": ["Lianbo Liu", "Shiao Zhu", "Kai Washizaki", "Reo Yoneyama", "Haesung Jeon", "Mengjie Zhao", "Yusuke Fujita", "Hao Shi", "Nao Yoshida", "Yuan Gao", "Roman Koshkin", "Yukiya Hono", "Yui Sudo"],
+      "venue": "arXiv（テクニカルレポート）",
+      "date": "2026-06",
+      "topic": "speech",
+      "summary": "LLMをもとにした音声合成は英語・中国語中心で進んできたが、日本語に特有の「同じ漢字の読み分け」に正面から取り組んだ。",
+      "points": [
+        "音声データを大規模に増やすことと、読み間違えやすい箇所を狙って学習データを合成することの二本立て。",
+        "評価用に、常用漢字の文脈ごとの読みを確かめる「常用漢字読みベンチマーク」も公開。",
+        "短い参照音声から話者の声を再現するゼロショット生成にも対応。"
+      ],
+      "sarashina": "Sarashina2.2-0.5Bを土台にした音声合成モデルで、重みとコードも公開されている（非商用ライセンス）。",
+      "models": ["sarashina2.2-tts"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2606.25369",
+        "code": "https://github.com/sbintuitions/sarashina2.2-tts"
+      },
+      "sources": ["https://arxiv.org/html/2606.25369v1", "https://huggingface.co/sbintuitions/sarashina2.2-tts"]
+    },
+    {
+      "id": "jamc-qa",
+      "title": "JamC-QA: A Multiple-Choice Question Answering Benchmark for Japan-Specific Knowledge",
+      "title_ja": "「日本ならでは」の知識を問う、選択式の試験問題集",
+      "authors": ["Teruaki Oka", "Tomohide Shibata", "Nao Yoshida"],
+      "venue": "LREC 2026",
+      "date": "2026-05",
+      "topic": "evaluation",
+      "summary": "英語からの翻訳や資格試験由来ではない、日本固有の知識を測るための評価用データを一から作った。",
+      "points": [
+        "人が一から書いた2,309問で、文化・風習・地域・地理・歴史・行政・法律・医療の8分野。",
+        "簡単すぎる問題は弱いモデルで解かせてふるい落とした。",
+        "一般的なベンチマークで強い多言語モデルも日本固有の話題では伸び悩み、日本語モデルは文化や地域の知識で強みを見せた。"
+      ],
+      "sarashina": "公開モデルの中ではSarashina2-8x70Bが最も高い正答率（約0.725）。Sarashina3の公式評価でも、日本文化の知識を測る指標として使われている。",
+      "models": ["sarashina2-8x70b", "sarashina3-mini"],
+      "links": { "paper": "https://aclanthology.org/2026.lrec-1.356/" },
+      "sources": ["https://aclanthology.org/2026.lrec-1.356.pdf"]
+    },
+    {
+      "id": "jmteb",
+      "title": "JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version",
+      "title_ja": "日本語の「文章ベクトル化」を測るものさしと、その軽量版",
+      "authors": ["Shengzhe Li", "Masaya Ohagi", "Ryokan Ri", "Akihiko Fukuchi", "Tomohide Shibata", "Daisuke Kawahara"],
+      "venue": "LREC 2026",
+      "date": "2026-05",
+      "topic": "evaluation",
+      "summary": "検索やRAGの土台になる日本語テキスト埋め込みモデルを、5種類のタスク・28データセットで総合評価するベンチマーク。",
+      "points": [
+        "全部を回すと時間と計算資源がかかるため、手強い「紛らわしい文書」は残しつつ簡単な文書を減らした軽量版JMTEB-liteも作った。",
+        "軽量版は平均で約5倍速く、モデルの順位や点数は本家とほぼ一致。",
+        "40モデルを比べた結果、検索性能を大きく左右していたのは弱教師ありの事前学習だった。"
+      ],
+      "sarashina": "Sarashina-Embedding-v1-1Bは公開当時このJMTEBで最高水準の平均点を記録。Sarashina3 embeddingの性能もJMTEBの点数で示されている。",
+      "models": ["sarashina-embedding-v1-1b", "sarashina-embedding-v2-1b", "sarashina3-embedding"],
+      "links": {
+        "paper": "https://aclanthology.org/2026.lrec-1.588/",
+        "data": "https://huggingface.co/datasets/sbintuitions/JMTEB"
+      },
+      "sources": ["https://aclanthology.org/2026.lrec-1.588.pdf"]
+    },
+    {
+      "id": "wso-iclr2026",
+      "title": "Pre-training LLM without Learning Rate Decay Enhances Supervised Fine-tuning",
+      "title_ja": "事前学習の最後に学習率を下げないほうが、仕上げの学習で伸びる",
+      "authors": ["Kazuki Yano", "Shun Kiyono", "Sosuke Kobayashi", "Sho Takase", "Jun Suzuki"],
+      "venue": "ICLR 2026",
+      "date": "2026-04",
+      "topic": "pretraining",
+      "summary": "学習率の下げ方は事前学習の損失ではなく、指示チューニング（SFT）後の性能で評価すべきだと主張し、最後まで学習率を下げない方式を提案。",
+      "points": [
+        "学習率を下げる方式は事前学習の損失やゼロショットの成績では勝つが、SFTをした後の平均点では下げない方式が最も良かった。",
+        "1Bと8BのLlama 3型モデルで確認し、中間学習を挟む3段階の設定でも同じ傾向。",
+        "下げない方式のモデルは損失の地形が「平ら」で、平らなほどSFTで伸びやすいという関係も見つかった。"
+      ],
+      "sarashina": "実験はLlama 3型のモデルで、Sarashinaは直接は登場しない。Sarashinaの事前学習に携わる研究者による、学習方法そのものの研究。",
+      "models": [],
+      "links": {
+        "paper": "https://openreview.net/forum?id=JnebU2QLdH",
+        "blog": "https://www.sbintuitions.co.jp/blog/entry/2026/04/23/081304"
+      },
+      "sources": ["https://www.sbintuitions.co.jp/blog/entry/2026/04/23/081304"]
+    },
+    {
+      "id": "upcycling-scaling-laws",
+      "title": "Scaling Laws for Upcycling Mixture-of-Experts Language Models",
+      "title_ja": "小さなモデルを「作り直して」大きなMoEにするときの法則",
+      "authors": ["Seng Pei Liew", "Takuya Kato", "Sho Takase"],
+      "venue": "ICML 2025",
+      "date": "2025-06",
+      "topic": "pretraining",
+      "summary": "学習済みの小さなモデルを再利用して、大きく効率的なMoEモデルを作る「アップサイクリング」のスケーリング則を調べた。",
+      "points": [
+        "学習コストを抑える手段としてのアップサイクリングを、データ量や元モデルの条件を変えて体系的に検証。",
+        "データを増やせば増やすほど良くなるとは限らず、元のモデルがどう学習されたかにも結果が左右される。",
+        "結果をもとに、アップサイクリングを効果的に使うための指針を示した。"
+      ],
+      "sarashina": "Sarashina2-8x70Bは、まさにSarashina2-70Bをアップサイクリングして作られたMoEモデル。その手法を深掘りした研究。",
+      "models": ["sarashina2-8x70b"],
+      "links": {
+        "paper": "https://openreview.net/forum?id=ZBBo19jldX",
+        "blog": "https://www.sbintuitions.co.jp/blog/entry/2025/06/20/143234",
+        "code": "https://github.com/sbintuitions/sparse-upcycling-scaling-laws"
+      },
+      "sources": ["https://www.sbintuitions.co.jp/blog/entry/2025/06/20/143234"]
+    },
+    {
+      "id": "large-vocab",
+      "title": "Large Vocabulary Size Improves Large Language Models",
+      "title_ja": "語彙は大きいほうが、LLMは賢くなる",
+      "authors": ["Sho Takase", "Ryokan Ri", "Shun Kiyono", "Takuya Kato"],
+      "venue": "Findings of ACL 2025",
+      "date": "2025-07",
+      "topic": "pretraining",
+      "summary": "トークナイザの語彙数を5千から50万まで変えて、英語と日本語のモデルを一から学習させ、語彙が大きいほど性能が上がることを示した。",
+      "points": [
+        "英語・日本語のどちらでも、大きな語彙のほうが良い結果になった。",
+        "学習済みの英語中心モデル（Llama2 7B）を日本語で追加学習する場合に、新しい語彙へ差し替える簡単な方法も提案。",
+        "その方法は元の語彙のまま続けるよりも良く、言語に合った語彙の大切さを示している。"
+      ],
+      "sarashina": "Sarashina2は語彙数102,400という大きめの語彙を採用しており、日本語を少ないトークンで扱えることを強みにしている。その設計の背景にある問いを扱った研究。",
+      "models": [],
+      "links": { "paper": "https://aclanthology.org/2025.findings-acl.57/" },
+      "sources": ["https://aclanthology.org/2025.findings-acl.57.pdf", "https://www.sbintuitions.co.jp/blog/entry/2024/06/26/115641"]
+    },
+    {
+      "id": "mergeprint",
+      "title": "MergePrint: Merge-Resistant Fingerprints for Robust Black-box Ownership Verification of Large Language Models",
+      "title_ja": "ほかのモデルと混ぜられても消えない、LLMの「指紋」",
+      "authors": ["Shojiro Yamabe", "Futa Waseda", "Tsubasa Takahashi", "Koki Wataoka"],
+      "venue": "ACL 2025",
+      "date": "2025-07",
+      "topic": "trust",
+      "summary": "公開したモデルが他のモデルとマージ（合成）されても、元が自分たちのモデルだと外から確かめられるようにする指紋の手法。",
+      "points": [
+        "モデルの中身を見られない状態（ブラックボックス）でも所有者を確認できることを目指す。",
+        "モデルのマージで指紋が消えにくいように設計されている。"
+      ],
+      "sarashina": "重みを公開しているSarashinaのようなモデルにとって、派生モデルの出どころを確かめる技術は将来の課題になる。Sarashinaへの適用が論文で述べられているわけではない。",
+      "models": [],
+      "links": { "announce": "https://www.sbintuitions.co.jp/news/info/20250630_02/" },
+      "sources": ["https://www.sbintuitions.co.jp/news/info/20250630_02/"]
+    },
+    {
+      "id": "persona-dpo",
+      "title": "Persona-Consistent Dialogue Generation via Pseudo Preference Tuning",
+      "title_ja": "キャラクターがぶれない対話AIを、手間をかけずに鍛える",
+      "authors": ["Junya Takayama", "Masaya Ohagi", "Tomoya Mizumoto", "Katsumasa Yoshikawa"],
+      "venue": "COLING 2025",
+      "date": "2025-01",
+      "topic": "dialogue",
+      "summary": "対話AIが設定された人物像（ペルソナ）と矛盾しない返答をするよう、DPOで学習させる簡単な方法を提案。",
+      "points": [
+        "別の対話のペルソナとわざと入れ替えて作った返答を「悪い例」とみなし、人手で悪い例を集めなくても好みの学習ができるようにした。",
+        "人手のラベル付けなしで、ペルソナとの一貫性を高められる。"
+      ],
+      "sarashina": "実験にSarashina2-7B・13Bを使用。7Bでは評価スコアが47.59から61.50へ、13Bでは52.27から67.27へ上がった。",
+      "models": ["sarashina2-7b", "sarashina2-13b"],
+      "links": { "paper": "https://aclanthology.org/2025.coling-main.369/" },
+      "sources": ["https://aclanthology.org/2025.coling-main.369.pdf"]
+    }
+  ]
+}

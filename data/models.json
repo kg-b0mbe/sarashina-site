@@ -1,0 +1,725 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-18",
+  "field_notes": {
+    "released": "HFで公開されたモデルはHugging Faceのリポジトリ作成日（UTC）。API提供モデルは公式発表の提供開始日。",
+    "spark": "DGX Spark（128GBユニファイドメモリ）で動かせるかの目安。ok=そのまま動く / quant=量子化すれば動く見込み / no=現実的でない / api=APIのみ。実測ではなく目安。",
+    "license.commercial": "true=商用可 / false=非商用（商用は要問い合わせ） / null=未確認",
+    "null": "null は「未確認」。推測で埋めずに、出典を確認できたら埋める。"
+  },
+  "models": [
+    {
+      "id": "sarashina1-7b",
+      "name": "Sarashina1-7B",
+      "generation": "Sarashina1",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 7,
+      "architecture": "GPT-NeoX（RoPE）",
+      "training_tokens": "1.0T",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-06-07",
+      "hf_repo": "sbintuitions/sarashina1-7b",
+      "spark": "ok",
+      "notes": "指示チューニングなしの事前学習モデル。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina1-65b"
+      ]
+    },
+    {
+      "id": "sarashina1-13b",
+      "name": "Sarashina1-13B",
+      "generation": "Sarashina1",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 13,
+      "architecture": "GPT-NeoX（RoPE）",
+      "training_tokens": "1.0T",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-06-07",
+      "hf_repo": "sbintuitions/sarashina1-13b",
+      "spark": "ok",
+      "notes": "指示チューニングなしの事前学習モデル。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina1-65b"
+      ]
+    },
+    {
+      "id": "sarashina1-65b",
+      "name": "Sarashina1-65B",
+      "generation": "Sarashina1",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 65,
+      "architecture": "GPT-NeoX（RoPE）、80層、語彙51,200",
+      "training_tokens": "800B",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-06-07",
+      "hf_repo": "sbintuitions/sarashina1-65b",
+      "spark": "quant",
+      "notes": "日本語Common Crawl（クリーニング後 約550Bトークン）で学習。指示チューニングなし。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina1-65b"
+      ]
+    },
+    {
+      "id": "sarashina2-7b",
+      "name": "Sarashina2-7B",
+      "generation": "Sarashina2",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 7,
+      "architecture": "Llama系（RoPE、SwiGLU）、語彙102,400",
+      "training_tokens": "2.1T",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-06-07",
+      "hf_repo": "sbintuitions/sarashina2-7b",
+      "spark": "ok",
+      "notes": "トークナイザは use_fast=False 指定が必要。指示チューニングなし。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2-7b",
+        "https://labindex.pages.dev/outputs/sb-intuitions/sarashina2"
+      ]
+    },
+    {
+      "id": "sarashina2-13b",
+      "name": "Sarashina2-13B",
+      "generation": "Sarashina2",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 13,
+      "architecture": "Llama系（RoPE、SwiGLU）、語彙102,400",
+      "training_tokens": "2.1T",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-06-07",
+      "hf_repo": "sbintuitions/sarashina2-13b",
+      "spark": "ok",
+      "notes": "Sarashina2-Vision-14Bのベース。指示チューニングなし。",
+      "sources": [
+        "https://labindex.pages.dev/outputs/sb-intuitions/sarashina2"
+      ]
+    },
+    {
+      "id": "sarashina2-70b",
+      "name": "Sarashina2-70B",
+      "generation": "Sarashina2",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 70,
+      "architecture": "Llama系、80層、隠れ次元8192、語彙102,400",
+      "training_tokens": "2.1T",
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2024-08-06",
+      "hf_repo": "sbintuitions/sarashina2-70b",
+      "spark": "quant",
+      "notes": "Sarashina2-8x70Bのベース。指示チューニングなし。",
+      "sources": [
+        "https://labindex.pages.dev/outputs/sb-intuitions/sarashina2"
+      ]
+    },
+    {
+      "id": "sarashina2-8x70b",
+      "name": "Sarashina2-8x70B",
+      "generation": "Sarashina2",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 465,
+      "architecture": "MoE（Sarashina2-70Bをsparse upcycling）",
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "Sarashina Model NonCommercial License",
+        "commercial": false
+      },
+      "availability": "open_weights",
+      "released": "2024-11-05",
+      "hf_repo": "sbintuitions/sarashina2-8x70b",
+      "spark": "no",
+      "notes": "公式発表は2024-11-08。BF16推論にはH100×16台が必要とされる。「4,600億パラメータ」はこのモデルの総パラメータ数。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2-8x70b",
+        "https://www.sbintuitions.co.jp/en/news/press/20241108_01"
+      ]
+    },
+    {
+      "id": "sarashina2.1-1b",
+      "name": "Sarashina2.1-1B",
+      "generation": "Sarashina2.1",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 1,
+      "architecture": null,
+      "training_tokens": "10T（第1段階）",
+      "context_length": null,
+      "license": {
+        "name": null,
+        "commercial": null
+      },
+      "availability": "open_weights",
+      "released": "2024-11-26",
+      "hf_repo": "sbintuitions/sarashina2.1-1b",
+      "spark": "ok",
+      "notes": "sarashina-embedding-v1-1bのベース。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.1-1b"
+      ]
+    },
+    {
+      "id": "sarashina2.2-0.5b-instruct",
+      "name": "Sarashina2.2-0.5B-instruct-v0.1",
+      "generation": "Sarashina2.2",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": 0.5,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-02-26",
+      "hf_repo": "sbintuitions/sarashina2.2-0.5b-instruct-v0.1",
+      "spark": "ok",
+      "notes": "Japanese MT Bench 4.55。エッジ・軽量用途。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-0.5b-instruct-v0.1"
+      ]
+    },
+    {
+      "id": "sarashina2.2-1b-instruct",
+      "name": "Sarashina2.2-1B-instruct-v0.1",
+      "generation": "Sarashina2.2",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": 1,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-02-26",
+      "hf_repo": "sbintuitions/sarashina2.2-1b-instruct-v0.1",
+      "spark": "ok",
+      "notes": "Japanese MT Bench 5.09。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-1b-instruct-v0.1"
+      ]
+    },
+    {
+      "id": "sarashina2.2-3b-instruct",
+      "name": "Sarashina2.2-3B-instruct-v0.1",
+      "generation": "Sarashina2.2",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": 3,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-02-26",
+      "hf_repo": "sbintuitions/sarashina2.2-3b-instruct-v0.1",
+      "spark": "ok",
+      "notes": "Elyza-tasks-100 3.75、Japanese MT Bench 6.51。ローカルで動くSarashinaの本命。このサイトの更新担当候補。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-3b-instruct-v0.1"
+      ]
+    },
+    {
+      "id": "sarashina2.2-base",
+      "name": "Sarashina2.2-0.5B / 1B / 3B（事前学習）",
+      "generation": "Sarashina2.2",
+      "kind": "base",
+      "modality": [
+        "text"
+      ],
+      "params_b": 3,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-03-03",
+      "hf_repo": "sbintuitions/sarashina2.2-3b",
+      "spark": "ok",
+      "notes": "0.5B・1B・3Bの3サイズ。3段階の学習で構築。ファインチューニングの土台向け。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-3b",
+        "https://huggingface.co/sbintuitions/sarashina2.2-1b"
+      ]
+    },
+    {
+      "id": "sarashina2-vision-8b",
+      "name": "Sarashina2-Vision-8B",
+      "generation": "Sarashina2",
+      "kind": "vision",
+      "modality": [
+        "text",
+        "image"
+      ],
+      "params_b": 8,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": null,
+        "commercial": null
+      },
+      "availability": "open_weights",
+      "released": "2025-03-09",
+      "hf_repo": "sbintuitions/sarashina2-vision-8b",
+      "spark": "ok",
+      "notes": "画像理解（VLM）。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2-vision-8b"
+      ]
+    },
+    {
+      "id": "sarashina2-vision-14b",
+      "name": "Sarashina2-Vision-14B",
+      "generation": "Sarashina2",
+      "kind": "vision",
+      "modality": [
+        "text",
+        "image"
+      ],
+      "params_b": 14,
+      "architecture": "Sarashina2-13B ＋ Qwen2-VL-7Bの画像エンコーダ",
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-03-09",
+      "hf_repo": "sbintuitions/sarashina2-vision-14b",
+      "spark": "ok",
+      "notes": "画像理解（VLM）。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2-vision-14b"
+      ]
+    },
+    {
+      "id": "sarashina-embedding-v1-1b",
+      "name": "Sarashina-Embedding-v1-1B",
+      "generation": "Embedding",
+      "kind": "embedding",
+      "modality": [
+        "text"
+      ],
+      "params_b": 1.2,
+      "architecture": "Sarashina2.1-1Bベース、1,792次元",
+      "training_tokens": null,
+      "context_length": 8192,
+      "license": {
+        "name": "Sarashina Model NonCommercial License",
+        "commercial": false
+      },
+      "availability": "open_weights",
+      "released": "2024-11-22",
+      "hf_repo": "sbintuitions/sarashina-embedding-v1-1b",
+      "spark": "ok",
+      "notes": "公開当時、JMTEB 16データセット平均で最高水準。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina-embedding-v1-1b"
+      ]
+    },
+    {
+      "id": "sarashina-embedding-v2-1b",
+      "name": "Sarashina-Embedding-v2-1B",
+      "generation": "Embedding",
+      "kind": "embedding",
+      "modality": [
+        "text"
+      ],
+      "params_b": 1,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": 8192,
+      "license": {
+        "name": "Sarashina Model NonCommercial License",
+        "commercial": false
+      },
+      "availability": "open_weights",
+      "released": "2025-07-30",
+      "hf_repo": "sbintuitions/sarashina-embedding-v2-1b",
+      "spark": "ok",
+      "notes": "",
+      "sources": [
+        "https://www.issoh.co.jp/tech/details/11856/"
+      ]
+    },
+    {
+      "id": "sarashina2.2-vision-3b",
+      "name": "Sarashina2.2-Vision-3B",
+      "generation": "Sarashina2.2",
+      "kind": "vision",
+      "modality": [
+        "text",
+        "image"
+      ],
+      "params_b": 3.8,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-11-19",
+      "hf_repo": "sbintuitions/sarashina2.2-vision-3b",
+      "spark": "ok",
+      "notes": "画像理解（VLM）。",
+      "sources": [
+        "https://www.issoh.co.jp/tech/details/11856/"
+      ]
+    },
+    {
+      "id": "sarashina2-mini",
+      "name": "Sarashina2 mini",
+      "generation": "Sarashina2",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2025-11",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "商用APIとして提供。Sarashina3の提供開始に伴い、旧Sarashina APIは新規申し込みを終了。",
+      "sources": [
+        "https://weel.co.jp/media/tech/sarashina/",
+        "https://www.issoh.co.jp/tech/details/11856/"
+      ]
+    },
+    {
+      "id": "sarashina2.2-ocr",
+      "name": "Sarashina2.2-OCR",
+      "generation": "Sarashina2.2",
+      "kind": "ocr",
+      "modality": [
+        "text",
+        "image"
+      ],
+      "params_b": 3,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2026-03-22",
+      "hf_repo": "sbintuitions/sarashina2.2-ocr",
+      "spark": "ok",
+      "notes": "日英ドキュメントOCR。縦書きや複雑なレイアウトの日本語文書に強い（VJRODaでCER 22.6）。HF上の表示は4B。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-ocr",
+        "https://www.issoh.co.jp/tech/details/11856/"
+      ]
+    },
+    {
+      "id": "sarashina2.2-tts",
+      "name": "Sarashina2.2-TTS",
+      "generation": "Sarashina2.2",
+      "kind": "tts",
+      "modality": [
+        "text",
+        "audio"
+      ],
+      "params_b": 0.8,
+      "architecture": "Sarashina2.2-0.5Bベース",
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "Sarashina Model NonCommercial License",
+        "commercial": false
+      },
+      "availability": "open_weights",
+      "released": "2026-04-16",
+      "hf_repo": "sbintuitions/sarashina2.2-tts",
+      "spark": "ok",
+      "notes": "日本語中心の音声合成。短い参照音声からのゼロショット話者生成、ナレーション・放送・会話などの話し方、日英の混在に対応。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/sarashina2.2-tts"
+      ]
+    },
+    {
+      "id": "sarashina3-mini",
+      "name": "Sarashina3 mini",
+      "generation": "Sarashina3",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": "フルスクラッチ開発",
+      "training_tokens": "約30T",
+      "context_length": 131072,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-06-30",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "標準モデル。ツール呼び出し対応。公式評価で全体的にGPT-4.1やQwen3-235B-A22B-Instruct-2507と同程度、日本文化QA（JamC-QA）では上回る。Cloud PF Type Aと、無償ベータの「Sarashinaサービス」で利用可能。",
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/06/30/100000/",
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3-nano",
+      "name": "Sarashina3 nano",
+      "generation": "Sarashina3",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": "フルスクラッチ開発",
+      "training_tokens": "約30T",
+      "context_length": 131072,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-06-30",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "軽量・高速モデル。分類・タグ付け・要約などの大量処理向け。公式評価で日本語などでQwen3-4B-Instruct-2507を上回る。",
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/06/30/100000/",
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3-guard",
+      "name": "Sarashina3 guard",
+      "generation": "Sarashina3",
+      "kind": "guard",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": 65536,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-06-30",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "入力の安全性を判定する専用モデル（文章は生成しない）。有害な入力にはT1〜T12のカテゴリコードを返す。",
+      "sources": [
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3-embedding",
+      "name": "Sarashina3 embedding",
+      "generation": "Sarashina3",
+      "kind": "embedding",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": "1,536次元（256次元まで削減可）",
+      "training_tokens": null,
+      "context_length": 8000,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-06-30",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "検索・分類・クラスタリングなど7種類のタスク指定に対応。",
+      "sources": [
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3-rerank",
+      "name": "Sarashina3 rerank",
+      "generation": "Sarashina3",
+      "kind": "rerank",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": "クロスエンコーダ",
+      "training_tokens": null,
+      "context_length": 8000,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-06-30",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "検索結果やRAG候補の並べ替え。独自の順位付けルールを指定できるCUSTOMIZEモードあり。",
+      "sources": [
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3-translate",
+      "name": "Sarashina3 translate",
+      "generation": "Sarashina3",
+      "kind": "translate",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-10-13",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "日英・英日翻訳。無償ベータ「Sarashinaサービス」で公開。後継はSarashina3.2 translate。",
+      "sources": [
+        "https://www.watch.impress.co.jp/docs/news/2147706.html"
+      ]
+    },
+    {
+      "id": "sarashina3.2-mini-thinking",
+      "name": "Sarashina3.2 mini thinking",
+      "generation": "Sarashina3.2",
+      "kind": "thinking",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": 131072,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": "2026-10-29",
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "Sarashina初の思考（推論）モデル。reasoning_effortでlow/medium/highの3段階を指定。ツール呼び出し・Web検索・コーディングが向上。",
+      "sources": [
+        "https://www.sbbit.jp/article/cont1/187994",
+        "https://docs.sarashina.ai/models"
+      ]
+    },
+    {
+      "id": "sarashina3.2-translate",
+      "name": "Sarashina3.2 translate",
+      "generation": "Sarashina3.2",
+      "kind": "translate",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": null,
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "API（提供元の利用規約に従う）",
+        "commercial": null
+      },
+      "availability": "api",
+      "released": null,
+      "hf_repo": null,
+      "spark": "api",
+      "notes": "Sarashina3 translateの後継。入力は最大5,000文字。日本語出力の文体（である調／です・ます調）を指定可能（ベータ）。",
+      "sources": [
+        "https://docs.sarashina.ai/models"
+      ]
+    }
+  ]
+}

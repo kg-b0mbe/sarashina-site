@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F1E6">
+<meta name="color-scheme" content="light only">
+<title>国産AI歌合｜Sarashina 帖（非公式）</title>
+<meta name="description" content="Sarashinaと国産の生成AIモデルを、平安時代の歌合になぞらえて左右に並べて比べる非公式ページ。勝ち負けは出典で確かめられる事実だけで決めています。">
+<style>
+/*__BASE_CSS__*/
+:root { --left: var(--suou); --left-soft: #F3E1E1; --right: var(--hanada); --right-soft: #DFE8F0; }
+.intro p { margin: 0 0 10px; }
+.tally { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin: 26px 0 8px;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 14px 0; text-align: center; }
+.tally .side { font-family: var(--fude); font-size: 22px; }
+.tally .side small { display: block; font-family: var(--mincho); font-size: 12px; color: var(--sub); }
+.tally .l { color: var(--left); } .tally .r { color: var(--right); }
+.tally .score { font-family: var(--mincho); font-size: 14px; color: var(--sub); line-height: 1.7; }
+.tally .score b { font-family: var(--fude); font-weight: 400; font-size: 26px; color: var(--ink); }
+
+.ban { margin: 34px 0 0; }
+.ban-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+.ban-no { font-family: var(--fude); font-size: 26px; }
+.ban-theme { font-family: var(--fude); font-size: 20px; color: var(--accent); }
+.ban-q { font-size: 13px; color: var(--sub); margin: 6px 0 12px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.side-card { padding: 10px 12px 12px; border-top: 4px solid var(--c); background: var(--soft); }
+.side-card.left { --c: var(--left); --soft: var(--left-soft); }
+.side-card.right { --c: var(--right); --soft: var(--right-soft); }
+.side-card .who { font-size: 11px; color: var(--c); letter-spacing: .1em; }
+.side-card .name { font-family: var(--mincho); font-weight: 700; font-size: 15px; line-height: 1.45; margin: 2px 0 6px; }
+.side-card .val { font-size: 13px; line-height: 1.7; }
+.side-card.win { box-shadow: inset 0 0 0 1px var(--c); }
+.han { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; margin-top: 12px; }
+.han .verdict { font-family: var(--fude); font-size: 30px; line-height: 1; padding: 6px 10px; border: 1px solid currentColor; }
+.han .verdict.left { color: var(--left); } .han .verdict.right { color: var(--right); } .han .verdict.draw { color: var(--sub); }
+.han .words { font-size: 14px; }
+.han .words b { display: block; font-size: 11px; color: var(--sub); font-weight: 400; letter-spacing: .1em; }
+
+h2.sec { font-family: var(--fude); font-weight: 400; font-size: 28px; margin: 56px 0 6px; letter-spacing: .06em; }
+.sec-lead { color: var(--sub); font-size: 14px; margin: 0 0 8px; }
+.method { font-size: 11px; padding: 1px 7px; border: 1px solid currentColor; }
+.method.scratch { color: var(--suou); } .method.continual { color: var(--hanada); } .method.unknown { color: var(--sub); }
+.spec { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 18px; margin: 10px 0 4px; }
+.spec div { border-left: 2px solid var(--rule); padding-left: 10px; }
+.spec dt { font-size: 11px; color: var(--sub); }
+.spec dd { margin: 0; font-size: 14px; }
+</style>
+</head>
+<body>
+<!--HEADER-->
+<div class="page-head">
+  <div class="tate" aria-hidden="true">うたあはせ</div>
+  <div>
+    <h1>国産AI歌合</h1>
+    <p>歌合（うたあわせ）は、平安の人々が左右に分かれて和歌を出し合い、判者（はんじゃ）が勝・負・持（じ＝引き分け）を定めた遊びです。ここではSarashinaを左方に、ほかの国産AIを右方に立てて、ひとつずつ比べます。</p>
+  </div>
+</div>
+<main>
+  <div class="intro">
+    <p class="sec-lead">勝ち負けは、各番に書いた一つの物差しについて、出典で確かめられる事実だけで定めています。どちらが総合的に優れているかを決めるものではありません。</p>
+  </div>
+  <div class="tally" id="tally"></div>
+  <div id="rounds"></div>
+
+  <h2 class="sec">名寄せ</h2>
+  <p class="sec-lead">国産の主な生成AIモデルの一覧です。「フルスクラッチ」は重みを一から学習したもの、「追加学習」は学習済みのモデルを土台に日本語などを鍛えたものです。</p>
+  <div class="filters">
+    <div class="filter-row" id="f-method">
+      <span class="label">作り方</span>
+      <button class="opt" data-v="all" aria-pressed="true">すべて</button>
+      <button class="opt" data-v="scratch" aria-pressed="false">フルスクラッチ</button>
+      <button class="opt" data-v="continual" aria-pressed="false">追加学習</button>
+    </div>
+  </div>
+  <div id="list"></div>
+  <p class="note">
+    「源内」は、デジタル庁が政府職員向けの生成AI環境で試用する国産LLMとして、2026年3月に選んだ7モデルです。<br>
+    「未確認」は出典で確かめられていない項目です。各社の発表で数値の測り方が異なるため、数字の単純な比較にはご注意ください。
+  </p>
+</main>
+<!--FOOTER-->
+
+<script id="site-data" type="application/json">/*__SITE_JSON__*/</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('site-data').textContent);
+  var K = DATA.kokusan;
+  var byId = {};
+  K.models.forEach(function (m) { byId[m.id] = m; });
+  var KANSUJI = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+  var VERDICT = { left: '左勝', right: '右勝', draw: '持' };
+  var METHOD = { scratch: 'フルスクラッチ', continual: '追加学習', unknown: '作り方は未確認' };
+  var state = { method: 'all' };
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function val(v) { return v === null || v === undefined || v === '' ? '<span class="unk">未確認</span>' : esc(v); }
+
+  // 星取
+  var w = { left: 0, right: 0, draw: 0 };
+  K.rounds.forEach(function (r) { w[r.result]++; });
+  document.getElementById('tally').innerHTML =
+    '<div class="side l">左方<small>Sarashina</small></div>' +
+    '<div class="score"><b>' + w.left + '</b> 勝　<b>' + w.right + '</b> 負　<b>' + w.draw + '</b> 持<br>' +
+    '全' + K.rounds.length + '番</div>' +
+    '<div class="side r">右方<small>国産AIの面々</small></div>';
+
+  // 番
+  document.getElementById('rounds').innerHTML = K.rounds.map(function (r, i) {
+    function side(s, cls) {
+      var win = (r.result === cls) ? ' win' : '';
+      var maker = byId[s.model] ? byId[s.model].maker : '';
+      return '<div class="side-card ' + cls + win + '"><div class="who">' + (cls === 'left' ? '左' : '右') + '　' + esc(maker) + '</div>' +
+        '<div class="name">' + esc(s.label) + '</div><div class="val">' + esc(s.value) + '</div></div>';
+    }
+    return '<section class="ban" id="ban-' + (i + 1) + '">' +
+      '<div class="ban-head"><span class="ban-no">' + KANSUJI[i] + '番</span><span class="ban-theme">' + esc(r.theme) + '</span></div>' +
+      '<p class="ban-q">物差し：' + esc(r.question) + '</p>' +
+      '<div class="pair">' + side(r.left, 'left') + side(r.right, 'right') + '</div>' +
+      '<div class="han"><div class="verdict ' + r.result + '">' + VERDICT[r.result] + '</div>' +
+        '<div class="words"><b>判詞</b>' + esc(r.judgment) +
+        '<div class="links">' + r.sources.map(function (u, j) {
+          return '<a href="' + esc(u) + '" target="_blank" rel="noopener">出典' + (j + 1) + '</a>'; }).join('') + '</div>' +
+      '</div></div></section>';
+  }).join('');
+
+  // 名寄せ
+  function render() {
+    var list = K.models.filter(function (m) { return state.method === 'all' || m.method === state.method; });
+    document.getElementById('list').innerHTML = list.map(function (m) {
+      return '<article class="entry">' +
+        '<div class="entry-meta"><span>' + esc(m.maker) + '</span><span class="method ' + m.method + '">' + METHOD[m.method] + '</span>' +
+          (m.gennai ? '<span class="mark">源内に選定</span>' : '') + '</div>' +
+        '<h2>' + esc(m.name) + '</h2>' +
+        '<p>' + esc(m.note) + '</p>' +
+        '<dl class="spec">' +
+          '<div><dt>最新</dt><dd>' + val(m.latest) + '</dd></div>' +
+          (m.method === 'continual' ? '<div><dt>土台のモデル</dt><dd>' + val(m.base) + '</dd></div>' : '') +
+          '<div><dt>大きさ</dt><dd>' + val(m.size) + '</dd></div>' +
+          '<div><dt>学習量</dt><dd>' + val(m.tokens) + '</dd></div>' +
+          '<div><dt>文脈長</dt><dd>' + val(m.context) + '</dd></div>' +
+          '<div><dt>重みの公開</dt><dd>' + val(m.open) + '</dd></div>' +
+          '<div><dt>使い方</dt><dd>' + val(m.access) + '</dd></div>' +
+        '</dl>' +
+        '<div class="links">' + m.sources.map(function (u, j) {
+          return '<a href="' + esc(u) + '" target="_blank" rel="noopener">出典' + (j + 1) + '</a>'; }).join('') + '</div>' +
+        '</article>';
+    }).join('');
+  }
+  var el = document.getElementById('f-method');
+  el.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    state.method = b.dataset.v; render();
+  });
+  document.getElementById('updated').textContent = DATA.updated_at;
+  render();
+})();
+</script>
+</body>
+</html>

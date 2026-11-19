@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F1E6">
+<meta name="color-scheme" content="light only">
+<title>モデル目録｜Sarashina 帖（非公式）</title>
+<meta name="description" content="SB Intuitionsの国産AI「Sarashina」の全モデルを、サイズ・ライセンス・提供形態・手元で動くかどうかで調べられる非公式の目録。">
+<style>
+/*__BASE_CSS__*/
+.spec { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 18px; margin: 12px 0 6px; }
+.spec div { border-left: 2px solid var(--rule); padding-left: 10px; }
+.spec dt { font-size: 11px; color: var(--sub); }
+.spec dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.entry:target { background: var(--paper-2); box-shadow: 0 0 0 12px var(--paper-2); }
+</style>
+</head>
+<body>
+<!--HEADER-->
+<div class="page-head">
+  <div class="tate" aria-hidden="true">もでるもくろく</div>
+  <div>
+    <h1>モデル目録</h1>
+    <p>Sarashinaの名を持つモデルを、初代から最新まで一冊にまとめました。重みが公開されているか、商用に使えるか、DGX Sparkのような手元の機械で動くか、を調べられます。</p>
+  </div>
+</div>
+<main>
+  <div class="filters">
+    <input class="search" id="q" type="search" placeholder="名前・用途・メモで探す（例：OCR、3B、翻訳）" aria-label="検索">
+    <div class="filter-row" id="f-avail">
+      <span class="label">提供</span>
+      <button class="opt" data-v="all" aria-pressed="true">すべて</button>
+      <button class="opt" data-v="open_weights" aria-pressed="false">重み公開</button>
+      <button class="opt" data-v="api" aria-pressed="false">APIのみ</button>
+    </div>
+    <div class="filter-row" id="f-kind">
+      <span class="label">用途</span>
+      <button class="opt" data-v="all" aria-pressed="true">すべて</button>
+      <button class="opt" data-v="chat" aria-pressed="false">対話</button>
+      <button class="opt" data-v="base" aria-pressed="false">事前学習</button>
+      <button class="opt" data-v="vision" aria-pressed="false">画像・OCR</button>
+      <button class="opt" data-v="tts" aria-pressed="false">音声</button>
+      <button class="opt" data-v="retrieval" aria-pressed="false">検索</button>
+      <button class="opt" data-v="other" aria-pressed="false">安全・翻訳</button>
+    </div>
+    <div class="filter-row">
+      <span class="label">条件</span>
+      <button class="opt" id="f-spark" aria-pressed="false">手元で動く</button>
+      <button class="opt" id="f-commercial" aria-pressed="false">商用利用可</button>
+    </div>
+    <div class="filter-row" id="f-sort">
+      <span class="label">並び</span>
+      <button class="opt" data-v="new" aria-pressed="true">新しい順</button>
+      <button class="opt" data-v="old" aria-pressed="false">古い順</button>
+      <button class="opt" data-v="big" aria-pressed="false">大きい順</button>
+      <button class="opt" data-v="small" aria-pressed="false">小さい順</button>
+    </div>
+  </div>
+  <p class="count" id="count"></p>
+  <div id="list"></div>
+  <p class="note">
+    「未確認」は出典で確かめられていない項目です。推測では埋めず、確かめられ次第更新します。<br>
+    「手元で動く」は128GBメモリのDGX Sparkを前提にした目安で、実測ではありません。<br>
+    公開日は、Hugging Faceで公開されたモデルはリポジトリの作成日（UTC）、APIのモデルは公式発表の提供開始日です。<br>
+    「Sarashina下書き」の印がある項目は、DGX Spark上のSarashina2.2-3Bが下書きし、人が確認して載せたものです。
+  </p>
+</main>
+<!--FOOTER-->
+
+<script id="site-data" type="application/json">/*__SITE_JSON__*/</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('site-data').textContent);
+  var models = DATA.models;
+  var KIND_LABEL = { base: '事前学習', instruct: '対話', thinking: '思考', vision: '画像理解', ocr: 'OCR',
+    tts: '音声合成', embedding: '埋め込み', rerank: 'リランク', guard: '安全性判定', translate: '翻訳' };
+  var KIND_GROUP = { base: 'base', instruct: 'chat', thinking: 'chat', vision: 'vision', ocr: 'vision', tts: 'tts',
+    embedding: 'retrieval', rerank: 'retrieval', guard: 'other', translate: 'other' };
+  var SPARK = { ok: 'そのまま動く', quant: '量子化すれば動く', no: '手元では難しい', api: 'APIのみ' };
+  var state = { q: '', avail: 'all', kind: 'all', spark: false, commercial: false, sort: 'new' };
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function val(v, fmt) { return v === null || v === undefined || v === '' ?
+    '<span class="unk">未確認</span>' : esc(fmt ? fmt(v) : v); }
+  function params(b) { return b >= 1 ? b + 'B' : Math.round(b * 1000) + 'M'; }
+  function ctx(n) { return n % 1024 === 0 ? (n / 1024) + 'K トークン' : n.toLocaleString() + ' トークン'; }
+  function lic(l) {
+    if (!l || l.name === null) return '<span class="unk">未確認</span>';
+    return esc(l.name) + (l.commercial === true ? '（商用可）' : l.commercial === false ? '（非商用）' : '');
+  }
+
+  function entry(m) {
+    var links = [];
+    if (m.hf_repo) links.push('<a href="https://huggingface.co/' + esc(m.hf_repo) + '" target="_blank" rel="noopener">Hugging Face</a>');
+    (m.sources || []).forEach(function (u, i) {
+      if (m.hf_repo && u.indexOf(m.hf_repo) !== -1) return;
+      links.push('<a href="' + esc(u) + '" target="_blank" rel="noopener">出典' + (i + 1) + '</a>');
+    });
+    var marks = '';
+    if (m.license && m.license.commercial === false) marks += ' <span class="mark warn">非商用</span>';
+    if (m.drafted_by) marks += ' <span class="mark" title="' + esc(m.drafted_by) + '">Sarashina下書き</span>';
+    return '<article class="entry" id="m-' + esc(m.id) + '">' +
+      '<div class="entry-meta"><span>' + esc(m.generation) + '</span><span class="kind">' +
+        esc(KIND_LABEL[m.kind] || m.kind) + '</span><span>' + esc(SPARK[m.spark] || '') + '</span>' + marks + '</div>' +
+      '<h2>' + esc(m.name) + '</h2>' +
+      (m.notes ? '<p>' + esc(m.notes) + '</p>' : '') +
+      '<dl class="spec">' +
+        '<div><dt>パラメータ</dt><dd>' + val(m.params_b, params) + '</dd></div>' +
+        '<div><dt>提供</dt><dd>' + (m.availability === 'api' ? 'API' : '重み公開') + '</dd></div>' +
+        '<div><dt>公開日</dt><dd>' + val(m.released) + '</dd></div>' +
+        '<div><dt>ライセンス</dt><dd>' + lic(m.license) + '</dd></div>' +
+        '<div><dt>学習トークン</dt><dd>' + val(m.training_tokens) + '</dd></div>' +
+        '<div><dt>文脈長</dt><dd>' + val(m.context_length, ctx) + '</dd></div>' +
+        '<div><dt>構造</dt><dd>' + val(m.architecture) + '</dd></div>' +
+      '</dl>' +
+      '<div class="links">' + links.join('') + '</div>' +
+      '</article>';
+  }
+
+  function render() {
+    var q = state.q.trim().toLowerCase();
+    var list = models.filter(function (m) {
+      if (state.avail !== 'all' && m.availability !== state.avail) return false;
+      if (state.kind !== 'all' && KIND_GROUP[m.kind] !== state.kind) return false;
+      if (state.spark && !(m.spark === 'ok' || m.spark === 'quant')) return false;
+      if (state.commercial && !(m.license && m.license.commercial === true)) return false;
+      if (q) {
+        var hay = [m.name, m.generation, KIND_LABEL[m.kind], m.notes, m.architecture, m.params_b ? params(m.params_b) : '']
+          .join(' ').toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+    list.sort(function (a, b) {
+      if (state.sort === 'big' || state.sort === 'small') {
+        var pa = a.params_b, pb = b.params_b;
+        if (pa === null && pb === null) return 0;
+        if (pa === null) return 1;
+        if (pb === null) return -1;
+        return state.sort === 'big' ? pb - pa : pa - pb;
+      }
+      var da = a.released || '', db = b.released || '';
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return state.sort === 'new' ? (db > da ? 1 : db < da ? -1 : 0) : (da > db ? 1 : da < db ? -1 : 0);
+    });
+    document.getElementById('list').innerHTML = list.map(entry).join('') ||
+      '<p class="count">条件に合うモデルはありません。</p>';
+    document.getElementById('count').textContent = '全' + models.length + '件のうち ' + list.length + '件';
+  }
+
+  function group(id, key) {
+    var el = document.getElementById(id);
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      state[key] = b.dataset.v; render();
+    });
+  }
+  function toggle(id, key) {
+    var b = document.getElementById(id);
+    b.addEventListener('click', function () {
+      state[key] = !state[key]; b.setAttribute('aria-pressed', String(state[key])); render();
+    });
+  }
+  group('f-avail', 'avail'); group('f-kind', 'kind'); group('f-sort', 'sort');
+  toggle('f-spark', 'spark'); toggle('f-commercial', 'commercial');
+  document.getElementById('q').addEventListener('input', function (e) { state.q = e.target.value; render(); });
+  document.getElementById('updated').textContent = DATA.updated_at;
+  render();
+  if (location.hash) {
+    var t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (t) t.scrollIntoView({ block: 'start' });
+  }
+})();
+</script>
+</body>
+</html>

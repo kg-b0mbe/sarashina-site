@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F1E6">
+<meta name="color-scheme" content="light only">
+<title>年譜｜Sarashina 帖（非公式）</title>
+<meta name="description" content="SB Intuitionsの国産AI「Sarashina」の歩みを、会社の始まりからモデル公開・サービス提供まで時系列でたどる非公式の年譜。">
+<style>
+/*__BASE_CSS__*/
+.year { display: grid; grid-template-columns: 5.5em 1fr; gap: 0 22px; border-top: 1px solid var(--ink); padding-top: 14px; margin-top: 28px; }
+.year-num { font-family: var(--fude); font-weight: 400; font-size: 32px; line-height: 1.1; letter-spacing: .02em; }
+@media (min-width: 720px) { .year-num { position: sticky; top: 16px; align-self: start; } }
+@media (max-width: 560px) { .year { grid-template-columns: 1fr; } .year-num { margin-bottom: 6px; } }
+.ev { padding: 0 0 22px 14px; border-left: 3px solid var(--c, var(--rule)); margin-bottom: 4px; }
+.ev.k-company { --c: var(--c-company); }
+.ev.k-release { --c: var(--c-release); }
+.ev.k-service { --c: var(--c-service); }
+.ev.k-hf { --c: var(--c-hf); }
+.ev .meta { font-size: 12px; color: var(--sub); display: flex; flex-wrap: wrap; gap: 2px 12px; }
+.ev .meta .type { color: var(--c); }
+.ev h3 { font-family: var(--mincho); font-weight: 700; font-size: 18px; line-height: 1.5; margin: 2px 0 4px; }
+.ev.k-hf h3 { font-size: 16px; }
+.ev p { margin: 0 0 4px; font-size: 14px; }
+.ev.k-world { --c: var(--c-world); border-left-style: dotted; }
+.ev.k-world h3 { font-family: var(--mincho); font-weight: 600; font-size: 14px; color: var(--sub); }
+.ev.k-world p { color: var(--sub); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; margin: 4px 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; color: var(--sub); margin-top: 10px; }
+.legend span::before { content: ""; display: inline-block; width: 3px; height: 12px; background: var(--c); margin-right: 6px; vertical-align: -1px; }
+</style>
+</head>
+<body>
+<!--HEADER-->
+<div class="page-head">
+  <div class="tate" aria-hidden="true">さらしなねんぷ</div>
+  <div>
+    <h1>年譜</h1>
+    <p>会社の始まりから最新の思考モデルまで、Sarashinaの歩みを時系列でたどります。同じ頃にChatGPT・Claude・Geminiで何があったかも、細い線で並べています。</p>
+  </div>
+</div>
+<main>
+  <div class="filters">
+    <div class="filter-row" id="f-scope">
+      <span class="label">表示</span>
+      <button class="opt" data-v="all" aria-pressed="true">すべて</button>
+      <button class="opt" data-v="events" aria-pressed="false">主な出来事だけ</button>
+    </div>
+    <div class="filter-row">
+      <span class="label">海外</span>
+      <button class="opt" id="f-world" aria-pressed="true">海外AIの動きも並べる</button>
+    </div>
+    <div class="filter-row" id="f-order">
+      <span class="label">並び</span>
+      <button class="opt" data-v="asc" aria-pressed="true">古い順</button>
+      <button class="opt" data-v="desc" aria-pressed="false">新しい順</button>
+    </div>
+    <div class="legend">
+      <span style="--c: var(--c-company)">会社</span>
+      <span style="--c: var(--c-release)">モデル発表</span>
+      <span style="--c: var(--c-service)">サービス</span>
+      <span style="--c: var(--c-hf)">Hugging Faceで公開</span>
+      <span style="--c: var(--c-world)">海外の動き</span>
+    </div>
+  </div>
+  <div id="timeline"></div>
+  <p class="note">
+    海外の動きの日付は、各社の現地時間での発表日です。<br>
+    モデル名を押すと、モデル目録の該当箇所に移ります。<br>
+    「Sarashina下書き」の印がある項目は、DGX Spark上のSarashina2.2-3Bが下書きし、人が確認して載せたものです。
+  </p>
+</main>
+<!--FOOTER-->
+
+<script id="site-data" type="application/json">/*__SITE_JSON__*/</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('site-data').textContent);
+  var byId = {};
+  DATA.models.forEach(function (m) { byId[m.id] = m; });
+  var TYPE = { company: '会社', release: 'モデル発表', service: 'サービス', milestone: '節目', hf: 'Hugging Faceで公開' };
+  var COMPANY = { openai: 'OpenAI', anthropic: 'Anthropic', google: 'Google' };
+  var state = { scope: 'all', order: 'asc', world: true };
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function fmtDate(d) { var p = d.split('-'); return Number(p[1]) + '月' + (p[2] ? Number(p[2]) + '日' : ''); }
+
+  var covered = {};
+  DATA.events.forEach(function (e) { e.models.forEach(function (id) { covered[id] = true; }); });
+  var items = DATA.events.map(function (e) {
+    return { date: e.date, kind: e.kind, title: e.title, summary: e.summary, models: e.models,
+      sources: e.sources, drafted_by: e.drafted_by };
+  });
+  (DATA.world || []).forEach(function (w) {
+    items.push({ date: w.date, kind: 'world', company: w.company, title: w.title, summary: w.summary,
+      models: [], sources: w.sources, drafted_by: w.drafted_by });
+  });
+  var loose = {};
+  DATA.models.forEach(function (m) {
+    if (covered[m.id] || !m.released) return;
+    var key = m.released + '|' + m.generation;
+    (loose[key] = loose[key] || { date: m.released, ids: [] }).ids.push(m.id);
+  });
+  Object.keys(loose).forEach(function (k) {
+    var g = loose[k];
+    items.push({ date: g.date, kind: 'hf', title: g.ids.map(function (id) { return byId[id].name; }).join('、'),
+      summary: '', models: g.ids, sources: [] });
+  });
+
+  function render() {
+    var list = items.filter(function (it) {
+      if (it.kind === 'world') return state.world;
+      return state.scope === 'all' || it.kind !== 'hf';
+    });
+    list.sort(function (a, b) {
+      var c = a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+      return state.order === 'asc' ? c : -c;
+    });
+    var years = [], cur = null;
+    list.forEach(function (it) {
+      var y = it.date.slice(0, 4);
+      if (!cur || cur.y !== y) { cur = { y: y, items: [] }; years.push(cur); }
+      cur.items.push(it);
+    });
+    document.getElementById('timeline').innerHTML = years.map(function (g) {
+      return '<section class="year"><div class="year-num">' + g.y + '</div><div>' + g.items.map(function (it) {
+        var type = it.kind === 'world' ? COMPANY[it.company] : TYPE[it.kind];
+        return '<div class="ev k-' + it.kind + '">' +
+          '<div class="meta"><span>' + fmtDate(it.date) + '</span><span class="type">' + esc(type) + '</span>' +
+          (it.drafted_by ? '<span class="mark" title="' + esc(it.drafted_by) + '">Sarashina下書き</span>' : '') + '</div>' +
+          '<h3>' + esc(it.title) + '</h3>' +
+          (it.summary ? '<p>' + esc(it.summary) + '</p>' : '') +
+          (it.kind !== 'hf' && it.models.length ? '<div class="chips">' + it.models.map(function (id) {
+            return '<a href="models.html#m-' + esc(id) + '">' + esc(byId[id] ? byId[id].name : id) + '</a>';
+          }).join('') + '</div>' : '') +
+          (it.kind === 'hf' ? '<div class="chips">' + it.models.map(function (id) {
+            return '<a href="models.html#m-' + esc(id) + '">目録で見る</a>';
+          }).slice(0, 1).join('') + '</div>' : '') +
+          (it.sources.length ? '<div class="links">' + it.sources.map(function (u, i) {
+            return '<a href="' + esc(u) + '" target="_blank" rel="noopener">出典' + (i + 1) + '</a>';
+          }).join('') + '</div>' : '') +
+          '</div>';
+      }).join('') + '</div></section>';
+    }).join('');
+  }
+
+  function group(id, key) {
+    var el = document.getElementById(id);
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      state[key] = b.dataset.v; render();
+    });
+  }
+  group('f-scope', 'scope'); group('f-order', 'order');
+  var wb = document.getElementById('f-world');
+  wb.addEventListener('click', function () { state.world = !state.world; wb.setAttribute('aria-pressed', String(state.world)); render(); });
+  document.getElementById('updated').textContent = DATA.updated_at;
+  render();
+})();
+</script>
+</body>
+</html>

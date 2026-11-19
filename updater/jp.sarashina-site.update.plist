@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Mac miniで毎日 7:40 に更新を実行する（launchd）。
+  REPO_PATH をリポジトリの場所に書き換えてから ~/Library/LaunchAgents/ に置く。
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>jp.sarashina-site.update</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>cd REPO_PATH &amp;&amp; /usr/bin/python3 updater/update.py</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>7</integer>
+    <key>Minute</key>
+    <integer>40</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/tmp/sarashina-site-update.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/sarashina-site-update.log</string>
+</dict>
+</plist>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Mac miniで2時間ごとに「さらとしなの茶話」を1回分つくる（launchd）。
+  REPO_PATH をリポジトリの場所に書き換えてから ~/Library/LaunchAgents/ に置く。
+  間隔を変えるときは StartInterval（秒）を変える。止めるときは updater/.env に CHAT_ENABLED=0。
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>jp.sarashina-site.chat</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>cd REPO_PATH &amp;&amp; /usr/bin/python3 updater/chat.py</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>7200</integer>
+  <key>StandardOutPath</key>
+  <string>/tmp/sarashina-site-chat.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/sarashina-site-chat.log</string>
+</dict>
+</plist>

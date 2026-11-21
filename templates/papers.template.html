@@ -16,6 +16,8 @@
 .tie { border-left: 3px solid transparent; border-image: var(--kasane-v) 1; padding: 6px 0 6px 12px; margin: 12px 0 8px; font-size: 14px; }
 .tie b { display: block; font-size: 11px; color: var(--brand); font-weight: 500; letter-spacing: .1em; }
 .authors { font-size: 12px; color: var(--sub); margin-top: 8px; }
+.cite { font-family: var(--fude); font-size: 15px; color: var(--accent); }
+.cite small { font-family: var(--mincho); font-size: 11px; color: var(--sub); margin-left: 2px; }
 .models { font-size: 13px; display: flex; flex-wrap: wrap; gap: 2px 12px; }
 </style>
 </head>
@@ -39,12 +41,18 @@
       <button class="opt" data-v="dialogue" aria-pressed="false">対話</button>
       <button class="opt" data-v="trust" aria-pressed="false">安全・信頼</button>
     </div>
+    <div class="filter-row" id="f-sort" hidden>
+      <span class="label">並び</span>
+      <button class="opt" data-v="date" aria-pressed="true">新しい順</button>
+      <button class="opt" data-v="cite" aria-pressed="false">引用の多い順</button>
+    </div>
   </div>
   <p class="count" id="count"></p>
   <div id="list"></div>
   <p class="note">
     解説は論文と公式の技術ブログを読んで書いた要約です。正確な内容は必ず原著をご確認ください。<br>
-    SB Intuitions所属（発表時）の著者を含む論文を載せています。
+    SB Intuitions所属（発表時）の著者を含む論文を載せています。<br>
+    <span id="cite-note"></span>
   </p>
 </main>
 <!--FOOTER-->
@@ -57,7 +65,9 @@
   DATA.models.forEach(function (m) { byId[m.id] = m; });
   var TOPIC = { pretraining: '事前学習・設計', evaluation: '評価', speech: '音声', dialogue: '対話', trust: '安全・信頼' };
   var LINK = { paper: '論文', blog: '解説ブログ', code: 'コード', data: 'データ', announce: '採択のお知らせ' };
-  var state = { topic: 'all' };
+  var state = { topic: 'all', sort: 'date' };
+  var PS = DATA.paper_stats;
+  function citeOf(p) { return PS && PS.papers[p.id] ? PS.papers[p.id] : null; }
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -70,10 +80,14 @@
     var models = p.models.filter(function (id) { return byId[id]; }).map(function (id) {
       return '<a href="models.html#m-' + esc(id) + '">' + esc(byId[id].name) + '</a>';
     });
+    var c = citeOf(p);
+    links.push('<a href="https://scholar.google.com/scholar?q=' + encodeURIComponent('"' + p.title + '"') + '" target="_blank" rel="noopener">Google Scholarで見る</a>');
+    if (c && c.s2_url) links.push('<a href="' + esc(c.s2_url) + '" target="_blank" rel="noopener">Semantic Scholar</a>');
     var authors = p.authors.length > 6 ? p.authors.slice(0, 5).join(', ') + ' ほか' + (p.authors.length - 5) + '名' : p.authors.join(', ');
     return '<article class="entry paper" id="p-' + esc(p.id) + '">' +
       '<div class="entry-meta"><span>' + esc(p.venue) + '</span><span>' + ym(p.date) + '</span>' +
         '<span class="kind">' + esc(TOPIC[p.topic]) + '</span>' +
+        (c ? '<span class="cite">引用 ' + c.citations + '<small>件</small></span>' : '') +
         (p.drafted_by ? '<span class="mark" title="' + esc(p.drafted_by) + '">Sarashina下書き</span>' : '') + '</div>' +
       '<h2>' + esc(p.title_ja) + '</h2>' +
       '<p class="orig">' + esc(p.title) + '</p>' +
@@ -88,7 +102,14 @@
 
   function render() {
     var list = DATA.papers.filter(function (p) { return state.topic === 'all' || p.topic === state.topic; })
-      .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+      .sort(function (a, b) {
+        if (state.sort === 'cite') {
+          var ca = citeOf(a), cb = citeOf(b);
+          var d = (cb ? cb.citations : -1) - (ca ? ca.citations : -1);
+          if (d) return d;
+        }
+        return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+      });
     document.getElementById('list').innerHTML = list.map(entry).join('');
     document.getElementById('count').textContent = '全' + DATA.papers.length + '本のうち ' + list.length + '本';
   }
@@ -99,6 +120,17 @@
     el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
     state.topic = b.dataset.v; render();
   });
+  if (PS) {
+    var total = 0; Object.keys(PS.papers).forEach(function (k) { total += PS.papers[k].citations; });
+    document.getElementById('cite-note').textContent = '引用件数は' + PS.fetched_at + '時点のSemantic Scholarの数字です（' +
+      Object.keys(PS.papers).length + '本で合計' + total + '件）。Google Scholarとは数え方が違うため、数字が異なることがあります。発表から日が浅い論文は、まだ登録されていないことがあります。';
+    var fs = document.getElementById('f-sort'); fs.hidden = false;
+    fs.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      fs.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      state.sort = b.dataset.v; render();
+    });
+  }
   document.getElementById('updated').textContent = DATA.updated_at;
   render();
 })();

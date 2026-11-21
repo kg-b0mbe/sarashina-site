@@ -62,7 +62,7 @@ a:hover { text-decoration-color: var(--brand); }
 }
 .site-name { font-family: var(--fude); font-weight: 400; font-size: 24px; letter-spacing: .08em; text-decoration: none; }
 .site-name small { font-family: var(--gothic); font-weight: 400; font-size: 11px; color: var(--sub); letter-spacing: .1em; margin-left: 10px; }
-.site-nav { display: flex; gap: 22px; font-size: 14px; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
 .site-nav a { text-decoration: none; color: var(--sub); padding-bottom: 3px; border-bottom: 2px solid transparent; }
 .site-nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--brand); }
 

@@ -13,6 +13,36 @@
 .spec div { border-left: 2px solid var(--rule); padding-left: 10px; }
 .spec dt { font-size: 11px; color: var(--sub); }
 .spec dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.map { margin: 0 0 30px; }
+.map h2 { font-family: var(--fude); font-weight: 400; font-size: 24px; margin: 0 0 4px; letter-spacing: .06em; }
+.map .lead { font-size: 14px; color: var(--sub); margin: 0 0 12px; }
+.map-grid { display: grid; grid-template-columns: 4.6em repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.map-grid > div { border-bottom: 1px solid var(--rule); padding: 6px 3px; min-height: 40px; }
+.map-grid > div.col-head { font-family: var(--fude); font-size: 17px; text-align: center; border-bottom: 1px solid var(--ink); padding: 6px 2px 4px; min-height: 0; }
+.map-grid > div.col-head small { display: block; font-family: var(--mincho); font-size: 10px; color: var(--sub); }
+.map-grid > div.row-head { font-size: 12px; color: var(--ink); padding-left: 0; line-height: 1.4; display: flex; align-items: center; }
+.map-grid > div.cell { display: flex; flex-wrap: wrap; gap: 3px; align-content: center; justify-content: center; }
+.map-grid > div.alt { background: rgba(255,255,255,.35); }
+.chip { font-size: 11px; line-height: 1.3; padding: 2px 4px; text-decoration: none; border: 1px solid var(--hanada); color: var(--hanada); background: var(--paper); text-align: center; word-break: keep-all; }
+.chip.api { border-color: var(--kobai); color: var(--suou); background: #F6E1E1; }
+.chip.nc { border-style: dashed; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--sub); margin-top: 8px; align-items: center; }
+.map-legend .chip { pointer-events: none; }
+@media (max-width: 420px) { .chip { font-size: 10.5px; padding: 1px 3px; } .map-grid > div.col-head { font-size: 15px; } }
+.pop { margin: 0 0 30px; }
+.pop h2 { font-family: var(--fude); font-weight: 400; font-size: 24px; margin: 0 0 4px; letter-spacing: .06em; }
+.pop h3 { font-family: var(--mincho); font-size: 15px; margin: 22px 0 6px; }
+.pop .lead { font-size: 13px; color: var(--sub); margin: 0 0 8px; }
+.bars { border-top: 1px solid var(--ink); }
+.bar { display: grid; grid-template-columns: 1.6em 1fr; gap: 0 8px; padding: 7px 0; border-bottom: 1px solid var(--rule); text-decoration: none; }
+.bar .rank { font-family: var(--fude); font-size: 17px; color: var(--sub); text-align: center; }
+.bar .name { font-size: 13px; display: flex; justify-content: space-between; gap: 8px; }
+.bar .name b { font-weight: 600; }
+.bar .num { font-variant-numeric: tabular-nums; color: var(--sub); white-space: nowrap; }
+.bar .track { grid-column: 2; height: 6px; background: var(--paper-2); margin-top: 4px; }
+.bar .fill { height: 6px; background: var(--hanada); }
+.bar.ours .fill { background: var(--kobai); }
+.bar.ours .name b { color: var(--suou); }
 .entry:target { background: var(--paper-2); box-shadow: 0 0 0 12px var(--paper-2); }
 </style>
 </head>
@@ -26,6 +56,31 @@
   </div>
 </div>
 <main>
+  <section class="map" aria-labelledby="map-title">
+    <h2 id="map-title">見取り図</h2>
+    <p class="lead" id="map-lead"></p>
+    <div class="map-grid" id="map-grid"></div>
+    <div class="map-legend">
+      <span class="chip">7B</span>重みが公開されている
+      <span class="chip api">mini</span>APIのみ
+      <span class="chip nc">1B</span>点線は非商用ライセンス
+    </div>
+  </section>
+  <section class="pop" id="pop" hidden>
+    <h2>Hugging Faceでの人気</h2>
+    <p class="lead" id="pop-lead"></p>
+    <div class="filter-row" id="f-metric">
+      <span class="label">物差し</span>
+      <button class="opt" data-v="downloads" aria-pressed="true">直近30日</button>
+      <button class="opt" data-v="downloads_all_time" aria-pressed="false">累計</button>
+      <button class="opt" data-v="likes" aria-pressed="false">いいね</button>
+    </div>
+    <h3>Sarashinaの中での順位</h3>
+    <div class="bars" id="pop-models"></div>
+    <h3>国産オープンモデルの公開元くらべ</h3>
+    <p class="lead">各公開元がHugging Faceに置いている全モデルの合計です。モデルの数や、派生モデル・量子化版の有無で数字は大きく変わります。</p>
+    <div class="bars" id="pop-orgs"></div>
+  </section>
   <div class="filters">
     <input class="search" id="q" type="search" placeholder="名前・用途・メモで探す（例：OCR、3B、翻訳）" aria-label="検索">
     <div class="filter-row" id="f-avail">
@@ -91,6 +146,26 @@
     return esc(l.name) + (l.commercial === true ? '（商用可）' : l.commercial === false ? '（非商用）' : '');
   }
 
+  var HF = DATA.hf;
+  function reposOf(m) { return m.hf_repos || (m.hf_repo ? [m.hf_repo] : []); }
+  function hfOf(m) {
+    if (!HF) return null;
+    var rs = reposOf(m).filter(function (r) { return HF.repos[r]; });
+    if (!rs.length) return null;
+    var t = { downloads: 0, downloads_all_time: 0, likes: 0 }, allKnown = true;
+    rs.forEach(function (r) {
+      var x = HF.repos[r]; t.downloads += x.downloads; t.likes += x.likes;
+      if (x.downloads_all_time === null) allKnown = false; else t.downloads_all_time += x.downloads_all_time;
+    });
+    if (!allKnown) t.downloads_all_time = null;
+    return t;
+  }
+  function num(n) { return n === null || n === undefined ? '—' : n.toLocaleString('ja-JP'); }
+  function hfSpec(m) {
+    var h = hfOf(m); if (!h) return '';
+    return '<div><dt>HFダウンロード（30日）</dt><dd>' + num(h.downloads) + '</dd></div>' +
+      '<div><dt>HFいいね</dt><dd>' + num(h.likes) + '</dd></div>';
+  }
   function entry(m) {
     var links = [];
     if (m.hf_repo) links.push('<a href="https://huggingface.co/' + esc(m.hf_repo) + '" target="_blank" rel="noopener">Hugging Face</a>');
@@ -114,6 +189,7 @@
         '<div><dt>学習トークン</dt><dd>' + val(m.training_tokens) + '</dd></div>' +
         '<div><dt>文脈長</dt><dd>' + val(m.context_length, ctx) + '</dd></div>' +
         '<div><dt>構造</dt><dd>' + val(m.architecture) + '</dd></div>' +
+        hfSpec(m) +
       '</dl>' +
       '<div class="links">' + links.join('') + '</div>' +
       '</article>';
@@ -166,6 +242,78 @@
       state[key] = !state[key]; b.setAttribute('aria-pressed', String(state[key])); render();
     });
   }
+  // 見取り図：縦に用途、横に世代
+  var COLS = [['Sarashina1', '1', '2024'], ['Sarashina2', '2', '2024〜'], ['Sarashina2.1', '2.1', '2024'],
+              ['Sarashina2.2', '2.2', '2025〜'], ['Sarashina3', '3', '2026'], ['Sarashina3.2', '3.2', '2026']];
+  var ROWS = [['chat', '対話・思考'], ['base', '事前学習'], ['vision', '画像・OCR'], ['tts', '音声'],
+              ['retrieval', '検索'], ['other', '安全・翻訳']];
+  function colOf(m) { var g = m.lineage || m.generation; for (var i = 0; i < COLS.length; i++) if (COLS[i][0] === g) return i; return -1; }
+  function shortOf(m) {
+    if (m.short) return m.short;
+    if (m.params_b) return params(m.params_b);
+    var t = m.name.replace(m.generation, '').replace('thinking', '思考')
+      .replace('embedding', '埋め込み').replace('rerank', '並べ替え').replace('translate', '翻訳').replace('guard', '安全判定').trim();
+    return t || m.name;
+  }
+  (function () {
+    var html = '<div class="col-head" aria-hidden="true"></div>' + COLS.map(function (c) {
+      return '<div class="col-head">' + c[1] + '<small>' + c[2] + '</small></div>'; }).join('');
+    var placed = 0;
+    ROWS.forEach(function (r, ri) {
+      var alt = ri % 2 ? ' alt' : '';
+      html += '<div class="row-head' + alt + '">' + r[1] + '</div>';
+      COLS.forEach(function (c, ci) {
+        var here = models.filter(function (m) { return KIND_GROUP[m.kind] === r[0] && colOf(m) === ci; })
+          .sort(function (a, b) { return (a.params_b || 0) - (b.params_b || 0); });
+        placed += here.length;
+        html += '<div class="cell' + alt + '">' + here.map(function (m) {
+          var cls = 'chip' + (m.availability === 'api' ? ' api' : '') + (m.license && m.license.commercial === false ? ' nc' : '');
+          return '<a class="' + cls + '" href="#m-' + esc(m.id) + '" title="' + esc(m.name) + '">' + esc(shortOf(m)) + '</a>';
+        }).join('') + '</div>';
+      });
+    });
+    document.getElementById('map-grid').innerHTML = html;
+    var kinds = {}; models.forEach(function (m) { kinds[m.kind] = 1; });
+    document.getElementById('map-lead').textContent = '対話から音声・検索・安全判定まで、' + Object.keys(kinds).length +
+      '種類のモデルを' + COLS.length + '世代にわたって出しています。名前を押すと、下の目録の説明に移ります。' +
+      (placed < models.length ? '（' + (models.length - placed) + '件は見取り図の外）' : '');
+  })();
+
+  // Hugging Faceでの人気
+  if (HF) {
+    document.getElementById('pop').hidden = false;
+    document.getElementById('pop-lead').textContent = HF.fetched_at + '時点の数字です。ダウンロード数・いいね数は、Hugging Faceが集計して公開している値をそのまま使っています。';
+    var metric = 'downloads';
+    var UNIT = { downloads: '回', downloads_all_time: '回', likes: '' };
+    function renderPop() {
+      var rows = models.map(function (m) { return { m: m, h: hfOf(m) }; })
+        .filter(function (r) { return r.h && r.h[metric] !== null; })
+        .sort(function (a, b) { return b.h[metric] - a.h[metric]; }).slice(0, 10);
+      var max = rows.length ? Math.max(1, rows[0].h[metric]) : 1;
+      document.getElementById('pop-models').innerHTML = rows.map(function (r, i) {
+        return '<a class="bar" href="#m-' + esc(r.m.id) + '"><span class="rank">' + (i + 1) + '</span>' +
+          '<span class="name"><b>' + esc(r.m.name) + '</b><span class="num">' + num(r.h[metric]) + UNIT[metric] + '</span></span>' +
+          '<span class="track"><span class="fill" style="display:block;width:' + (r.h[metric] / max * 100).toFixed(1) + '%"></span></span></a>';
+      }).join('') || '<p class="count">この物差しの数字はまだありません。</p>';
+      var orgs = Object.keys(HF.orgs).map(function (k) { return { k: k, o: HF.orgs[k] }; })
+        .filter(function (r) { return r.o[metric] !== null; })
+        .sort(function (a, b) { return b.o[metric] - a.o[metric]; });
+      var omax = orgs.length ? Math.max(1, orgs[0].o[metric]) : 1;
+      document.getElementById('pop-orgs').innerHTML = orgs.map(function (r, i) {
+        return '<div class="bar' + (r.k === 'sbintuitions' ? ' ours' : '') + '"><span class="rank">' + (i + 1) + '</span>' +
+          '<span class="name"><b>' + esc(r.o.label) + '</b><span class="num">' + num(r.o[metric]) + UNIT[metric] + '・' + r.o.models + 'モデル</span></span>' +
+          '<span class="track"><span class="fill" style="display:block;width:' + (r.o[metric] / omax * 100).toFixed(1) + '%"></span></span></div>';
+      }).join('') || '<p class="count">この物差しの数字はまだありません。</p>';
+    }
+    var fm = document.getElementById('f-metric');
+    fm.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      fm.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      metric = b.dataset.v; renderPop();
+    });
+    renderPop();
+  }
+
   group('f-avail', 'avail'); group('f-kind', 'kind'); group('f-sort', 'sort');
   toggle('f-spark', 'spark'); toggle('f-commercial', 'commercial');
   document.getElementById('q').addEventListener('input', function (e) { state.q = e.target.value; render(); });

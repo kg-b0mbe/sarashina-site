@@ -10,6 +10,9 @@ data/models.json     モデル総合データベースの元データ
 updater/             自動更新（Mac miniで実行）
 spark/               Sarashinaの起動スクリプト（DGX Sparkで実行）
 data/papers.json     「論文手帖」の論文と解説
+data/hf_stats.json   Hugging Faceのダウンロード数・いいね数（updater/hf_stats.py が作る）
+data/chat.json       「さらとしなの茶話」の会話（updater/chat.py が2時間ごとに追加）
+data/paper_stats.json 論文の引用件数（updater/paper_stats.py がSemantic Scholarから作る）
 data/kokusan.json    「国産AI歌合」の名寄せ（国産モデル一覧）と各番の判定
 data/events.json     年譜の「出来事」（設立・発表・サービス開始など）と、
                      同じ時期の海外の動き（world：OpenAI・Anthropic・Google）
@@ -39,6 +42,8 @@ Mac mini  updater/update.py（毎朝 launchd で実行）
 - Sarashinaが書いた項目には `drafted_by` が付き、ページに「✍ Sarashinaが下書き」と表示される。
 - 一度提案したもの（マージしなかったものも含む）は `~/.sarashina-site/seen.json` に記録し、二度は出さない。
 - Sparkが応答しないときは更新をスキップしてSlackに知らせる。自動で再起動はしない。
+- Hugging Faceの数字は `updater/hf_stats.py` がAPIからそのまま取り込む。LLMを通さないので、プルリクエストにはせず main に直接コミットする。
+- 論文の引用件数は `updater/paper_stats.py` がSemantic Scholarの公式APIから取り込む（Google Scholarは公式APIがなく、機械的な取得が規約で禁止されているため使わない。ページにはGoogle Scholarへのリンクだけを置く）。
 - Googleニュース経由の出典URLは転送用の長いURLになる。マージ前に元記事のURLへ差し替えると読みやすい。
 
 ## セットアップ
@@ -77,3 +82,22 @@ launchctl load ~/Library/LaunchAgents/jp.sarashina-site.update.plist
 リポジトリの Settings → Pages → Source を「Deploy from a branch」、Branch を `main` / `/docs` にします。
 
 このサイトは個人が運営する非公式のファンサイトで、SB Intuitions株式会社とは関係ありません。
+
+## さらとしなの茶話（遊びのページ）
+
+Mac miniが2時間ごとにニュースの見出しを1つ拾い、DGX SparkのSarashina2.2-3Bに「さら」と「しな」の雑談を書かせて、`docs/chat.html` に追加する。遊びのページなので人の承認は挟まず、main に直接pushする。
+
+- 事件・事故・災害・政治などの見出しは話題にしない（`updater/chat.py` の `AVOID`）
+- 見出しにない事実は話さないよう指示し、形の崩れた会話（話者・行数・長さ・URL）は捨てる
+- 止めるときは `updater/.env` に `CHAT_ENABLED=0`
+- 会話を書くのは手元のDGX SparkのSarashina2.2-3B（MIT）で、APIの利用料はかからない
+- ページの「声で聴く」は、閲覧者の端末に入っている日本語の音声で読み上げる（Web Speech API、サーバー不要）
+
+```bash
+# Mac miniで実行：1回分を作って表示するだけ
+python3 updater/chat.py --dry-run
+# 2時間ごとの実行を登録（REPO_PATH を書き換えてから）
+sed "s|REPO_PATH|$HOME/sarashina-site|" updater/jp.sarashina-site.chat.plist \
+  > ~/Library/LaunchAgents/jp.sarashina-site.chat.plist
+launchctl load ~/Library/LaunchAgents/jp.sarashina-site.chat.plist
+```

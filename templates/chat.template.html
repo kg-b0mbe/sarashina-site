@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F1E6">
+<meta name="color-scheme" content="light only">
+<title>さらとしなの茶話｜Sarashina 帖（非公式）</title>
+<meta name="description" content="手元のDGX Sparkで動くSarashina同士が、ニュースの見出しをきっかけにゆるく雑談し続ける遊びのページ。">
+<style>
+/*__BASE_CSS__*/
+.booth { position: relative; margin: 0 0 14px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); container-type: inline-size; }
+.booth img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.booth .sign { position: absolute; left: 50%; top: 26.6%; transform: translate(-50%, -50%); font-family: var(--fude); font-size: 3.3cqw; color: #3B2A1E; white-space: nowrap; letter-spacing: .08em; text-shadow: 0 1px 0 rgba(255,240,215,.6); }
+.booth .onair { position: absolute; left: 50.3%; top: 10.2%; transform: translate(-50%, -50%); font-family: var(--mincho); font-weight: 700; font-size: 1.9cqw; color: #FFF6EC; letter-spacing: .18em; text-shadow: 0 0 6px rgba(255,210,170,.9); white-space: nowrap; }
+.cast { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 auto 26px; max-width: 560px; }
+.who-card { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 0 0 12px; background: var(--soft); border-top: 3px solid var(--c); text-align: center; }
+.who-card .full { width: 100%; height: auto; aspect-ratio: 1; display: block; }
+.who-card > div:last-child { padding: 0 10px; }
+.who-card.sara { --c: var(--kobai); --soft: #F6E3E3; }
+.who-card.shina { --c: var(--hanada); --soft: #E0E9F1; }
+.who-card b { font-family: var(--fude); font-weight: 400; font-size: 18px; display: block; }
+.who-card span { font-size: 12px; color: var(--sub); line-height: 1.6; display: block; }
+.face { width: 40px; height: 40px; border-radius: 50%; display: block; background: var(--soft, #fff); border: 2px solid var(--c); flex: none; overflow: hidden; }
+.face img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.5); transform-origin: 50% 40%; }
+.line.shina .face img { transform: scale(1.7); transform-origin: 50% 64%; }
+
+.topic { border-top: 1px solid var(--ink); padding-top: 12px; }
+.topic .when { font-size: 12px; color: var(--sub); }
+.topic .news { font-family: var(--mincho); font-weight: 600; font-size: 16px; margin: 2px 0 14px; line-height: 1.6; }
+.topic .news a { text-decoration-color: var(--rule); }
+.topic .news .tag, details.past .tag { font-family: var(--fude); font-weight: 400; font-size: 14px; color: var(--accent); margin-right: 8px; }
+.orig { display: block; font-family: var(--mincho); font-weight: 400; font-size: 12px; color: var(--sub); font-style: italic; margin-top: 2px; }
+.talk { display: flex; flex-direction: column; gap: 10px; }
+.line { display: grid; grid-template-columns: 40px 1fr; gap: 8px; align-items: start; max-width: 92%; }
+.line.shina { grid-template-columns: 1fr 40px; margin-left: auto; }
+.line.shina .face { order: 2; }
+.line .face { --c: var(--kobai); --soft: #F6E3E3; }
+.line.shina .face { --c: var(--hanada); --soft: #E0E9F1; }
+.bubble { padding: 8px 12px; font-size: 15px; line-height: 1.75; background: #F6E3E3; border-left: 3px solid var(--kobai); }
+.line.shina .bubble { background: #E0E9F1; border-left: 0; border-right: 3px solid var(--hanada); }
+.line.hidden { display: none; }
+.line.speaking .bubble { box-shadow: 0 0 0 2px var(--c, var(--kobai)); }
+.line.sara.speaking .bubble { box-shadow: 0 0 0 2px var(--kobai); }
+.line.shina.speaking .bubble { box-shadow: 0 0 0 2px var(--hanada); }
+.listen { font-family: var(--fude); font-size: 16px; color: var(--paper); background: var(--suou); border: 0; padding: 6px 16px 5px; cursor: pointer; letter-spacing: .1em; }
+.listen.on { background: var(--hanada); }
+.listen-past { display: block; font: inherit; font-size: 13px; background: none; border: 0; border-bottom: 1px solid var(--rule); color: var(--accent); cursor: pointer; padding: 0 0 2px; margin-top: 8px; }
+.typing { font-size: 13px; color: var(--sub); padding-left: 48px; letter-spacing: .3em; }
+.controls-row { display: flex; gap: 16px; justify-content: flex-end; margin: 10px 0 0; font-size: 13px; }
+.controls-row button { font: inherit; background: none; border: 0; border-bottom: 1px solid var(--rule); color: var(--sub); cursor: pointer; padding: 0 0 2px; }
+
+h2.sec { font-family: var(--fude); font-weight: 400; font-size: 24px; margin: 44px 0 8px; letter-spacing: .06em; }
+details.past { border-bottom: 1px solid var(--rule); padding: 10px 0; }
+details.past summary { cursor: pointer; list-style: none; }
+details.past summary::-webkit-details-marker { display: none; }
+details.past summary .when { font-size: 12px; color: var(--sub); display: block; }
+details.past summary .t { font-family: var(--mincho); font-weight: 600; font-size: 15px; }
+details.past[open] .talk { margin-top: 12px; }
+.empty { color: var(--sub); padding: 18px 0; }
+@media (prefers-reduced-motion: reduce) { .typing { display: none; } }
+</style>
+</head>
+<body>
+<!--HEADER-->
+<div class="page-head">
+  <div class="tate" aria-hidden="true">さらとしな</div>
+  <div>
+    <h1>茶話</h1>
+    <p>手元のDGX Sparkで動くSarashinaが、「さら」と「しな」の二役を演じるラジオ番組です。AIやローカルLLMの新しい話題を優先して、なければ国内外のまったりしたニュースをきっかけに、ゆるく雑談しています。おおよそ2時間ごとに、新しい話題が増えます。</p>
+  </div>
+</div>
+<main>
+  <figure class="booth" style="margin:0 0 14px">
+    <img src="img/booth.webp" width="1600" height="900" alt="ラジオブースで、ヘッドホンを着けた十二単のさらと烏帽子のしなが、マイクと湯呑を前に並んでいる" fetchpriority="high">
+    <span class="onair" aria-hidden="true">ON AIR</span>
+    <span class="sign" aria-hidden="true">さらとしなの茶話</span>
+  </figure>
+  <div class="cast">
+    <div class="who-card sara"><img class="full" src="img/sara.webp" width="768" height="768" alt="短冊を手に、にっこり笑う十二単のさら" loading="lazy"><div><b>さら</b><span>十二単の姫君。新しいものにすぐわくわくする聞き役。</span></div></div>
+    <div class="who-card shina"><img class="full" src="img/shina.webp" width="768" height="768" alt="笏を手に、穏やかにほほえむ烏帽子のしな" loading="lazy"><div><b>しな</b><span>烏帽子の公達。落ち着いた物知りのツッコミ役。</span></div></div>
+  </div>
+
+  <section id="now"></section>
+
+  <h2 class="sec">これまでの茶話</h2>
+  <div id="past"></div>
+
+  <p class="note">
+    これはAI同士の雑談です。ニュースについては見出しだけを渡していますが、内容が正確とは限りません。事実は必ず元の記事でご確認ください。<br>
+    事件・事故・災害・政治などの見出しは、雑談の話題にしないようにしています。<br>
+    「声で聴く」は、お使いの端末に入っている日本語の音声で読み上げます。声は端末によって変わります。<br>
+    二人とも、DGX Spark上のSarashina2.2-3B-instructが演じています。名前は『更級日記』の「更」と「級」から。イラストは、このサイトのために画像生成AIで作ったオリジナルです。
+  </p>
+</main>
+<!--FOOTER-->
+
+<script id="site-data" type="application/json">/*__SITE_JSON__*/</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('site-data').textContent);
+  var chat = DATA.chat || { episodes: [] };
+  var FACE = { 'さら': '<img src="img/sara-face.webp" width="256" height="256" alt="" loading="lazy">', 'しな': '<img src="img/shina-face.webp" width="256" height="256" alt="" loading="lazy">' };
+  var CLS = { 'さら': 'sara', 'しな': 'shina' };
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var timer = null;
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function lineHtml(l, hidden) {
+    return '<div class="line ' + CLS[l.who] + (hidden ? ' hidden' : '') + '"><div class="face" aria-hidden="true">' + FACE[l.who] + '</div>' +
+      '<div class="bubble"><span class="sr-name" style="position:absolute;left:-9999px">' + esc(l.who) + '：</span>' + esc(l.text) + '</div></div>';
+  }
+  function tagOf(ep) { return ep.news.kind === 'ai' ? 'AIのはなし' : ep.news.lang === 'en' ? '海外のよもやま' : 'よもやま'; }
+  function titleOf(ep) { return ep.news.title_ja || ep.news.title; }
+  function origOf(ep) { return ep.news.lang === 'en' ? '<span class="orig">原題：' + esc(ep.news.title) + '（日本語の見出しはSarashinaによる意訳）</span>' : ''; }
+  function newsHtml(ep) {
+    return '<span class="tag">' + tagOf(ep) + '</span><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">' + esc(titleOf(ep)) + '</a>' + origOf(ep);
+  }
+
+  function showNow(ep, animate) {
+    var el = document.getElementById('now');
+    if (!ep) { el.innerHTML = '<p class="empty">まだ二人は話し始めていません。最初の茶話をお待ちください。</p>'; return; }
+    el.innerHTML = '<div class="topic"><div class="when">' + esc(ep.at) + '</div><div class="news">' + newsHtml(ep) + '</div>' +
+      '<div class="talk" id="now-talk">' + ep.lines.map(function (l) { return lineHtml(l, animate); }).join('') + '</div>' +
+      '<div class="typing" id="typing" hidden>・・・</div>' +
+      '<div class="controls-row">' + (canSpeak ? '<button class="listen" id="listen">声で聴く</button>' : '') +
+      '<button id="replay">もう一度読む</button><button id="skip">全部表示</button></div></div>';
+    document.getElementById('replay').onclick = function () { stopVoice(); play(); };
+    document.getElementById('skip').onclick = function () { stopVoice(); reveal(true); };
+    if (canSpeak) document.getElementById('listen').onclick = function () {
+      if (speakingBtn === this) { stopVoice(); reveal(true); return; }
+      if (timer) { clearTimeout(timer); timer = null; }
+      document.getElementById('typing').hidden = true;
+      speak(ep, document.getElementById('now-talk'), this, true);
+    };
+    if (animate) play();
+  }
+  function reveal(all) {
+    if (timer) { clearTimeout(timer); timer = null; }
+    var hidden = document.querySelectorAll('#now-talk .line.hidden');
+    if (all) { hidden.forEach(function (n) { n.classList.remove('hidden'); }); document.getElementById('typing').hidden = true; return; }
+  }
+  function play() {
+    if (timer) clearTimeout(timer);
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('#now-talk .line'));
+    if (reduce) { nodes.forEach(function (n) { n.classList.remove('hidden'); }); return; }
+    nodes.forEach(function (n) { n.classList.add('hidden'); });
+    var typing = document.getElementById('typing'), i = 0;
+    function next() {
+      if (i >= nodes.length) { typing.hidden = true; return; }
+      typing.hidden = false;
+      var len = nodes[i].textContent.length;
+      timer = setTimeout(function () {
+        nodes[i].classList.remove('hidden'); i++;
+        typing.hidden = true;
+        timer = setTimeout(next, 500);
+      }, Math.min(2600, 700 + len * 35));
+    }
+    next();
+  }
+  function showPast(eps) {
+    pastEps = eps;
+    document.getElementById('past').innerHTML = eps.map(function (ep, i) {
+      return '<details class="past"><summary><span class="when">' + esc(ep.at) + '</span><span class="t"><span class="tag">' + tagOf(ep) + '</span>' + esc(titleOf(ep)) + '</span>' + origOf(ep) +
+        (canSpeak ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
+        '<div class="talk">' + ep.lines.map(function (l) { return lineHtml(l, false); }).join('') + '</div>' +
+        '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">元の記事</a></div></details>';
+    }).join('') || '<p class="empty">まだありません。</p>';
+  }
+  function render(eps, animate) { stopVoice(); showNow(eps[0], animate); showPast(eps.slice(1)); }
+
+  // ---- 声で聴く（ブラウザに入っている日本語の音声で読み上げる。サーバーも費用も不要） ----
+  var synth = null, canSpeak = false, speakingBtn = null, pastEps = [];
+  try { synth = window.speechSynthesis; canSpeak = !!(synth && window.SpeechSynthesisUtterance); } catch (e) {}
+  function jaVoices() {
+    try { return synth.getVoices().filter(function (v) { return /^ja/i.test(v.lang); }); } catch (e) { return []; }
+  }
+  function voiceFor(who) {
+    var vs = jaVoices();
+    if (!vs.length) return { voice: null, pitch: who === 'さら' ? 1.3 : 0.85 };
+    if (vs.length === 1) return { voice: vs[0], pitch: who === 'さら' ? 1.3 : 0.8 };
+    return who === 'さら' ? { voice: vs[0], pitch: 1.2 } : { voice: vs[1], pitch: 0.95 };
+  }
+  function utter(text, who, onstart) {
+    var u = new SpeechSynthesisUtterance(text), v = voiceFor(who);
+    u.lang = 'ja-JP'; if (v.voice) u.voice = v.voice; u.pitch = v.pitch; u.rate = 1.05;
+    if (onstart) u.onstart = onstart;
+    return u;
+  }
+  function stopVoice() {
+    if (!canSpeak) return;
+    try { synth.cancel(); } catch (e) {}
+    document.querySelectorAll('.line.speaking').forEach(function (n) { n.classList.remove('speaking'); });
+    if (speakingBtn) { speakingBtn.classList.remove('on'); speakingBtn.textContent = '声で聴く'; speakingBtn = null; }
+  }
+  function speak(ep, box, btn, revealAsYouGo) {
+    stopVoice();
+    var nodes = Array.prototype.slice.call(box.querySelectorAll('.line'));
+    if (revealAsYouGo) nodes.forEach(function (n) { n.classList.add('hidden'); });
+    speakingBtn = btn; btn.classList.add('on'); btn.textContent = '止める';
+    // 番組の頭：しなが今日の話題を読む
+    synth.speak(utter('さらとしなの茶話。今日の話題は、' + titleOf(ep) + '。', 'しな'));
+    ep.lines.forEach(function (l, i) {
+      var u = utter(l.text, l.who, function () {
+        nodes.forEach(function (n) { n.classList.remove('speaking'); });
+        if (nodes[i]) { nodes[i].classList.remove('hidden'); nodes[i].classList.add('speaking'); }
+      });
+      if (i === ep.lines.length - 1) u.onend = function () { setTimeout(stopVoice, 400); };
+      synth.speak(u);
+    });
+  }
+  if (canSpeak) {
+    try { synth.getVoices(); synth.onvoiceschanged = function () {}; } catch (e) {}
+    document.getElementById('past').addEventListener('click', function (e) {
+      var b = e.target.closest('.listen-past'); if (!b) return;
+      e.preventDefault();  // 見出しの開閉はさせない
+      if (speakingBtn === b) { stopVoice(); return; }
+      var d = b.closest('details'); d.open = true;
+      speak(pastEps[Number(b.dataset.i)], d.querySelector('.talk'), b, false);
+    });
+  }
+  // 開いたままでも、新しい茶話が増えたら続きを流す（10分ごとに確認）
+  var latest = chat.episodes.length ? chat.episodes[0].id : '';
+  setInterval(function () {
+    try {
+      fetch('chat.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (d && d.episodes && d.episodes.length && d.episodes[0].id !== latest) {
+          latest = d.episodes[0].id; render(d.episodes, true);
+        }
+      }).catch(function () {});
+    } catch (e) {}
+  }, 600000);
+  render(chat.episodes, true);
+  document.getElementById('updated').textContent = DATA.updated_at;
+})();
+</script>
+</body>
+</html>

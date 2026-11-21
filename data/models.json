@@ -5,7 +5,10 @@
     "released": "HFで公開されたモデルはHugging Faceのリポジトリ作成日（UTC）。API提供モデルは公式発表の提供開始日。",
     "spark": "DGX Spark（128GBユニファイドメモリ）で動かせるかの目安。ok=そのまま動く / quant=量子化すれば動く見込み / no=現実的でない / api=APIのみ。実測ではなく目安。",
     "license.commercial": "true=商用可 / false=非商用（商用は要問い合わせ） / null=未確認",
-    "null": "null は「未確認」。推測で埋めずに、出典を確認できたら埋める。"
+    "null": "null は「未確認」。推測で埋めずに、出典を確認できたら埋める。",
+    "short": "見取り図に出す短い名前（なければパラメータ数か名前から自動）",
+    "lineage": "見取り図でどの世代の列に置くか（generation が世代名でないモデル用）",
+    "hf_repos": "1件の項目が複数のHugging Faceリポジトリをまとめている場合に、ダウンロード数を合算する対象"
   },
   "models": [
     {
@@ -309,6 +312,12 @@
       "sources": [
         "https://huggingface.co/sbintuitions/sarashina2.2-3b",
         "https://huggingface.co/sbintuitions/sarashina2.2-1b"
+      ],
+      "short": "0.5〜3B",
+      "hf_repos": [
+        "sbintuitions/sarashina2.2-0.5b",
+        "sbintuitions/sarashina2.2-1b",
+        "sbintuitions/sarashina2.2-3b"
       ]
     },
     {
@@ -386,7 +395,8 @@
       "notes": "公開当時、JMTEB 16データセット平均で最高水準。",
       "sources": [
         "https://huggingface.co/sbintuitions/sarashina-embedding-v1-1b"
-      ]
+      ],
+      "lineage": "Sarashina2.1"
     },
     {
       "id": "sarashina-embedding-v2-1b",
@@ -411,7 +421,8 @@
       "notes": "",
       "sources": [
         "https://www.issoh.co.jp/tech/details/11856/"
-      ]
+      ],
+      "lineage": "Sarashina2.2"
     },
     {
       "id": "sarashina2.2-vision-3b",

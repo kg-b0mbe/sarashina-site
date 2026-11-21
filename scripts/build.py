@@ -4,7 +4,7 @@
 Sarashinaなどのローカルモデルが data/ のJSONを書き換えたあと、必ずこれを通す。
 検証に失敗したら exit code 1 で止まるので、Hermesはpushしないこと。
 
-生成物: docs/models.html（モデル目録）, docs/timeline.html（年譜）, docs/papers.html（論文手帖）, docs/utaawase.html（国産AI歌合）, docs/index.html
+生成物: docs/models.html（モデル目録）, docs/timeline.html（年譜）, docs/papers.html（論文手帖）, docs/utaawase.html（国産AI歌合）, docs/chat.html（茶話）, docs/about.html（はしがき）, docs/index.html
 サイト名・ナビ・奥付はこのファイルの SITE_NAME / NAV / FOOTER で一括管理する。
 
 使い方: python3 scripts/build.py
@@ -19,20 +19,27 @@ DATA = ROOT / "data" / "models.json"
 EVENTS = ROOT / "data" / "events.json"
 PAPERS = ROOT / "data" / "papers.json"
 KOKUSAN = ROOT / "data" / "kokusan.json"
+HF_STATS = ROOT / "data" / "hf_stats.json"   # updater/hf_stats.py が作る。なければ数字は表示しない
+CHAT = ROOT / "data" / "chat.json"   # updater/chat.py が2時間ごとに追加する
+PAPER_STATS = ROOT / "data" / "paper_stats.json"   # updater/paper_stats.py が作る。なければ引用件数は表示しない
 TEMPLATES = ROOT / "templates"
 OUT_DIR = ROOT / "docs"
 PAGES = {"models.template.html": "models.html", "timeline.template.html": "timeline.html",
-         "papers.template.html": "papers.html", "utaawase.template.html": "utaawase.html"}
+         "papers.template.html": "papers.html", "utaawase.template.html": "utaawase.html",
+         "chat.template.html": "chat.html", "about.template.html": "about.html"}
 SITE_NAME = "Sarashina 帖"
 NAV = [("models.html", "モデル目録"), ("timeline.html", "年譜"), ("papers.html", "論文手帖"),
-       ("utaawase.html", "歌合")]
+       ("utaawase.html", "歌合"), ("chat.html", "茶話"),
+       ("about.html", "はしがき")]
 TOPICS = {"pretraining", "evaluation", "speech", "dialogue", "trust"}
 
 
 def header(current):
-    links = "".join(
-        f'<a href="{href}"{" aria-current=\"page\"" if href == current else ""}>{label}</a>'
-        for href, label in NAV)
+    parts = []
+    for href, label in NAV:
+        cur = ' aria-current="page"' if href == current else ""
+        parts.append(f'<a href="{href}"{cur}>{label}</a>')
+    links = "".join(parts)
     return (f'<header class="masthead"><div class="masthead-inner">'
             f'<a class="site-name" href="models.html">{SITE_NAME}<small>非公式ファンサイト</small></a>'
             f'<nav class="site-nav" aria-label="サイト内">{links}</nav></div></header>')
@@ -200,6 +207,44 @@ def validate_kokusan(doc):
     return errors
 
 
+def validate_hf(doc):
+    errors = []
+    if not DATE_RE.match(str(doc.get("fetched_at"))):
+        errors.append("hf_stats: fetched_at が日付ではありません")
+    for rid, st in (doc.get("repos") or {}).items():
+        if not isinstance(st.get("downloads"), int) or not isinstance(st.get("likes"), int):
+            errors.append(f"hf_stats: {rid} の数値が不正です")
+    return errors
+
+
+def validate_paper_stats(doc, paper_ids):
+    errors = []
+    if not DATE_RE.match(str(doc.get("fetched_at"))):
+        errors.append("paper_stats: fetched_at が日付ではありません")
+    for pid, st in (doc.get("papers") or {}).items():
+        if pid not in paper_ids:
+            errors.append(f"paper_stats: papers.json にない論文 '{pid}' があります")
+        if not isinstance(st.get("citations"), int):
+            errors.append(f"paper_stats: {pid} の引用件数が不正です")
+    return errors
+
+
+def validate_chat(doc):
+    errors = []
+    for i, ep in enumerate(doc.get("episodes", [])):
+        where = "chat:" + str(ep.get("id", f"#{i}"))
+        if not str((ep.get("news") or {}).get("link", "")).startswith("https://"):
+            errors.append(f"{where}: 元の記事のURL（https://）がありません")
+        lines = ep.get("lines") or []
+        if not (2 <= len(lines) <= 16):
+            errors.append(f"{where}: 会話の行数が不正です")
+        for ln in lines:
+            if ln.get("who") not in ("さら", "しな") or not str(ln.get("text", "")).strip():
+                errors.append(f"{where}: 話者か台詞が不正です")
+                break
+    return errors
+
+
 def main():
     doc = json.loads(DATA.read_text(encoding="utf-8"))
     ev = json.loads(EVENTS.read_text(encoding="utf-8"))
@@ -210,6 +255,14 @@ def main():
     errors += validate_papers(papers, model_ids)
     kokusan = json.loads(KOKUSAN.read_text(encoding="utf-8"))
     errors += validate_kokusan(kokusan)
+    hf = json.loads(HF_STATS.read_text(encoding="utf-8")) if HF_STATS.exists() else None
+    if hf:
+        errors += validate_hf(hf)
+    chat = json.loads(CHAT.read_text(encoding="utf-8")) if CHAT.exists() else {"episodes": []}
+    errors += validate_chat(chat)
+    pstats = json.loads(PAPER_STATS.read_text(encoding="utf-8")) if PAPER_STATS.exists() else None
+    if pstats:
+        errors += validate_paper_stats(pstats, {p.get("id") for p in papers.get("papers", [])})
     if errors:
         print("検証エラー（ページは生成していません）:")
         for e in errors:
@@ -222,6 +275,9 @@ def main():
         "world": ev.get("world", []),
         "papers": papers["papers"],
         "kokusan": kokusan,
+        "hf": hf,
+        "paper_stats": pstats,
+        "chat": chat,
     }
     base_css = (TEMPLATES / "_base.css").read_text(encoding="utf-8")
     payload = json.dumps(site, ensure_ascii=False).replace("</", "<\\/")
@@ -231,6 +287,7 @@ def main():
                 .replace("/*__BASE_CSS__*/", base_css)
                 .replace("<!--HEADER-->", header(out))
                 .replace("<!--FOOTER-->", FOOTER)
+                .replace("<!--BOOTH-->", (TEMPLATES / "_booth.svg").read_text(encoding="utf-8"))
                 .replace("/*__SITE_JSON__*/", payload))
         (OUT_DIR / out).write_text(html, encoding="utf-8")
     # トップページができるまでは、データベースへ案内する
@@ -241,6 +298,13 @@ def main():
         '<body><a href="models.html">モデル総合データベースへ</a></body></html>\n',
         encoding="utf-8")
     (OUT_DIR / ".nojekyll").write_text("", encoding="utf-8")
+    # イラスト（assets/ の画像。SVGは tools/draw_characters.py が描いた予備の絵）
+    (OUT_DIR / "img").mkdir(exist_ok=True)
+    for f in sorted((ROOT / "assets").iterdir()):
+        if f.suffix in (".svg", ".webp", ".png", ".jpg"):
+            (OUT_DIR / "img" / f.name).write_bytes(f.read_bytes())
+    # 茶話のページが、開いたまま新しい会話を読み込むためのファイル
+    (OUT_DIR / "chat.json").write_text(json.dumps(chat, ensure_ascii=False), encoding="utf-8")
     print(f"OK: {len(doc['models'])}モデル・{len(ev['events'])}件の出来事・{len(ev.get('world', []))}件の海外の動き・"
           f"{len(papers['papers'])}本の論文・{len(kokusan['rounds'])}番の歌合 → docs/")
 

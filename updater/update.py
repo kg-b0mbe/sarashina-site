@@ -520,4 +520,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lock import single_run
+    with single_run():
+        main()

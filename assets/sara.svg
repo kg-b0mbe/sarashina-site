@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 264" role="img" aria-label="さら：十二単の姫君">
+  <!-- 長い垂髪（後ろ） -->
+  <path d="M54 92 C44 34 156 34 146 92 L166 250 Q100 262 34 250 Z" fill="#1E1A19"/>
+  <!-- 十二単：内側の衣ほど裾と袖口がのぞく -->
+  <path d="M54 150 Q100 136 146 150 L184 254 Q100 264 16 254 Z" fill="#8E354A"/>
+  <path d="M57 150 Q100 138 143 150 L178 248 Q100 257 22 248 Z" fill="#D9798A"/>
+  <path d="M60 150 Q100 140 140 150 L172 242 Q100 250 28 242 Z" fill="#EFC3C3"/>
+  <path d="M63 150 Q100 142 137 150 L166 236 Q100 243 34 236 Z" fill="#FBF8F0"/>
+  <path d="M66 150 Q100 144 134 150 L160 230 Q100 236 40 230 Z" fill="#D9798A"/>
+  <!-- 唐衣（からぎぬ） -->
+  <path d="M64 150 Q100 142 136 150 L150 196 Q100 204 50 196 Z" fill="#6E4F86"/>
+  <path d="M64 150 Q100 142 136 150 L140 160 Q100 152 60 160 Z" fill="#8466A0"/>
+  <!-- 襟元のかさね -->
+  <path d="M84 146 L100 178 L116 146" fill="none" stroke="#8E354A" stroke-width="5"/>
+  <path d="M87 146 L100 172 L113 146" fill="none" stroke="#EFC3C3" stroke-width="4"/>
+  <path d="M90 146 L100 166 L110 146" fill="none" stroke="#FBF8F0" stroke-width="4"/>
+  <!-- 広い袖 -->
+  <path d="M60 156 Q34 170 30 228 L72 230 Q74 196 74 170 Z" fill="#D9798A"/>
+  <path d="M30 228 L72 230 L72 236 L29 234 Z" fill="#8E354A"/>
+  <path d="M31 222 L72 224 L72 230 L30 228 Z" fill="#EFC3C3"/>
+  <path d="M140 156 Q166 170 170 228 L128 230 Q126 196 126 170 Z" fill="#D9798A"/>
+  <path d="M170 228 L128 230 L128 236 L171 234 Z" fill="#8E354A"/>
+  <path d="M169 222 L128 224 L128 230 L170 228 Z" fill="#EFC3C3"/>
+  <!-- 短冊と手 -->
+  <rect x="93" y="168" width="14" height="52" rx="2" fill="#E9E1F2" stroke="#B7A6C6" stroke-width="1"/>
+  <path d="M100 176 L100 210" stroke="#6E4F86" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <ellipse cx="89" cy="200" rx="7" ry="6" fill="#FBEFE4"/>
+  <ellipse cx="111" cy="200" rx="7" ry="6" fill="#FBEFE4"/>
+  
+  <ellipse cx="100" cy="100" rx="44" ry="42" fill="#FBEFE4"/>
+  <ellipse cx="84" cy="76" rx="6.5" ry="3.6" fill="#3A302C" opacity=".55"/>
+  <ellipse cx="116" cy="76" rx="6.5" ry="3.6" fill="#3A302C" opacity=".55"/>
+  <path d="M79 101 Q86 93 93 101" fill="none" stroke="#2B2620" stroke-width="2.8" stroke-linecap="round"/><path d="M107 101 Q114 93 121 101" fill="none" stroke="#2B2620" stroke-width="2.8" stroke-linecap="round"/><path d="M95 117 Q100 123 105 117 Z" fill="#C8505E"/>
+  <ellipse cx="75" cy="113" rx="7.5" ry="4.2" fill="#F09AA6" opacity=".6"/>
+  <ellipse cx="125" cy="113" rx="7.5" ry="4.2" fill="#F09AA6" opacity=".6"/>
+  <!-- 前髪（中央で分けた額）と鬢削ぎ -->
+  <path d="M54 102 C46 46 154 46 146 102 C142 74 124 60 100 58 C76 60 58 74 54 102 Z" fill="#1E1A19"/>
+  <path d="M100 58 Q98 66 100 70 Q102 66 100 58 Z" fill="#1E1A19"/>
+  <path d="M55 96 Q50 128 60 142 L67 139 Q60 120 62 98 Z" fill="#1E1A19"/>
+  <path d="M145 96 Q150 128 140 142 L133 139 Q140 120 138 98 Z" fill="#1E1A19"/>
+</svg>

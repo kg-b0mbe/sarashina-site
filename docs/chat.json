@@ -1,0 +1,1 @@
+{"schema_version": 1, "updated_at": "2026-11-21", "field_notes": {"episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"}, "episodes": []}

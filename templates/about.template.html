@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F1E6">
+<meta name="color-scheme" content="light only">
+<title>はしがき｜Sarashina 帖（非公式）</title>
+<meta name="description" content="国産AI「Sarashina」を応援する非公式ファンサイト「Sarashina 帖」の成り立ちと、三つの約束、Sarashina自身が育てる仕組みについて。">
+<style>
+/*__BASE_CSS__*/
+.prose { max-width: 40em; }
+.prose h2 { font-family: var(--fude); font-weight: 400; font-size: 24px; margin: 40px 0 8px; letter-spacing: .06em; }
+.prose p { margin: 0 0 12px; }
+.vows { list-style: none; padding: 0; margin: 12px 0; }
+.vows li { display: grid; grid-template-columns: 2.2em 1fr; gap: 0 10px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.vows li .n { font-family: var(--fude); font-size: 26px; color: var(--accent); line-height: 1.2; text-align: center; }
+.vows b { display: block; font-family: var(--mincho); font-size: 16px; }
+.vows span { font-size: 14px; color: var(--sub); }
+.flow { border-left: 3px solid transparent; border-image: var(--kasane-v) 1; padding: 2px 0 2px 16px; margin: 12px 0; }
+.flow div { padding: 6px 0; font-size: 14px; }
+.flow div b { font-family: var(--mincho); }
+.flow .who { display: inline-block; min-width: 6.5em; font-size: 12px; color: var(--accent); }
+.pages a { display: block; padding: 10px 0; border-bottom: 1px solid var(--rule); text-decoration: none; }
+.pages a b { font-family: var(--fude); font-weight: 400; font-size: 18px; margin-right: 10px; }
+.pages a span { font-size: 14px; color: var(--sub); }
+.credits { font-size: 13px; color: var(--sub); }
+.credits dt { color: var(--ink); font-family: var(--mincho); margin-top: 10px; }
+.credits dd { margin: 0; }
+</style>
+</head>
+<body>
+<!--HEADER-->
+<div class="page-head">
+  <div class="tate" aria-hidden="true">はしがき</div>
+  <div>
+    <h1>はしがき</h1>
+    <p>Sarashina 帖は、SB Intuitionsが開発する国産の生成AI「Sarashina」を応援する、個人の非公式ファンサイトです。</p>
+  </div>
+</div>
+<main class="prose">
+  <h2>なぜ作ったのか</h2>
+  <p>海外の生成AIのニュースは毎日のように届きますが、日本で一から作られたAIの話題は、なかなか目に入りません。それなら、Sarashinaのことをまとめて知れる場所を自分で作ろう、と思ったのが始まりです。</p>
+  <p>公式サイトが「発表する場所」なら、ここは「調べる・比べる・試す場所」。ニュースのように流れていくのではなく、情報が積み上がって育っていく帖（ノート）を目指しています。</p>
+
+  <h2>名前と装い</h2>
+  <p>Sarashinaの名は、平安時代の『更級日記』に由来します。そこでこのサイトも、平安の装いでまとめました。帯の色は十二単の襟元のような「紅梅と縹の匂」、見出しは筆の書体です。新しいAIと、日本の伝統的な色の出会いがテーマです。</p>
+
+  <h2>三つの約束</h2>
+  <ol class="vows">
+    <li><span class="n" aria-hidden="true">一</span><div><b>出典を付ける</b><span>載せている事実には、確かめられる出典のリンクを付けます。</span></div></li>
+    <li><span class="n" aria-hidden="true">二</span><div><b>わからないことは書かない</b><span>確かめられなかった項目は推測で埋めず、「未確認」と書きます。</span></div></li>
+    <li><span class="n" aria-hidden="true">三</span><div><b>公平に比べる</b><span>応援サイトでも、ほかの国産AIと比べるときは事実だけで判定します。</span></div></li>
+  </ol>
+
+  <h2>Sarashinaが育てるサイト</h2>
+  <p>このサイトの更新は、運営者の手元にあるDGX Sparkで動くSarashina2.2-3B（MITライセンス）が手伝っています。クラウドのAPIは使っていません。国産AIを応援するサイトを、国産AIが自分で育てていく仕組みです。</p>
+  <div class="flow">
+    <div><span class="who">Mac mini</span><b>新しい情報を集める</b>（Hugging Face・公式ブログ・ニュース）</div>
+    <div><span class="who">DGX Spark</span><b>Sarashinaが下書きする</b>（名前・分類・日本語の要約だけ）</div>
+    <div><span class="who">Mac mini</span><b>関所で検証する</b>（項目・日付・出典・参照先）</div>
+    <div><span class="who">人</span><b>確かめて承認する</b>（プルリクエストをマージすると公開）</div>
+  </div>
+  <p>日付やパラメータ数、ライセンス、ダウンロード数、引用件数は、AIには書かせず、各サービスのAPIから機械的に取り込んでいます。Sarashinaが下書きした項目には「Sarashina下書き」の印が付きます。</p>
+
+  <h2>ページの案内</h2>
+  <div class="pages">
+    <a href="models.html"><b>モデル目録</b><span>すべてのSarashinaを、見取り図と一覧で</span></a>
+    <a href="timeline.html"><b>年譜</b><span>会社の始まりから最新モデルまで、海外の動きと並べて</span></a>
+    <a href="papers.html"><b>論文手帖</b><span>SB Intuitionsの研究者の論文を、日本語でやさしく</span></a>
+    <a href="utaawase.html"><b>歌合</b><span>ほかの国産AIと、左右に並べて比べる</span></a>
+    <a href="chat.html"><b>茶話</b><span>さらとしなが、ニュースを肴にゆるく雑談するラジオ</span></a>
+  </div>
+
+  <h2>おことわり</h2>
+  <p>このサイトは個人が運営する非公式のファンサイトで、SB Intuitions株式会社とは関係ありません。ロゴなど公式の素材は使っていません。正確な最新情報は、公式サイトとHugging Faceでご確認ください。間違いを見つけたら、GitHubで教えてもらえるとうれしいです。</p>
+
+  <h2>使わせてもらっているもの</h2>
+  <dl class="credits">
+    <dt>文章の下書き・茶話</dt><dd>Sarashina2.2-3B-instruct（SB Intuitions、MIT License）Built with Sarashina</dd>
+    <dt>書体</dt><dd>Yuji Syuku、Shippori Mincho（どちらもGoogle Fonts、SIL Open Font License）</dd>
+    <dt>数字</dt><dd>Hugging Face API、Semantic Scholar Academic Graph API</dd>
+    <dt>イラスト</dt><dd>さらとしな、ラジオブースの絵は、このサイトのために画像生成AIで作ったオリジナル</dd>
+    <dt>ソースコード</dt><dd><a href="https://github.com/kg-b0mbe/sarashina-site" target="_blank" rel="noopener">github.com/kg-b0mbe/sarashina-site</a>（<a href="https://github.com/kg-b0mbe/sarashina-site/issues" target="_blank" rel="noopener">間違いの報告はこちら</a>）</dd>
+  </dl>
+</main>
+<!--FOOTER-->
+<script id="site-data" type="application/json">/*__SITE_JSON__*/</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('site-data').textContent);
+  document.getElementById('updated').textContent = DATA.updated_at;
+})();
+</script>
+</body>
+</html>

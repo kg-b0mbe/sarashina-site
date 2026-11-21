@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-18",
+  "updated_at": "2026-11-22",
   "field_notes": {
     "released": "HFで公開されたモデルはHugging Faceのリポジトリ作成日（UTC）。API提供モデルは公式発表の提供開始日。",
     "spark": "DGX Spark（128GBユニファイドメモリ）で動かせるかの目安。ok=そのまま動く / quant=量子化すれば動く見込み / no=現実的でない / api=APIのみ。実測ではなく目安。",
@@ -731,6 +731,32 @@
       "sources": [
         "https://docs.sarashina.ai/models"
       ]
+    },
+    {
+      "id": "diafill-sarashina2.2-3b-instruct",
+      "name": "DiaFill Sarashina2.2-Dialogue",
+      "generation": "Sarashina2.2-instruc",
+      "kind": "instruct",
+      "modality": [
+        "text"
+      ],
+      "params_b": null,
+      "architecture": "Llama型のTransformer（デコーダのみ）",
+      "training_tokens": null,
+      "context_length": null,
+      "license": {
+        "name": "MIT",
+        "commercial": true
+      },
+      "availability": "open_weights",
+      "released": "2025-12-22",
+      "hf_repo": "sbintuitions/diafill-sarashina2.2-3b-instruct",
+      "spark": "ok",
+      "notes": "二人称間の自然で話し言葉風の対話スクリプトを生成するモデル。与えられたシナリオ（シードデータ）に基づき、複数のターンにわたる対話スクリプトを生成するようファインチューニングされている。",
+      "sources": [
+        "https://huggingface.co/sbintuitions/diafill-sarashina2.2-3b-instruct"
+      ],
+      "drafted_by": "sarashina2.2-3b"
     }
   ]
 }

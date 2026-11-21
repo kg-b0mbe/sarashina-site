@@ -1,0 +1,37 @@
+{
+  "fetched_at": "2026-11-22",
+  "source": "Semantic Scholar Academic Graph API",
+  "papers": {
+    "kana-reward-rl": {
+      "citations": 0,
+      "influential": 0,
+      "s2_url": "https://www.semanticscholar.org/paper/4c4f7a26a85d17c7e5e12e5fdfdc24585fccd99c",
+      "matched_by": "arXiv:2610.07575"
+    },
+    "mergeprint": {
+      "citations": 12,
+      "influential": 0,
+      "s2_url": "https://www.semanticscholar.org/paper/f7b6508268b576f406c8b14a58be987335c4ac19",
+      "matched_by": "title"
+    },
+    "sarashina2.2-tts": {
+      "citations": 7,
+      "influential": 1,
+      "s2_url": "https://www.semanticscholar.org/paper/ce0f3683ed472db6346203b0956191af9713a379",
+      "matched_by": "arXiv:2606.25369"
+    },
+    "upcycling-scaling-laws": {
+      "citations": 15,
+      "influential": 0,
+      "s2_url": "https://www.semanticscholar.org/paper/217430d40cb54ddd29b6f5f13e78ad1899865ca5",
+      "matched_by": "title"
+    },
+    "wso-iclr2026": {
+      "citations": 15,
+      "influential": 0,
+      "s2_url": "https://www.semanticscholar.org/paper/7bbba5def4ceae2726bbc810983f5569d2c0494e",
+      "matched_by": "title"
+    }
+  },
+  "not_found": []
+}

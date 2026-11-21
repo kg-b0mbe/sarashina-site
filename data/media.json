@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-21",
+  "items": [
+    {
+      "id": "book-ai-safety-intro",
+      "kind": "book",
+      "title": "生成AIの安全性入門（ML Systems）",
+      "people": [
+        {
+          "name": "綿岡晃輝",
+          "note": "SB Intuitions Responsible AIチーム リーダー"
+        }
+      ],
+      "date": "2026-06-24",
+      "where": "技術評論社",
+      "summary": "生成AIのリスクを分類し、評価のしかた・レッドチーミング・モデルとシステム両面での対策まで、エンジニア向けに一冊にまとめた入門書。",
+      "url": "https://gihyo.jp/book/2026/978-4-297-15702-9",
+      "sources": [
+        "https://gihyo.jp/book/2026/978-4-297-15702-9",
+        "https://www.yodobashi.com/product-detail/100000009004247718/"
+      ]
+    },
+    {
+      "id": "book-llm-intro-2",
+      "kind": "book",
+      "title": "大規模言語モデル入門Ⅱ 〜生成型LLMの実装と評価",
+      "people": [
+        {
+          "name": "李凌寒",
+          "note": "SB Intuitions 事前学習チーム（共著）"
+        }
+      ],
+      "date": "2024-09-04",
+      "where": "技術評論社",
+      "summary": "『大規模言語モデル入門』の続編。LLMの評価方法、指示チューニング、人のフィードバックからの学習、RAG、分散学習を実装つきで解説。",
+      "url": "https://gihyo.jp/book/2024/978-4-297-14393-0",
+      "sources": [
+        "https://gihyo.jp/book/2024/978-4-297-14393-0",
+        "https://news.mynavi.jp/techplus/kikaku/20240729-2991861/"
+      ]
+    },
+    {
+      "id": "book-genai-ronten",
+      "kind": "book",
+      "title": "生成AIの論点 ― 学問・ビジネスからカルチャーまで",
+      "people": [
+        {
+          "name": "井尻善久",
+          "note": "SB Intuitions 取締役 兼 CRO（分担執筆）"
+        }
+      ],
+      "date": "2024-05-29",
+      "where": "青弓社（喜連川優 編著）",
+      "summary": "生成AIのしくみと得意・不得意から、学問・ビジネス・カルチャーでの使われ方、著作権などの法的な課題まで、11人の専門家が図を多く使って書いた本。",
+      "url": "https://www.yodobashi.com/product-detail/100000009003840582/",
+      "sources": [
+        "https://www.yodobashi.com/product-detail/100000009003840582/",
+        "https://www.softbank.jp/business/content/blog/202509/sbw2025-sarashina"
+      ]
+    },
+    {
+      "id": "book-llm-intro",
+      "kind": "book",
+      "title": "大規模言語モデル入門",
+      "people": [
+        {
+          "name": "李凌寒",
+          "note": "SB Intuitions 事前学習チーム（共著）"
+        }
+      ],
+      "date": "2023-07",
+      "where": "技術評論社",
+      "summary": "LLMのしくみを理論と実装の両面から解説した入門書。Hugging Faceのtransformersを使い、日本語データで試せる例が多い。",
+      "url": "https://www.hanmoto.com/bd/isbn/9784297136338",
+      "sources": [
+        "https://www.hanmoto.com/bd/isbn/9784297136338",
+        "https://news.mynavi.jp/techplus/kikaku/20240729-2991861/"
+      ]
+    },
+    {
+      "id": "book-vit-intro",
+      "kind": "book",
+      "title": "Vision Transformer入門（Computer Vision Library）",
+      "people": [
+        {
+          "name": "品川政太朗",
+          "note": "SB Intuitions VLMチーム（共著・入社前の著書）"
+        }
+      ],
+      "date": "2022-09-15",
+      "where": "技術評論社",
+      "summary": "画像を扱うTransformer（ViT）の入門書。しくみと実装から、派生モデルや分析までを解説。画像と言葉を合わせて扱うVLMの土台になる技術。",
+      "url": "https://gihyo.jp/book/2022/978-4-297-13058-9",
+      "sources": [
+        "https://gihyo.jp/book/2022/978-4-297-13058-9",
+        "https://peatix.com/us/event/4010640"
+      ]
+    },
+    {
+      "id": "yt-ai-safety-frontline",
+      "kind": "video",
+      "title": "【AIセーフティ最前線】国産AIの安全性を担う専門家に聞く",
+      "people": [
+        {
+          "name": "綿岡晃輝",
+          "note": "SB Intuitions（ゲスト）"
+        }
+      ],
+      "date": "2026-11-20",
+      "where": "YouTube（安野貴博さんとの対談）",
+      "summary": "AIの安全性とは何か、5つのリスク分類、AIに倫理を教える方法、「おばあちゃんジェイルブレイク」、AIへの精神的な依存などを語る対談。",
+      "url": "https://www.youtube.com/watch?v=Lc0nFgSGlmY",
+      "youtube": "Lc0nFgSGlmY",
+      "sources": [
+        "https://www.youtube.com/watch?v=Lc0nFgSGlmY"
+      ]
+    },
+    {
+      "id": "yt-wandb-pretraining",
+      "kind": "video",
+      "title": "SB Intuitionsにおける大規模言語モデルの事前学習",
+      "people": [
+        {
+          "name": "高瀬翔",
+          "note": "SB Intuitions 事前学習チーム"
+        }
+      ],
+      "date": "2025",
+      "where": "W&Bミートアップ #17",
+      "summary": "Sarashinaの事前学習をどう進めているかの講演。W&B・NVIDIAと並んで、LLMの開発から運用までを扱ったミートアップでの登壇。",
+      "url": "https://www.youtube.com/watch?v=n5O_f4s0ZbM",
+      "youtube": "n5O_f4s0ZbM",
+      "sources": [
+        "https://www.youtube.com/watch?v=n5O_f4s0ZbM"
+      ]
+    },
+    {
+      "id": "yt-foundation-model-dev",
+      "kind": "video",
+      "title": "SB Intuitionsで進める大規模基盤モデル開発",
+      "people": [
+        {
+          "name": "井尻善久",
+          "note": "SB Intuitions 取締役 兼 CRO"
+        },
+        {
+          "name": "高瀬翔",
+          "note": "Chief Scientist"
+        },
+        {
+          "name": "高橋翼",
+          "note": "Chief Scientist"
+        }
+      ],
+      "date": "2024",
+      "where": "YouTube（企業講演）",
+      "summary": "研究開発の責任者とChief Scientistの3人が、Sarashinaをはじめとする大規模基盤モデル開発の取り組みを紹介する講演。",
+      "url": "https://www.youtube.com/watch?v=SzBVnGbT5CQ",
+      "youtube": "SzBVnGbT5CQ",
+      "sources": [
+        "https://www.youtube.com/watch?v=SzBVnGbT5CQ"
+      ]
+    },
+    {
+      "id": "art-mynavi-pretraining",
+      "kind": "article",
+      "title": "「日本語に特化したLLM」開発に挑むエンジニアに独占インタビュー Part1（事前学習）",
+      "people": [
+        {
+          "name": "高瀬翔"
+        },
+        {
+          "name": "李凌寒"
+        },
+        {
+          "name": "加藤卓也"
+        }
+      ],
+      "date": "2024-07-29",
+      "where": "マイナビニュース TECH+（PR）",
+      "summary": "事前学習チームに、英語中心の海外モデルとの違いや、開発の舞台裏を聞いたインタビュー。",
+      "url": "https://news.mynavi.jp/techplus/kikaku/20240729-2991861/",
+      "sources": [
+        "https://news.mynavi.jp/techplus/kikaku/20240729-2991861/"
+      ]
+    },
+    {
+      "id": "art-mynavi-finetuning",
+      "kind": "article",
+      "title": "LLMの精度や安全性を左右する「ファインチューニング」って？ Part2",
+      "people": [
+        {
+          "name": "小林滉河"
+        },
+        {
+          "name": "清野舜"
+        },
+        {
+          "name": "馬越雅人"
+        }
+      ],
+      "date": "2024-09-27",
+      "where": "マイナビニュース TECH+（PR）",
+      "summary": "チューニング用データの整備から評価まで、ファインチューニングチームの仕事を紹介するインタビュー。",
+      "url": "https://news.mynavi.jp/techplus/kikaku/20240927-3031862/",
+      "sources": [
+        "https://news.mynavi.jp/techplus/kikaku/20240927-3031862/"
+      ]
+    },
+    {
+      "id": "art-mynavi-responsible-ai",
+      "kind": "article",
+      "title": "LLMの安全性はだれが守っているの？ Part3（Responsible AI）",
+      "people": [
+        {
+          "name": "綿岡晃輝"
+        }
+      ],
+      "date": "2024-11-29",
+      "where": "マイナビニュース TECH+（PR）",
+      "summary": "倫理や法の観点から、危険や偏りのない答え方を「育てる」Responsible AIチームの取り組みを聞いたインタビュー。",
+      "url": "https://news.mynavi.jp/techplus/kikaku/20241129-3072018/",
+      "sources": [
+        "https://news.mynavi.jp/techplus/kikaku/20241129-3072018/"
+      ]
+    },
+    {
+      "id": "art-mynavi-annotation",
+      "kind": "article",
+      "title": "LLMの開発に欠かせない「アノテーション」とは？ Part4",
+      "people": [
+        {
+          "name": "吉田奈央",
+          "note": "大規模データ構築チーム リーダー"
+        }
+      ],
+      "date": "2025-01-15",
+      "where": "マイナビニュース TECH+（PR）",
+      "summary": "学習用データを人の手でつくるデータ作成チームに、アカデミアから企業へ移った経緯や仕事の中身を聞いたインタビュー。",
+      "url": "https://news.mynavi.jp/techplus/kikaku/20250115-3102839/",
+      "sources": [
+        "https://news.mynavi.jp/techplus/kikaku/20250115-3102839/"
+      ]
+    }
+  ]
+}

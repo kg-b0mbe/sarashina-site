@@ -21,6 +21,7 @@ PAPERS = ROOT / "data" / "papers.json"
 KOKUSAN = ROOT / "data" / "kokusan.json"
 HF_STATS = ROOT / "data" / "hf_stats.json"   # updater/hf_stats.py が作る。なければ数字は表示しない
 CHAT = ROOT / "data" / "chat.json"   # updater/chat.py が2時間ごとに追加する
+MEDIA = ROOT / "data" / "media.json"            # 研究者の本・出演動画・インタビュー（論文手帖の下に出す）
 PAPER_STATS = ROOT / "data" / "paper_stats.json"   # updater/paper_stats.py が作る。なければ引用件数は表示しない
 TEMPLATES = ROOT / "templates"
 OUT_DIR = ROOT / "docs"
@@ -229,6 +230,33 @@ def validate_paper_stats(doc, paper_ids):
     return errors
 
 
+MEDIA_DATE_RE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
+
+
+def validate_media(doc):
+    errors, seen = [], set()
+    for i, it in enumerate(doc.get("items", [])):
+        where = "media:" + str(it.get("id", f"#{i}"))
+        if not it.get("id") or it["id"] in seen:
+            errors.append(f"{where}: id がないか重複しています")
+        seen.add(it.get("id"))
+        if it.get("kind") not in ("book", "video", "article"):
+            errors.append(f"{where}: kind は book / video / article のどれかにしてください")
+        for k in ("title", "where", "summary"):
+            if not str(it.get(k, "")).strip():
+                errors.append(f"{where}: {k} がありません")
+        if not MEDIA_DATE_RE.match(str(it.get("date", ""))):
+            errors.append(f"{where}: date は YYYY / YYYY-MM / YYYY-MM-DD で書いてください")
+        if not it.get("people") or not all(str(x.get("name", "")).strip() for x in it["people"]):
+            errors.append(f"{where}: people（SB Intuitionsの人）がありません")
+        urls = [it.get("url", "")] + list(it.get("sources") or [])
+        if not it.get("sources") or not all(str(u).startswith("https://") for u in urls):
+            errors.append(f"{where}: url と sources は https:// で、出典は1つ以上必要です")
+        if it.get("kind") == "video" and not re.match(r"^[A-Za-z0-9_-]{11}$", str(it.get("youtube", ""))):
+            errors.append(f"{where}: 動画には YouTube の動画ID（11文字）を youtube に入れてください")
+    return errors
+
+
 def validate_chat(doc):
     errors = []
     for i, ep in enumerate(doc.get("episodes", [])):
@@ -263,6 +291,8 @@ def main():
     pstats = json.loads(PAPER_STATS.read_text(encoding="utf-8")) if PAPER_STATS.exists() else None
     if pstats:
         errors += validate_paper_stats(pstats, {p.get("id") for p in papers.get("papers", [])})
+    media = json.loads(MEDIA.read_text(encoding="utf-8")) if MEDIA.exists() else {"items": []}
+    errors += validate_media(media)
     if errors:
         print("検証エラー（ページは生成していません）:")
         for e in errors:
@@ -278,6 +308,7 @@ def main():
         "hf": hf,
         "paper_stats": pstats,
         "chat": chat,
+        "media": media["items"],
     }
     base_css = (TEMPLATES / "_base.css").read_text(encoding="utf-8")
     payload = json.dumps(site, ensure_ascii=False).replace("</", "<\\/")

@@ -237,6 +237,11 @@ WORLD_QUERIES = {
     "openai": ("OpenAI 新モデル 発表", r"\bGPT-\d+(\.\d+)?(\s?[A-Z][a-z]+)?"),
     "anthropic": ("Anthropic Claude 新モデル 発表", r"\bClaude\s(?:Opus|Sonnet|Haiku|Fable|Mythos)\s\d+(\.\d+)?"),
     "google": ("Google Gemini 新モデル 発表", r"\bGemini\s\d+(\.\d+)?(\s(?:Pro|Flash|Ultra|Flash-Lite))?"),
+    # 中国の主なオープンモデル
+    "deepseek": ("DeepSeek 新モデル 公開", r"\bDeepSeek[- ]?[VR]\d+(\.\d+)?"),
+    "alibaba": ("アリババ Qwen 新モデル 公開", r"\bQwen\s?\d+(\.\d+)?"),
+    "moonshot": ("Moonshot Kimi 新モデル 公開", r"\bKimi\s?K\d+(\.\d+)?"),
+    "zhipu": ("Z.ai Zhipu GLM 新モデル 公開", r"\bGLM-\d+(\.\d+)?"),
 }
 
 

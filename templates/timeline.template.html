@@ -26,6 +26,10 @@
 .ev.k-world { --c: var(--c-world); border-left-style: dotted; }
 .ev.k-world h3 { font-family: var(--mincho); font-weight: 600; font-size: 14px; color: var(--sub); }
 .ev.k-world p { color: var(--sub); font-size: 13px; }
+.ev.k-china { --c: var(--c-china); border-left-style: dotted; }
+.ev.k-china h3 { font-family: var(--mincho); font-weight: 600; font-size: 14px; color: var(--sub); }
+.ev.k-china p { color: var(--sub); font-size: 13px; }
+.ev.k-china .type { color: var(--c-china); }
 .chips { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; margin: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; color: var(--sub); margin-top: 10px; }
 .legend span::before { content: ""; display: inline-block; width: 3px; height: 12px; background: var(--c); margin-right: 6px; vertical-align: -1px; }
@@ -37,7 +41,7 @@
   <div class="tate" aria-hidden="true">さらしなねんぷ</div>
   <div>
     <h1>年譜</h1>
-    <p>会社の始まりから最新の思考モデルまで、Sarashinaの歩みを時系列でたどります。同じ頃にChatGPT・Claude・Geminiで何があったかも、細い線で並べています。</p>
+    <p>会社の始まりから最新の思考モデルまで、Sarashinaの歩みを時系列でたどります。同じ頃にChatGPT・Claude・Geminiで何があったか、DeepSeekやQwen、Kimi、GLMといった中国のオープンモデルがどう動いたかも、細い線で並べています。</p>
   </div>
 </div>
 <main>
@@ -49,7 +53,8 @@
     </div>
     <div class="filter-row">
       <span class="label">海外</span>
-      <button class="opt" id="f-world" aria-pressed="true">海外AIの動きも並べる</button>
+      <button class="opt" id="f-world" aria-pressed="true">米国の動き</button>
+      <button class="opt" id="f-china" aria-pressed="true">中国の動き</button>
     </div>
     <div class="filter-row" id="f-order">
       <span class="label">並び</span>
@@ -61,12 +66,13 @@
       <span style="--c: var(--c-release)">モデル発表</span>
       <span style="--c: var(--c-service)">サービス</span>
       <span style="--c: var(--c-hf)">Hugging Faceで公開</span>
-      <span style="--c: var(--c-world)">海外の動き</span>
+      <span style="--c: var(--c-world)">米国の動き</span>
+      <span style="--c: var(--c-china)">中国の動き</span>
     </div>
   </div>
   <div id="timeline"></div>
   <p class="note">
-    海外の動きの日付は、各社の現地時間での発表日です。<br>
+    海外の動きの日付は、各社の現地時間での発表日です。中国の動きは、DeepSeek・アリババ（Qwen）・Moonshot AI（Kimi）・Z.ai（GLM）の主な公開を載せています。<br>
     モデル名を押すと、モデル目録の該当箇所に移ります。<br>
     「Sarashina下書き」の印がある項目は、DGX Spark上のSarashina2.2-3Bが下書きし、人が確認して載せたものです。
   </p>
@@ -80,8 +86,10 @@
   var byId = {};
   DATA.models.forEach(function (m) { byId[m.id] = m; });
   var TYPE = { company: '会社', release: 'モデル発表', service: 'サービス', milestone: '節目', hf: 'Hugging Faceで公開' };
-  var COMPANY = { openai: 'OpenAI', anthropic: 'Anthropic', google: 'Google' };
-  var state = { scope: 'all', order: 'asc', world: true };
+  var COMPANY = { openai: 'OpenAI', anthropic: 'Anthropic', google: 'Google',
+    deepseek: 'DeepSeek', alibaba: 'Alibaba（Qwen）', moonshot: 'Moonshot AI（Kimi）', zhipu: 'Z.ai（GLM）' };
+  var CHINA = { deepseek: 1, alibaba: 1, moonshot: 1, zhipu: 1 };
+  var state = { scope: 'all', order: 'asc', world: true, china: true };
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -94,7 +102,7 @@
       sources: e.sources, drafted_by: e.drafted_by };
   });
   (DATA.world || []).forEach(function (w) {
-    items.push({ date: w.date, kind: 'world', company: w.company, title: w.title, summary: w.summary,
+    items.push({ date: w.date, kind: CHINA[w.company] ? 'china' : 'world', company: w.company, title: w.title, summary: w.summary,
       models: [], sources: w.sources, drafted_by: w.drafted_by });
   });
   var loose = {};
@@ -112,6 +120,7 @@
   function render() {
     var list = items.filter(function (it) {
       if (it.kind === 'world') return state.world;
+      if (it.kind === 'china') return state.china;
       return state.scope === 'all' || it.kind !== 'hf';
     });
     list.sort(function (a, b) {
@@ -126,7 +135,7 @@
     });
     document.getElementById('timeline').innerHTML = years.map(function (g) {
       return '<section class="year"><div class="year-num">' + g.y + '</div><div>' + g.items.map(function (it) {
-        var type = it.kind === 'world' ? COMPANY[it.company] : TYPE[it.kind];
+        var type = (it.kind === 'world' || it.kind === 'china') ? COMPANY[it.company] : TYPE[it.kind];
         return '<div class="ev k-' + it.kind + '">' +
           '<div class="meta"><span>' + fmtDate(it.date) + '</span><span class="type">' + esc(type) + '</span>' +
           (it.drafted_by ? '<span class="mark" title="' + esc(it.drafted_by) + '">Sarashina下書き</span>' : '') + '</div>' +
@@ -157,6 +166,8 @@
   group('f-scope', 'scope'); group('f-order', 'order');
   var wb = document.getElementById('f-world');
   wb.addEventListener('click', function () { state.world = !state.world; wb.setAttribute('aria-pressed', String(state.world)); render(); });
+  var cb = document.getElementById('f-china');
+  cb.addEventListener('click', function () { state.china = !state.china; cb.setAttribute('aria-pressed', String(state.china)); render(); });
   document.getElementById('updated').textContent = DATA.updated_at;
   render();
 })();

@@ -4,7 +4,7 @@
 Sarashinaなどのローカルモデルが data/ のJSONを書き換えたあと、必ずこれを通す。
 検証に失敗したら exit code 1 で止まるので、Hermesはpushしないこと。
 
-生成物: docs/models.html（モデル目録）, docs/timeline.html（年譜）, docs/papers.html（論文手帖）, docs/utaawase.html（国産AI歌合）, docs/chat.html（茶話）, docs/about.html（はしがき）, docs/index.html
+生成物: docs/models.html（モデル目録）, docs/timeline.html（年譜）, docs/papers.html（論文手帖）, docs/utaawase.html（国産AI歌合）, docs/chat.html（茶話）, docs/about.html（はしがき）, docs/index.html（ホーム）
 サイト名・ナビ・奥付はこのファイルの SITE_NAME / NAV / FOOTER で一括管理する。
 
 使い方: python3 scripts/build.py
@@ -25,7 +25,7 @@ MEDIA = ROOT / "data" / "media.json"            # 研究者の本・出演動画
 PAPER_STATS = ROOT / "data" / "paper_stats.json"   # updater/paper_stats.py が作る。なければ引用件数は表示しない
 TEMPLATES = ROOT / "templates"
 OUT_DIR = ROOT / "docs"
-PAGES = {"models.template.html": "models.html", "timeline.template.html": "timeline.html",
+PAGES = {"home.template.html": "index.html", "models.template.html": "models.html", "timeline.template.html": "timeline.html",
          "papers.template.html": "papers.html", "utaawase.template.html": "utaawase.html",
          "chat.template.html": "chat.html", "about.template.html": "about.html"}
 SITE_NAME = "Sarashina 帖"
@@ -42,7 +42,7 @@ def header(current):
         parts.append(f'<a href="{href}"{cur}>{label}</a>')
     links = "".join(parts)
     return (f'<header class="masthead"><div class="masthead-inner">'
-            f'<a class="site-name" href="models.html">{SITE_NAME}<small>非公式ファンサイト</small></a>'
+            f'<a class="site-name" href="index.html">{SITE_NAME}<small>非公式ファンサイト</small></a>'
             f'<nav class="site-nav" aria-label="サイト内">{links}</nav></div></header>')
 
 
@@ -86,7 +86,7 @@ def validate_papers(doc, model_ids):
             errors.append(f"{where}: リンクと出典は https:// で、出典は最低1つ必要です")
     return errors
 EVENT_KINDS = {"company", "release", "service", "milestone"}
-COMPANIES = {"openai", "anthropic", "google"}
+COMPANIES = {"openai", "anthropic", "google", "deepseek", "alibaba", "moonshot", "zhipu"}  # 後ろ4つは中国
 
 KINDS = {"base", "instruct", "thinking", "vision", "ocr", "tts",
          "embedding", "rerank", "guard", "translate"}
@@ -171,7 +171,7 @@ def validate_events(ev, model_ids):
         if not DATE_RE.match(str(w.get("date"))):
             errors.append(f"{where}: date '{w.get('date')}' は YYYY-MM-DD か YYYY-MM で書いてください")
         if w.get("company") not in COMPANIES:
-            errors.append(f"{where}: company '{w.get('company')}' は openai / anthropic / google のどれかにしてください")
+            errors.append(f"{where}: company '{w.get('company')}' は {', '.join(sorted(COMPANIES))} のどれかにしてください")
         srcs = w.get("sources")
         if not srcs or not all(str(u).startswith("https://") for u in srcs):
             errors.append(f"{where}: 出典URL（https://）が最低1つ必要です")
@@ -321,13 +321,6 @@ def main():
                 .replace("<!--BOOTH-->", (TEMPLATES / "_booth.svg").read_text(encoding="utf-8"))
                 .replace("/*__SITE_JSON__*/", payload))
         (OUT_DIR / out).write_text(html, encoding="utf-8")
-    # トップページができるまでは、データベースへ案内する
-    (OUT_DIR / "index.html").write_text(
-        '<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
-        '<meta http-equiv="refresh" content="0; url=models.html">'
-        '<title>Sarashina ファンサイト</title></head>'
-        '<body><a href="models.html">モデル総合データベースへ</a></body></html>\n',
-        encoding="utf-8")
     (OUT_DIR / ".nojekyll").write_text("", encoding="utf-8")
     # イラスト（assets/ の画像。SVGは tools/draw_characters.py が描いた予備の絵）
     (OUT_DIR / "img").mkdir(exist_ok=True)

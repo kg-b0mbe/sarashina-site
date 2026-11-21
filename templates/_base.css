@@ -24,6 +24,7 @@
   --kikuchiba: #B4862E;    /* 黄朽葉（きくちば） */
   --aokuchiba: #6B7A33;    /* 青朽葉（あおくちば） */
   --nibi: #9A9387;         /* 鈍色（にびいろ） */
+  --ouni: #C0623A;         /* 黄丹（おうに）寄りの丹 */
 
   --brand: var(--hanada);
   --accent: var(--suou);
@@ -37,6 +38,7 @@
   --c-service: var(--kikuchiba);
   --c-hf: var(--aokuchiba);
   --c-world: var(--nibi);
+  --c-china: var(--ouni);
   --fude: "Yuji Syuku", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --mincho: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --gothic: var(--mincho);

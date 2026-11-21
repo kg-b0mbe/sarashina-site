@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-18",
+  "updated_at": "2026-11-21",
   "field_notes": {
     "date": "発表日・提供開始日。YYYY-MM-DD か YYYY-MM。",
     "kind": "company=会社・体制 / release=モデル公開 / service=サービス・API提供 / milestone=その他の節目",
@@ -174,6 +174,61 @@
       ]
     },
     {
+      "id": "deepseek-v3",
+      "date": "2024-12-26",
+      "company": "deepseek",
+      "title": "DeepSeek-V3 公開",
+      "summary": "総パラメータ6710億（うち370億が動く）のMoEモデルを重みごと公開。GPT-4o級の性能を、制限付きのH800 GPUと低い学習費用で実現したとされ、翌月の騒ぎの下地になった。",
+      "sources": [
+        "https://www.deepseek.com/en/news/deepseek-v3/",
+        "https://gigazine.net/gsc_news/en/20241227-deepseek-v3"
+      ]
+    },
+    {
+      "id": "deepseek-shock",
+      "date": "2025-01-27",
+      "company": "deepseek",
+      "title": "DeepSeekショック（DeepSeek-R1）",
+      "summary": "1月に公開された推論モデルR1がOpenAI o1に迫ると話題になり、米国市場でAI関連株が急落。エヌビディアは1日で株価が約17%下がり、時価総額が史上最大の5890億ドル減った。",
+      "sources": [
+        "https://forbesjapan.com/articles/detail/76755",
+        "https://www.businessinsider.jp/article/stock-selloff-ai-deepseek-nvidia-investing-bull-market-strategy-2025-1/"
+      ]
+    },
+    {
+      "id": "qwen3",
+      "date": "2025-04-29",
+      "company": "alibaba",
+      "title": "Qwen3 公開（アリババ）",
+      "summary": "0.6B〜32Bの6モデルと、MoEの30B・235Bの計8モデルをすべてオープンに。考える／考えないを切り替える「ハイブリッド推論」を初めて搭載。",
+      "sources": [
+        "https://cloud.watch.impress.co.jp/docs/news/2011436.html",
+        "https://www.alibabacloud.com/press-room/alibaba-introduces-qwen3-setting-new-benchmark"
+      ]
+    },
+    {
+      "id": "kimi-k2",
+      "date": "2025-07-11",
+      "company": "moonshot",
+      "title": "Kimi K2 公開（Moonshot AI）",
+      "summary": "総パラメータ1兆のMoEモデルをオープンに公開。独自の最適化手法MuonClipで大規模な学習を安定させ、コーディングやエージェントの性能で注目された。",
+      "sources": [
+        "https://www.itmedia.co.jp/aiplus/articles/2507/15/news051.html",
+        "https://gihyo.jp/article/2025/07/kimi-k2"
+      ]
+    },
+    {
+      "id": "glm-4-5",
+      "date": "2025-07-28",
+      "company": "zhipu",
+      "title": "GLM-4.5 公開（Zhipu AI、のちのZ.ai）",
+      "summary": "推論・コーディング・エージェントを一つにまとめたオープンモデル。この頃から社名をZ.aiとして海外展開を強める。",
+      "sources": [
+        "https://www.digitimes.com/news/a20250729VL204.html",
+        "https://simonwillison.net/2025/Jul/28/"
+      ]
+    },
+    {
       "id": "gpt-5",
       "date": "2025-08-07",
       "company": "openai",
@@ -181,6 +236,16 @@
       "summary": "高速応答と深い推論を自動で切り替える統合システム。無料ユーザーを含む全ユーザーに提供。",
       "sources": [
         "https://openai.com/ja-JP/index/gpt-5-new-era-of-work/"
+      ]
+    },
+    {
+      "id": "kimi-k2-thinking",
+      "date": "2025-11-06",
+      "company": "moonshot",
+      "title": "Kimi K2 Thinking 公開",
+      "summary": "K2に考える力を加えたオープンな推論モデル。人の手を借りずに200〜300回続けて道具を呼び出せるとされた。",
+      "sources": [
+        "https://siliconangle.com/2025/11/07/moonshot-launches-open-source-kimi-k2-thinking-ai-trillion-parameters-reasoning-capabilities/"
       ]
     },
     {
@@ -204,6 +269,28 @@
       ]
     },
     {
+      "id": "glm-5",
+      "date": "2026-02-11",
+      "company": "zhipu",
+      "title": "GLM-5 公開（Z.ai）",
+      "summary": "総パラメータ7440億のオープンモデルをMITライセンスで公開。「長い作業をこなすエージェント」を前面に出し、Claude Opus 4.5に迫るとした。Zhipuは同年1月に香港で上場。",
+      "sources": [
+        "https://huggingface.co/blog/mlabonne/glm-5",
+        "https://the-decoder.com/chinese-ai-lab-zhipu-releases-glm-5-under-mit-license-claims-parity-with-top-western-models/"
+      ]
+    },
+    {
+      "id": "qwen3-5",
+      "date": "2026-02-16",
+      "company": "alibaba",
+      "title": "Qwen3.5 公開（アリババ）",
+      "summary": "文章・画像・動画をはじめから一緒に学んだネイティブなマルチモーダルモデル。旗艦の397B-A17Bを重みごと公開し、春節前の中国勢の新モデルラッシュの一つになった。",
+      "sources": [
+        "https://www.alibabagroup.com/document-1960233590314762240",
+        "https://gigazine.net/gsc_news/en/20260217-qwen3-5-397b-a17b"
+      ]
+    },
+    {
       "id": "claude-mythos-preview",
       "date": "2026-04-07",
       "company": "anthropic",
@@ -211,6 +298,17 @@
       "summary": "高度なサイバー能力を持つため、一部の組織に限定して提供された最上位モデル。",
       "sources": [
         "https://gigazine.net/news/20260610-claude-mythos-fable/"
+      ]
+    },
+    {
+      "id": "deepseek-v4",
+      "date": "2026-04-24",
+      "company": "deepseek",
+      "title": "DeepSeek-V4 プレビュー公開",
+      "summary": "R1からほぼ1年。V4-ProとV4-Flashの2種類を重みごと公開し、100万トークンの文脈を安く使えることを打ち出した。",
+      "sources": [
+        "https://www.deepseek.com/en/transparency/",
+        "https://thenextweb.com/news/deepseek-v4-pro-flash-launch-open-source"
       ]
     },
     {
@@ -234,6 +332,17 @@
       ]
     },
     {
+      "id": "glm-5-2",
+      "date": "2026-06-13",
+      "company": "zhipu",
+      "title": "GLM-5.2 公開（Z.ai）",
+      "summary": "長時間の自律的なコーディング向けの旗艦モデル。100万トークンの文脈に対応し、重みはMITライセンスで公開。",
+      "sources": [
+        "https://aiweekly.co/alerts/zais-glm-52-brings-1m-token-context-to-open-weight-coding",
+        "https://infoworld.com/article/4186136/z-ai-pitches-glm-5-2-for-long-running-software-engineering-tasks.html"
+      ]
+    },
+    {
       "id": "gpt-5-6",
       "date": "2026-06-26",
       "company": "openai",
@@ -241,6 +350,18 @@
       "summary": "米国政府の要請により、限定プレビューから段階的に提供。",
       "sources": [
         "https://openai.com/ja-JP/index/previewing-gpt-5-6-sol/"
+      ]
+    },
+    {
+      "id": "kimi-k3",
+      "date": "2026-07-16",
+      "company": "moonshot",
+      "title": "Kimi K3 発表（Kimiショック）",
+      "summary": "総パラメータ2.8兆の、過去最大級のオープンウェイトモデル。Arenaのコーディング部門で中国のモデルとして初めて首位になり、「DeepSeekショックの再来」と言われた。",
+      "sources": [
+        "https://axios.com/2026/07/16/moonshot-kimi-ai-china-model-openai-anthropic",
+        "https://english.ahram.org.eg/News/573092.aspx",
+        "https://agora-web.jp/archives/260717062310.html"
       ]
     },
     {

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-21",
+  "updated_at": "2026-11-22",
   "field_notes": {
     "date": "発表日・提供開始日。YYYY-MM-DD か YYYY-MM。",
     "kind": "company=会社・体制 / release=モデル公開 / service=サービス・API提供 / milestone=その他の節目",
@@ -129,6 +129,71 @@
       "sources": [
         "https://www.sbbit.jp/article/cont1/187994"
       ]
+    },
+    {
+      "id": "auto-2026-11-20-2cd6bf",
+      "date": "2026-11-20",
+      "kind": "release",
+      "title": "Sarashina3.2 ASR公開",
+      "summary": "SB Intuitionsが日本語トップクラスの認識精度を誇る音声認識モデル「Sarashina3.2 ASR」を公開。リアルタイム・専門用語認識に強い。",
+      "models": [],
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/11/20/131721"
+      ],
+      "drafted_by": "sarashina2.2-3b"
+    },
+    {
+      "id": "auto-2026-07-29-b008d3",
+      "date": "2026-07-29",
+      "kind": "release",
+      "title": "日本語マルチターン安全性評価ベンチマーク「JMT-Safety」公開",
+      "summary": "SB Intuitionsと早稲田大学が日本語マルチターン安全性評価ベンチマーク「JMT-Safety」を公開。実対話に即し、複数ターンの対話を評価するデータセットを提供。",
+      "models": [],
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/07/29/100000"
+      ],
+      "drafted_by": "sarashina2.2-3b"
+    },
+    {
+      "id": "auto-2026-06-19-a6344e",
+      "date": "2026-06-19",
+      "kind": "release",
+      "title": "日本語エージェントベンチマーク「J-tau telecom」公開",
+      "summary": "SB Intuitionsが日本語エージェント能力評価のためのベンチマーク「J-tau telecom」を公開。高性能な日本語LLM開発に不可欠な評価指標として期待される。",
+      "models": [],
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2026/06/19/100154"
+      ],
+      "drafted_by": "sarashina2.2-3b"
+    },
+    {
+      "id": "auto-2025-11-25-5695ef",
+      "date": "2025-11-25",
+      "kind": "release",
+      "title": "Sarashina2.2-Vision-3B VLM公開",
+      "summary": "SB Intuitionsがコンパクトかつ高性能な日本語大規模視覚言語モデル（VLM）Sarashina2.2-Vision-3BをMITライセンスで公開。VLM開発への貢献が目的。",
+      "models": [
+        "sarashina2.2-vision-3b"
+      ],
+      "sources": [
+        "https://www.sbintuitions.co.jp/blog/entry/2025/11/25/100000"
+      ],
+      "drafted_by": "sarashina2.2-3b"
+    },
+    {
+      "id": "auto-2025-03-17-bd9205",
+      "date": "2025-03-17",
+      "kind": "release",
+      "title": "Sarashina2-Vision公開",
+      "summary": "Sarashina2-Vision: 日本語特化の大規模視覚言語モデル公開",
+      "models": [
+        "sarashina2-vision-8b",
+        "sarashina2-vision-14b"
+      ],
+      "sources": [
+        "https://news.google.com/rss/articles/CBMia0FVX3lxTE1XUXhNczgzOVpaVnIxeWZCV0VmNmd5WkNiUXZsRGQ2QzRGTzFRZkNPTDctT3VneXl0Z01aZGdCcDNNZlZSZ3hncnJCTEd2RnlTeUxQazhTYXhOMEJhMTAzQW5pRkJyNlNPcDdB?oc=5"
+      ],
+      "drafted_by": "sarashina2.2-3b"
     }
   ],
   "world": [

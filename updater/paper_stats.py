@@ -32,12 +32,29 @@ JST = dt.timezone(dt.timedelta(hours=9))
 API = "https://api.semanticscholar.org/graph/v1/paper/"
 FIELDS = "title,citationCount,influentialCitationCount,url"
 UA = "sarashina-fan-site-updater/1.0"
+GAP = 3.0  # 1件ごとの間隔（秒）。キーなしのAPIは共用の枠なので、ゆっくり聞く
+
+
+def api_key():
+    """updater/.env に S2_API_KEY があれば使う（Semantic Scholarの無料キー。なくても動く）。"""
+    env = Path(__file__).resolve().parent / ".env"
+    if env.exists():
+        for line in env.read_text(encoding="utf-8").splitlines():
+            if line.strip().startswith("S2_API_KEY="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return ""
+
+
+KEY = api_key()
 
 
 def get_json(url, tries=4):
-    """キーなしのAPIは混み合うと429を返すので、少し待って再試行する。"""
+    """キーなしのAPIは混み合うと429を返すので、だんだん長く待って再試行する。"""
     for i in range(tries):
-        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        headers = {"User-Agent": UA}
+        if KEY:
+            headers["x-api-key"] = KEY
+        req = urllib.request.Request(url, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.loads(r.read().decode("utf-8"))
@@ -45,7 +62,7 @@ def get_json(url, tries=4):
             if e.code == 404:
                 return None
             if e.code == 429 and i < tries - 1:
-                time.sleep(5 * (i + 1))
+                time.sleep((15, 45, 90)[min(i, 2)])
                 continue
             raise
     return None
@@ -70,12 +87,12 @@ def candidate_ids(p):
 def lookup(p):
     for pid in candidate_ids(p):
         d = get_json(API + urllib.parse.quote(pid, safe=":") + "?fields=" + FIELDS)
-        time.sleep(1.1)
+        time.sleep(GAP)
         if d and d.get("citationCount") is not None:
             return d, pid
     q = urllib.parse.quote(p["title"])
     d = get_json(API + "search/match?query=" + q + "&fields=" + FIELDS)
-    time.sleep(1.1)
+    time.sleep(GAP)
     if d and d.get("data"):
         best = d["data"][0]
         if norm(best.get("title")) == norm(p["title"]):
@@ -95,13 +112,21 @@ def main():
         subprocess.run(["git", "pull", "--ff-only"], cwd=ROOT, check=True, capture_output=True)
 
     papers = json.loads(PAPERS.read_text(encoding="utf-8"))["papers"]
-    stats, missing = {}, []
+    try:
+        prev = json.loads(OUT.read_text(encoding="utf-8")).get("papers", {}) if OUT.exists() else {}
+    except Exception:
+        prev = {}
+    stats, missing, kept = {}, [], []
     for p in papers:
         try:
             d, how = lookup(p)
         except Exception as e:
-            print(f"{p['id']}: 取得エラー {e}")
-            d, how = None, None
+            # 混雑などで聞けなかったときは、前回の数字をそのまま残す（消さない）
+            print(f"{p['id']}: 取得エラー {e}（前回の数字を残します）" if p["id"] in prev else f"{p['id']}: 取得エラー {e}")
+            if p["id"] in prev:
+                stats[p["id"]] = prev[p["id"]]
+                kept.append(p["id"])
+            continue
         if not d:
             missing.append(p["id"])
             continue
@@ -124,6 +149,8 @@ def main():
             print(f"{s['citations']:>6}  {pid}（{s['matched_by']}）")
         if missing:
             print("見つからなかった論文:", ", ".join(missing))
+        if kept:
+            print("混雑で聞けず、前回の数字を残した論文:", ", ".join(kept))
         return
 
     def strip_date(t):

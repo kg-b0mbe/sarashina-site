@@ -166,19 +166,34 @@ def write_episode(cfg, news, last_lines):
     return u.ask_sarashina(cfg, SYSTEM, user, schema, max_tokens=900)
 
 
+WHY = []  # 捨てた理由（dry-runで表示する）
+
+
+def reject(reason):
+    WHY.append(reason)
+    return None, None
+
+
 def clean(d):
     head = re.sub(r"\s+", " ", str((d or {}).get("headline_ja", ""))).strip().strip("「」")
     if not (4 <= len(head) <= 80) or re.search(r"https?://|www\.", head):
-        return None, None
+        return reject(f"見出しの形が不正: {head[:40]!r}")
     lines = []
     for l in (d or {}).get("lines", []):
         who, text = l.get("who"), re.sub(r"\s+", " ", str(l.get("text", ""))).strip()
         text = re.sub(r"^(さら|しな)[:：]\s*", "", text)
-        if who not in SPEAKERS or not (2 <= len(text) <= 90) or re.search(r"https?://|www\.", text):
-            return None, None
+        text = re.sub(r"Sarashinar(?=\d)", "Sarashina", text.replace("</s>", "")).strip()  # 小さいモデルの書き損じを直す
+        if re.match(r"^[を、。」』）]", text):  # 文の頭が欠けた台詞は使わない（「へえ」「でも」で始まるのはふつう）
+            return reject(f"頭が欠けた台詞: {text[:30]!r}")
+        if who not in SPEAKERS:
+            return reject(f"話者が不正: {who!r}")
+        if not (2 <= len(text) <= 120) or re.search(r"https?://|www\.", text):
+            return reject(f"台詞の長さかURL: {len(text)}字 {text[:30]!r}")
         lines.append({"who": who, "text": text})
-    if not (6 <= len(lines) <= 12) or len({l["who"] for l in lines}) < 2:
-        return None, None
+    if not (6 <= len(lines) <= 12):
+        return reject(f"行数が {len(lines)} 行")
+    if len({l["who"] for l in lines}) < 2:
+        return reject("一人しか話していない")
     return head, lines
 
 
@@ -210,11 +225,11 @@ def main():
             return
         last = doc["episodes"][0]["lines"][-2:] if doc["episodes"] else []
         lines, head = None, None
-        for _ in range(2):  # 形が崩れたら1回だけ書き直させる
+        for _ in range(3):  # 形が崩れたら2回まで書き直させる
             try:
                 head, lines = clean(write_episode(cfg, news, last))
             except Exception as e:
-                print("下書きに失敗:", e)
+                WHY.append(f"下書きに失敗: {e}")
             if lines:
                 break
         if news["kind"] == "paper":
@@ -227,7 +242,7 @@ def main():
         if not lines:
             if not args.dry_run:
                 u.save_state(cfg, state)
-            print("会話の形が整わなかったので、今回は捨てました。")
+            print("会話の形が整わなかったので、今回は捨てました。理由:", " / ".join(WHY))
             return
 
         now = dt.datetime.now(u.JST)

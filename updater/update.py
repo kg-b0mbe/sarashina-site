@@ -103,12 +103,13 @@ def sarashina_alive(cfg):
 
 
 def ask_sarashina(cfg, system, user, schema, max_tokens=500):
-    """JSONスキーマに沿った答えを返させる。vLLMの構造化出力を使い、使えなければ通常生成から抜き出す。"""
+    """JSONスキーマに沿った答えを返させる。構造化出力（llama.cpp・vLLMとも対応）を使い、使えなければ通常生成から抜き出す。"""
     payload = {
         "model": cfg["model"],
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "temperature": 0.2,
         "max_tokens": max_tokens,
+        "stop": ["</s>"],  # llama.cppのGGUF版は終わりの記号を文字として出すことがあるので、そこで止める
         "response_format": {"type": "json_schema",
                             "json_schema": {"name": "answer", "schema": schema, "strict": True}},
     }
@@ -126,6 +127,7 @@ def ask_sarashina(cfg, system, user, schema, max_tokens=500):
         payload.pop("response_format")
         payload["messages"][1]["content"] += "\n\nJSONだけを出力してください。"
         text = call(payload)
+    text = text.replace("</s>", "")
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
         raise ValueError("SarashinaがJSONを返しませんでした: " + text[:200])
@@ -159,6 +161,7 @@ def known_repos(models):
     for m in models:
         if m.get("hf_repo"):
             repos.add(m["hf_repo"])
+        repos.update(m.get("hf_repos") or [])  # まとめて1件にしたモデル（例: 2.2の事前学習 0.5B/1B/3B）
         for u in m.get("sources", []):
             hit = re.match(r"https://huggingface\.co/(sbintuitions/[^/?#]+)", u)
             if hit:
@@ -271,9 +274,38 @@ PIPE_MODALITY = {"image-to-text": ["text", "image"], "image-text-to-text": ["tex
                  "text-to-speech": ["text", "audio"], "automatic-speech-recognition": ["text", "audio"]}
 
 
+ARCH_NAMES = {
+    "LlamaForCausalLM": "Llama型のTransformer（デコーダのみ）",
+    "MistralForCausalLM": "Mistral型のTransformer（デコーダのみ）",
+    "Qwen2ForCausalLM": "Qwen2型のTransformer（デコーダのみ）",
+    "ModernBertModel": "ModernBERT（エンコーダ）",
+    "ModernBertForMaskedLM": "ModernBERT（エンコーダ）",
+    "BertModel": "BERT（エンコーダ）",
+}
+# リポジトリ名から機械的に決められる種類（決められないときだけSarashinaに聞く）
+KIND_WORDS = [("thinking", "thinking"), ("vision", "vision"), ("ocr", "ocr"), ("tts", "tts"),
+              ("embedding", "embedding"), ("rerank", "rerank"), ("guard", "guard"), ("translat", "translate"),
+              ("instruct", "instruct"), ("chat", "instruct")]
+
+
+def kind_from_name(rid):
+    name = rid.split("/", 1)[-1].lower()
+    for word, kind in KIND_WORDS:
+        if word in name:
+            return kind
+    # sarashina2.2-0.5b のように、大きさで終わる名前は事前学習（base）
+    if re.search(r"-\d+(\.\d+)?b$", name):
+        return "base"
+    return None
+
+
+def has_japanese(t):
+    return bool(re.search(r"[\u3040-\u30ff\u4e00-\u9fff]", t or ""))
+
+
 def hf_facts(rid):
     """日付・サイズ・ライセンスはAPIから機械的に決める（LLMには書かせない）。"""
-    q = "expand[]=safetensors&expand[]=cardData&expand[]=createdAt&expand[]=pipeline_tag"
+    q = "expand[]=safetensors&expand[]=cardData&expand[]=createdAt&expand[]=pipeline_tag&expand[]=config"
     info = http_json(f"https://huggingface.co/api/models/{rid}?{q}")
     try:
         readme = http_get(f"https://huggingface.co/{rid}/raw/main/README.md")
@@ -299,8 +331,10 @@ def hf_facts(rid):
         spark = "quant"
     else:
         spark = "no"
+    archs = ((info.get("config") or {}).get("architectures") or [])
     return {
         "hf_repo": rid,
+        "architecture": ARCH_NAMES.get(archs[0], archs[0]) if archs else None,
         "released": (info.get("createdAt") or "")[:10] or None,
         "params_b": params_b,
         "license": license_,
@@ -314,12 +348,11 @@ def draft_model(cfg, rid):
     f = hf_facts(rid)
     schema = {
         "type": "object", "additionalProperties": False,
-        "required": ["name", "generation", "kind", "architecture", "notes"],
+        "required": ["name", "generation", "kind", "notes"],
         "properties": {
             "name": {"type": "string"},
             "generation": {"type": "string"},
             "kind": {"type": "string", "enum": KIND_ENUM},
-            "architecture": {"type": ["string", "null"]},
             "notes": {"type": "string"},
         },
     }
@@ -328,19 +361,80 @@ def draft_model(cfg, rid):
             "- name: 表示名（例: Sarashina2.2-OCR）\n"
             "- generation: 世代（例: Sarashina2.2、Sarashina3、Embedding）\n"
             f"- kind: 種類。次から1つ: {', '.join(KIND_ENUM)}\n"
-            "- architecture: 構造やベースモデル。書かれていなければ null\n"
-            "- notes: 何ができるモデルかを日本語で80字以内\n\n"
+            "- notes: 何ができるモデルかを、必ず日本語で80字以内（英語のモデルカードでも日本語に訳す）\n\n"
             f"--- モデルカード ---\n{f['readme']}")
     d = ask_sarashina(cfg, SYSTEM, user, schema)
+    if not has_japanese(d.get("notes")):
+        d = ask_sarashina(cfg, SYSTEM, user + "\n\n※notes は英語ではなく日本語で書いてください。", schema)
+    if not has_japanese(d.get("notes")):
+        raise ValueError("説明が日本語になりませんでした")
     mid = rid.split("/", 1)[1].lower()
     return {
-        "id": mid, "name": d["name"].strip(), "generation": d["generation"].strip(), "kind": d["kind"],
-        "modality": f["modality"], "params_b": f["params_b"], "architecture": d.get("architecture"),
+        "id": mid, "name": d["name"].strip(), "generation": d["generation"].strip(),
+        "kind": kind_from_name(rid) or d["kind"],
+        # 構造はLLMに書かせない（config.json の architectures から機械的に。なければ空欄）
+        "modality": f["modality"], "params_b": f["params_b"], "architecture": f["architecture"],
         "training_tokens": None, "context_length": None, "license": f["license"],
         "availability": "open_weights", "released": f["released"], "hf_repo": rid, "spark": f["spark"],
         "notes": d["notes"].strip()[:160], "sources": [f"https://huggingface.co/{rid}"],
         "drafted_by": cfg["model"],
     }
+
+
+def norm_title(t):
+    t = re.sub(r"[「」『』\"'（）()・、。！!？?\s]", "", t or "").lower()
+    # どの見出しにも出てくる言葉は、似ているかどうかの判断から外す
+    for w in ("sbintuitions", "sarashina", "を公開", "公開", "提供開始", "を開始", "発表", "を"):
+        t = t.replace(w, "")
+    return t
+
+
+MODEL_TOKEN = re.compile(r"\d+(?:\.\d+)+|asr|tts|ocr|vision|thinking|embedding|rerank|translat|guard|mini|70b|8x70b")
+
+
+def model_tokens(t):
+    toks = set(MODEL_TOKEN.findall((t or "").lower()))
+    m = re.search(r"sarashina\s?(\d+(?:\.\d+)?)", (t or "").lower())  # 「Sarashina3」の世代も名前の一部とみなす
+    if m:
+        toks.add("gen" + m.group(1))
+    return toks
+
+
+def is_dup_event(ev, events):
+    """同じ出来事がもう年表にあるか。
+
+    Sarashinaの出来事は数か月に一度なので、前後7日以内に別の出来事があれば、
+    見出しの言い回しが違っても同じ出来事とみなす。ただし両方の見出しに別々のモデル名
+    （3.2・ASR・thinking など）が出てくるときは、別の発表として残す。
+    日付が離れていても、見出しがほぼ同じなら同じとみなす。
+    """
+    import difflib
+    try:
+        d0 = dt.date.fromisoformat(ev["date"][:10])
+    except ValueError:
+        d0 = None
+    a, ta = norm_title(ev["title"]), model_tokens(ev["title"])
+    for e in events:
+        b, tb = norm_title(e["title"]), model_tokens(e["title"])
+        ratio = difflib.SequenceMatcher(None, a, b).ratio()
+        if ratio >= 0.8:
+            return e
+        if d0 is None or len(e["date"]) < 10:
+            if d0 and e["date"][:7] == ev["date"][:7] and ratio >= 0.45:
+                return e
+            continue
+        try:
+            days = abs((dt.date.fromisoformat(e["date"][:10]) - d0).days)
+        except ValueError:
+            continue
+        if days <= 7 and not (ta and tb and ta != tb):
+            # 片方だけにモデル名があるとき（「Sarashina3シリーズ」と「データセンター」など）は、見出しも少し似ていること
+            if bool(ta) != bool(tb) and ratio < 0.3:
+                continue
+            return e
+        if days <= 7 and ratio >= 0.45:
+            return e
+    return None
 
 
 def draft_event(cfg, item, existing_titles):
@@ -368,6 +462,48 @@ def draft_event(cfg, item, existing_titles):
     return {"id": eid, "date": item["date"] or dt.datetime.now(JST).date().isoformat(), "kind": d["kind"],
             "title": d["title"].strip()[:60], "summary": d["summary"].strip()[:160], "models": [],
             "sources": [item["link"]], "drafted_by": cfg["model"]}
+
+
+KIND_TOKENS = ("vision", "ocr", "tts", "asr", "thinking", "embedding", "rerank", "translat", "guard", "image")
+
+
+def generation_of(text):
+    m = re.search(r"sarashina\s?(\d+(?:\.\d+)?)", (text or "").lower())
+    return m.group(1) if m else None
+
+
+def link_models(ev, models, events):
+    """出来事にモデルを機械的に結びつける（ほかの出来事にもう入っているモデルは除く）。
+
+    1. 見出しと要約に、モデルの名前がそのまま出てくるもの
+    2. 「Sarashina2.2シリーズ公開」のような見出しなら、同じ世代で、種類（Visionなど）も合い、
+       公開日が前後14日以内のモデル
+    結びつけたモデルは、年譜でこの出来事の中に表示される（Hugging Faceで公開の行と二重にならない）。
+    """
+    used = {mid for e in events for mid in e.get("models", [])}
+    text = ev["title"] + " " + ev.get("summary", "")
+    hits = models_in(text, models)
+    gen = generation_of(ev["title"])
+    kinds = [k for k in KIND_TOKENS if k in ev["title"].lower()]
+    try:
+        d0 = dt.date.fromisoformat(ev["date"][:10])
+    except ValueError:
+        d0 = None
+    if gen and d0:
+        for m in models:
+            if m["id"] in hits or generation_of(m["id"]) != gen or not m.get("released"):
+                continue
+            if any(k not in m["id"] for k in kinds):
+                continue
+            if not kinds and any(k in m["id"] for k in KIND_TOKENS):
+                continue
+            try:
+                if abs((dt.date.fromisoformat(m["released"][:10]) - d0).days) <= 14:
+                    hits.append(m["id"])
+            except ValueError:
+                pass
+    ev["models"] = [mid for mid in hits if mid not in used]
+    return ev
 
 
 def draft_world(cfg, item):
@@ -547,7 +683,11 @@ def main():
             skipped.append(f"{it['title']}（下書き失敗: {e}）")
             continue
         if ev:
-            new_events.append(ev)
+            dup = is_dup_event(ev, events_doc["events"] + new_events)
+            if dup:
+                skipped.append(f"{ev['title']}（年表の「{dup['title']}」と同じ出来事とみなしました）")
+                continue
+            new_events.append(link_models(ev, models_doc["models"] + new_models, events_doc["events"] + new_events))
             budget -= 1
 
     # 海外の動き

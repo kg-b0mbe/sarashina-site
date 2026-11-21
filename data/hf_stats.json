@@ -1,0 +1,220 @@
+{
+  "fetched_at": "2026-11-22",
+  "note": "downloads は直近30日、downloads_all_time は累計（Hugging Face API）。",
+  "repos": {
+    "sbintuitions/DuplexCascade": {
+      "downloads": 0,
+      "downloads_all_time": 0,
+      "likes": 4
+    },
+    "sbintuitions/diafill-llm-jp-3.1-13b-instruct4": {
+      "downloads": 146,
+      "downloads_all_time": 594,
+      "likes": 6
+    },
+    "sbintuitions/diafill-sarashina2.2-3b-instruct": {
+      "downloads": 174,
+      "downloads_all_time": 5370,
+      "likes": 4
+    },
+    "sbintuitions/hikari-medium": {
+      "downloads": 220,
+      "downloads_all_time": 450,
+      "likes": 2
+    },
+    "sbintuitions/kana-whisper": {
+      "downloads": 38302,
+      "downloads_all_time": 157466,
+      "likes": 22
+    },
+    "sbintuitions/modernbert-ja-130m": {
+      "downloads": 12314,
+      "downloads_all_time": 498761,
+      "likes": 51
+    },
+    "sbintuitions/modernbert-ja-30m": {
+      "downloads": 3075,
+      "downloads_all_time": 250628,
+      "likes": 9
+    },
+    "sbintuitions/modernbert-ja-310m": {
+      "downloads": 36036,
+      "downloads_all_time": 359052,
+      "likes": 33
+    },
+    "sbintuitions/modernbert-ja-70m": {
+      "downloads": 2556,
+      "downloads_all_time": 448956,
+      "likes": 9
+    },
+    "sbintuitions/nest-ja-0.1b": {
+      "downloads": 145,
+      "downloads_all_time": 2265,
+      "likes": 7
+    },
+    "sbintuitions/nest-ja-0.6b": {
+      "downloads": 283,
+      "downloads_all_time": 1569,
+      "likes": 11
+    },
+    "sbintuitions/sarashina-embedding-v1-1b": {
+      "downloads": 741,
+      "downloads_all_time": 550265,
+      "likes": 38
+    },
+    "sbintuitions/sarashina-embedding-v2-1b": {
+      "downloads": 1766,
+      "downloads_all_time": 82909,
+      "likes": 28
+    },
+    "sbintuitions/sarashina1-13b": {
+      "downloads": 740,
+      "downloads_all_time": 14850,
+      "likes": 1
+    },
+    "sbintuitions/sarashina1-65b": {
+      "downloads": 79,
+      "downloads_all_time": 14993,
+      "likes": 6
+    },
+    "sbintuitions/sarashina1-7b": {
+      "downloads": 120,
+      "downloads_all_time": 14968,
+      "likes": 1
+    },
+    "sbintuitions/sarashina2-13b": {
+      "downloads": 1580,
+      "downloads_all_time": 30750,
+      "likes": 19
+    },
+    "sbintuitions/sarashina2-70b": {
+      "downloads": 113,
+      "downloads_all_time": 23111,
+      "likes": 17
+    },
+    "sbintuitions/sarashina2-7b": {
+      "downloads": 1815,
+      "downloads_all_time": 57486,
+      "likes": 29
+    },
+    "sbintuitions/sarashina2-8x70b": {
+      "downloads": 162,
+      "downloads_all_time": 1167,
+      "likes": 34
+    },
+    "sbintuitions/sarashina2-vision-14b": {
+      "downloads": 84,
+      "downloads_all_time": 8454,
+      "likes": 13
+    },
+    "sbintuitions/sarashina2-vision-8b": {
+      "downloads": 132,
+      "downloads_all_time": 19056,
+      "likes": 13
+    },
+    "sbintuitions/sarashina2.1-1b": {
+      "downloads": 101,
+      "downloads_all_time": 5607,
+      "likes": 21
+    },
+    "sbintuitions/sarashina2.2-0.5b": {
+      "downloads": 1361,
+      "downloads_all_time": 83171,
+      "likes": 16
+    },
+    "sbintuitions/sarashina2.2-0.5b-instruct-v0.1": {
+      "downloads": 2669,
+      "downloads_all_time": 336676,
+      "likes": 16
+    },
+    "sbintuitions/sarashina2.2-1b": {
+      "downloads": 1011,
+      "downloads_all_time": 22209,
+      "likes": 14
+    },
+    "sbintuitions/sarashina2.2-1b-instruct-v0.1": {
+      "downloads": 2411,
+      "downloads_all_time": 42650,
+      "likes": 17
+    },
+    "sbintuitions/sarashina2.2-3b": {
+      "downloads": 1359,
+      "downloads_all_time": 26937,
+      "likes": 22
+    },
+    "sbintuitions/sarashina2.2-3b-instruct-v0.1": {
+      "downloads": 15968,
+      "downloads_all_time": 183037,
+      "likes": 39
+    },
+    "sbintuitions/sarashina2.2-ocr": {
+      "downloads": 1290,
+      "downloads_all_time": 11010,
+      "likes": 34
+    },
+    "sbintuitions/sarashina2.2-tts": {
+      "downloads": 2076,
+      "downloads_all_time": 85028,
+      "likes": 76
+    },
+    "sbintuitions/sarashina2.2-vision-3b": {
+      "downloads": 973,
+      "downloads_all_time": 22034,
+      "likes": 20
+    },
+    "sbintuitions/tiny-lm": {
+      "downloads": 10899,
+      "downloads_all_time": 193686,
+      "likes": 2
+    },
+    "sbintuitions/tiny-lm-chat": {
+      "downloads": 2355,
+      "downloads_all_time": 62721,
+      "likes": 2
+    }
+  },
+  "orgs": {
+    "sbintuitions": {
+      "label": "SB Intuitions（Sarashina）",
+      "models": 34,
+      "downloads": 143056,
+      "downloads_all_time": 3617886,
+      "likes": 636
+    },
+    "llm-jp": {
+      "label": "LLM-jp（国立情報学研究所）",
+      "models": 278,
+      "downloads": 625312,
+      "downloads_all_time": 6691605,
+      "likes": 862
+    },
+    "pfnet": {
+      "label": "Preferred Networks（PLaMo）",
+      "models": 59,
+      "downloads": 764316,
+      "downloads_all_time": 3238912,
+      "likes": 790
+    },
+    "tokyotech-llm": {
+      "label": "Swallow（東京科学大学など）",
+      "models": 138,
+      "downloads": 55310,
+      "downloads_all_time": 3138238,
+      "likes": 559
+    },
+    "elyza": {
+      "label": "ELYZA",
+      "models": 20,
+      "downloads": 68050,
+      "downloads_all_time": 3111748,
+      "likes": 695
+    },
+    "stockmark": {
+      "label": "ストックマーク",
+      "models": 14,
+      "downloads": 3440,
+      "downloads_all_time": 175970,
+      "likes": 189
+    }
+  }
+}

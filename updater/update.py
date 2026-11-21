@@ -2,7 +2,7 @@
 """Sarashinaファンサイトの自動更新（Mac miniで実行）。
 
 流れ:
-  1. 集める   … Hugging Face API・SB Intuitionsのブログ・Google ニュースから新しい情報を探す（スクリプト）
+  1. 集める   … Hugging Face API・SB Intuitionsのブログ・Google ニュース・arXivから新しい情報を探す（スクリプト）
   2. 下書き   … DGX Spark上のSarashina2.2-3Bに、名前・分類・日本語の要約だけを書かせる
   3. 検証     … scripts/build.py でデータを検証し、ページを生成する
   4. 提案     … 新しいブランチにコミットしてプルリクエストを作り、Slackに通知する
@@ -34,6 +34,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MODELS = ROOT / "data" / "models.json"
 EVENTS = ROOT / "data" / "events.json"
+PAPERS = ROOT / "data" / "papers.json"
 JST = dt.timezone(dt.timedelta(hours=9))
 UA = "sarashina-fan-site-updater/1.0 (+https://github.com/)"
 
@@ -388,6 +389,101 @@ def draft_world(cfg, item):
             "sources": [item["link"]], "drafted_by": cfg["model"]}
 
 
+# ---------------------------------------------------------------- 論文（arXiv）
+
+ARXIV_API = ("https://export.arxiv.org/api/query?search_query=" +
+             urllib.parse.quote('all:Sarashina OR all:"SB Intuitions"') +
+             "&sortBy=submittedDate&sortOrder=descending&max_results=25")
+ATOM = {"a": "http://www.w3.org/2005/Atom"}
+TOPIC_ENUM = ["pretraining", "evaluation", "speech", "dialogue", "trust"]
+
+
+def known_arxiv(papers):
+    ids = set()
+    for p in papers:
+        for u in list((p.get("links") or {}).values()) + list(p.get("sources") or []):
+            m = re.search(r"arxiv\.org/(?:abs|pdf|html)/(\d{4}\.\d{4,5})", u)
+            if m:
+                ids.add(m.group(1))
+    return ids
+
+
+def collect_arxiv(papers_doc, state):
+    """arXivで Sarashina / SB Intuitions に触れた新しい論文を探す。"""
+    try:
+        root = ET.fromstring(http_get(ARXIV_API, timeout=60))
+    except Exception as e:
+        print("arXivを取得できません:", e)
+        return []
+    known = known_arxiv(papers_doc["papers"]) | set(state.setdefault("arxiv", []))
+    out = []
+    for e in root.findall("a:entry", ATOM):
+        m = re.search(r"(\d{4}\.\d{4,5})", e.findtext("a:id", default="", namespaces=ATOM))
+        if not m or m.group(1) in known:
+            continue
+        out.append({
+            "arxiv": m.group(1),
+            "title": re.sub(r"\s+", " ", e.findtext("a:title", default="", namespaces=ATOM)).strip(),
+            "abstract": re.sub(r"\s+", " ", e.findtext("a:summary", default="", namespaces=ATOM)).strip(),
+            "authors": [a.findtext("a:name", default="", namespaces=ATOM).strip() for a in e.findall("a:author", ATOM)],
+            "date": (e.findtext("a:published", default="", namespaces=ATOM) or "")[:7],
+        })
+    return out
+
+
+def models_in(text, models):
+    """論文の題名・要旨に名前が出てくるモデルを、機械的に拾う。"""
+    t = text.lower()
+    hits = []
+    for m in models:
+        names = {m["id"], m["name"].lower(), re.sub(r"-instruct-v0\.1$", "", m["name"].lower())}
+        if m.get("hf_repo"):
+            names.add(m["hf_repo"].split("/", 1)[1].lower())
+        if any(n and n in t for n in names):
+            hits.append(m["id"])
+    return hits
+
+
+def draft_paper(cfg, item, models):
+    schema = {
+        "type": "object", "additionalProperties": False,
+        "required": ["title_ja", "topic", "summary", "points", "sarashina"],
+        "properties": {
+            "title_ja": {"type": "string"},
+            "topic": {"type": "string", "enum": TOPIC_ENUM},
+            "summary": {"type": "string"},
+            "points": {"type": "array", "minItems": 2, "maxItems": 3, "items": {"type": "string"}},
+            "sarashina": {"type": "string"},
+        },
+    }
+    user = ("次の論文の題名と要旨を読んで、日本語でやさしく紹介してください。要旨に書かれていないことは書きません。\n"
+            "- title_ja: 内容がひと目でわかる日本語の題名（30字以内、直訳でなくてよい）\n"
+            f"- topic: 分野。次から1つ: {', '.join(TOPIC_ENUM)}"
+            "（pretraining=事前学習・モデル設計 / evaluation=評価 / speech=音声 / dialogue=対話 / trust=安全・信頼）\n"
+            "- summary: 何をした研究かを80字以内で\n"
+            "- points: わかったこと・工夫を2〜3個、それぞれ60字以内で\n"
+            "- sarashina: Sarashinaとのつながりを60字以内で。要旨から読み取れなければ「要旨からは読み取れない」\n\n"
+            f"題名: {item['title']}\n要旨: {item['abstract'][:2500]}")
+    d = ask_sarashina(cfg, SYSTEM, user, schema, max_tokens=700)
+    url = f"https://arxiv.org/abs/{item['arxiv']}"
+    return {
+        "id": "arxiv-" + item["arxiv"],
+        "title": item["title"],
+        "title_ja": d["title_ja"].strip()[:60],
+        "authors": item["authors"] or ["（著者名を確認）"],
+        "venue": "arXiv",
+        "date": item["date"] or dt.datetime.now(JST).strftime("%Y-%m"),
+        "topic": d["topic"],
+        "summary": d["summary"].strip()[:160],
+        "points": [x.strip()[:120] for x in d["points"]][:3],
+        "sarashina": d["sarashina"].strip()[:120],
+        "models": models_in(item["title"] + " " + item["abstract"], models),
+        "links": {"paper": url},
+        "sources": [url],
+        "drafted_by": cfg["model"],
+    }
+
+
 # ---------------------------------------------------------------- 3〜4. 検証・提案
 
 def git(*args, check=True):
@@ -418,9 +514,10 @@ def main():
 
     models_doc = json.loads(MODELS.read_text(encoding="utf-8"))
     events_doc = json.loads(EVENTS.read_text(encoding="utf-8"))
+    papers_doc = json.loads(PAPERS.read_text(encoding="utf-8"))
     state = load_state(cfg)
     budget = cfg["max_items"]
-    new_models, new_events, new_world, skipped = [], [], [], []
+    new_models, new_events, new_world, new_papers, skipped = [], [], [], [], []
 
     # モデル
     for rid in collect_hf(models_doc["models"], state):
@@ -464,13 +561,25 @@ def main():
                 new_world.append(w)
                 budget -= 1
 
-    total = len(new_models) + len(new_events) + len(new_world)
+    # 論文
+    for it in collect_arxiv(papers_doc, state):
+        if budget <= 0:
+            break
+        state["arxiv"].append(it["arxiv"])
+        try:
+            new_papers.append(draft_paper(cfg, it, models_doc["models"]))
+            budget -= 1
+        except Exception as e:
+            skipped.append(f"arXiv {it['arxiv']}（下書き失敗: {e}）")
+
+    total = len(new_models) + len(new_events) + len(new_world) + len(new_papers)
     lines = ([f"・モデル: {m['name']}（{m['hf_repo']}）" for m in new_models] +
              [f"・出来事: {e['date']} {e['title']}" for e in new_events] +
-             [f"・海外: {w['date']} {w['title']}" for w in new_world])
+             [f"・海外: {w['date']} {w['title']}" for w in new_world] +
+             [f"・論文: {p['title_ja']}（arXiv {p['id'][6:]}）※SB Intuitions所属の著者がいるか確認" for p in new_papers])
 
     if dry:
-        print(json.dumps({"models": new_models, "events": new_events, "world": new_world},
+        print(json.dumps({"models": new_models, "events": new_events, "world": new_world, "papers": new_papers},
                          ensure_ascii=False, indent=2))
         print("\n".join(lines) or "新しい提案はありません。")
         if skipped:
@@ -488,8 +597,12 @@ def main():
     events_doc["events"] += new_events
     events_doc.setdefault("world", []).extend(new_world)
     events_doc["updated_at"] = today
+    papers_doc["papers"] += new_papers
+    if new_papers:
+        papers_doc["updated_at"] = today
     write_json(MODELS, models_doc)
     write_json(EVENTS, events_doc)
+    write_json(PAPERS, papers_doc)
 
     build = subprocess.run([sys.executable, "scripts/build.py"], cwd=ROOT, capture_output=True, text=True)
     if build.returncode != 0:
@@ -505,7 +618,8 @@ def main():
     git("commit", "-m", f"Sarashinaによる更新提案（{total}件）\n\n" + "\n".join(lines))
     git("push", "-u", "origin", branch)
     body = ("DGX Spark上の " + cfg["model"] + " が下書きした更新提案です。\n"
-            "日付・サイズ・ライセンスはHugging Face APIから機械的に取得、名前・分類・要約はSarashinaが作成。\n"
+            "日付・サイズ・ライセンス・論文の著者はAPIから機械的に取得、名前・分類・要約・論文の解説はSarashinaが作成。\n"
+            "論文は、SB Intuitions所属の著者がいるかを確かめてください（外部の論文なら、その行を消すかクローズ）。\n"
             "内容と出典を確認して、問題なければマージしてください（マージすると公開されます）。\n\n"
             + "\n".join(lines) + ("\n\nスキップ:\n" + "\n".join(skipped) if skipped else ""))
     pr = subprocess.run(["gh", "pr", "create", "--base", cfg["branch"], "--head", branch,

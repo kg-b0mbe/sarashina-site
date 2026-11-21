@@ -192,7 +192,7 @@ details.past[open] .talk { margin-top: 12px; }
   <div class="tate" aria-hidden="true">さらとしな</div>
   <div>
     <h1>茶話</h1>
-    <p>手元のDGX Sparkで動くSarashinaが、「さら」と「しな」の二役を演じるラジオ番組です。AIやローカルLLMの新しい話題を優先して、なければ国内外のまったりしたニュースをきっかけに、ゆるく雑談しています。おおよそ2時間ごとに、新しい話題が増えます。</p>
+    <p>手元のDGX Sparkで動くSarashinaが、「さら」と「しな」の二役を演じるラジオ番組です。AIやローカルLLMの新しい話題を優先して、なければ国内外のまったりしたニュースをきっかけに、ゆるく雑談しています。1日1回は「論文コーナー」で、SB Intuitionsの論文をやさしく紹介します。おおよそ2時間ごとに、新しい話題が増えます。</p>
   </div>
 </div>
 <main>
@@ -215,7 +215,7 @@ details.past[open] .talk { margin-top: 12px; }
     これはAI同士の雑談です。ニュースについては見出しだけを渡していますが、内容が正確とは限りません。事実は必ず元の記事でご確認ください。<br>
     事件・事故・災害・政治などの見出しは、雑談の話題にしないようにしています。<br>
     「声で聴く」は、お使いの端末に入っている日本語の音声で読み上げます。声は端末によって変わります。<br>
-    二人とも、DGX Spark上のSarashina2.2-3B-instructが演じています。名前は『更級日記』の「更」と「級」から。イラストは、このサイトのために画像生成AIで作ったオリジナルです。
+    二人とも、DGX Spark上のSarashina2.2-3B-instructが演じています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
   </p>
 </main>
 <footer class="colophon"><div class="colophon-inner">国産AI「Sarashina」を応援する個人の非公式ファンサイトです。SB Intuitions株式会社とは関係ありません。正確な最新情報は公式サイトとHugging Faceをご確認ください。<br>データ更新日：<span id="updated"></span><div class="irome-title">このサイトの色　紅梅と縹の匂（上から）</div><div class="irome"><span style="--c:var(--suou)"><i></i>蘇芳</span><span style="--c:var(--kobai)"><i></i>紅梅</span><span style="--c:var(--usubeni)"><i></i>薄紅</span><span style="--c:var(--shiro)"><i></i>白</span><span style="--c:var(--usuhanada)"><i></i>薄縹</span><span style="--c:var(--hanada)"><i></i>縹</span></div></div></footer>
@@ -237,7 +237,13 @@ details.past[open] .talk { margin-top: 12px; }
     return '<div class="line ' + CLS[l.who] + (hidden ? ' hidden' : '') + '"><div class="face" aria-hidden="true">' + FACE[l.who] + '</div>' +
       '<div class="bubble"><span class="sr-name" style="position:absolute;left:-9999px">' + esc(l.who) + '：</span>' + esc(l.text) + '</div></div>';
   }
-  function tagOf(ep) { return ep.news.kind === 'ai' ? 'AIのはなし' : ep.news.lang === 'en' ? '海外のよもやま' : 'よもやま'; }
+  function tagOf(ep) {
+    if (ep.news.kind === 'paper') return '論文のはなし';
+    return ep.news.kind === 'ai' ? 'AIのはなし' : ep.news.lang === 'en' ? '海外のよもやま' : 'よもやま';
+  }
+  function paperLink(ep) {
+    return ep.news.paper_id ? '<a href="papers.html#p-' + esc(ep.news.paper_id) + '">論文手帖で読む</a>' : '';
+  }
   function titleOf(ep) { return ep.news.title_ja || ep.news.title; }
   function origOf(ep) { return ep.news.lang === 'en' ? '<span class="orig">原題：' + esc(ep.news.title) + '（日本語の見出しはSarashinaによる意訳）</span>' : ''; }
   function newsHtml(ep) {
@@ -249,6 +255,7 @@ details.past[open] .talk { margin-top: 12px; }
     if (!ep) { el.innerHTML = '<p class="empty">まだ二人は話し始めていません。最初の茶話をお待ちください。</p>'; return; }
     el.innerHTML = '<div class="topic"><div class="when">' + esc(ep.at) + '</div><div class="news">' + newsHtml(ep) + '</div>' +
       '<div class="talk" id="now-talk">' + ep.lines.map(function (l) { return lineHtml(l, animate); }).join('') + '</div>' +
+      (ep.news.paper_id ? '<div class="links">' + paperLink(ep) + '</div>' : '') +
       '<div class="typing" id="typing" hidden>・・・</div>' +
       '<div class="controls-row">' + (canSpeak ? '<button class="listen" id="listen">声で聴く</button>' : '') +
       '<button id="replay">もう一度読む</button><button id="skip">全部表示</button></div></div>';
@@ -291,7 +298,7 @@ details.past[open] .talk { margin-top: 12px; }
       return '<details class="past"><summary><span class="when">' + esc(ep.at) + '</span><span class="t"><span class="tag">' + tagOf(ep) + '</span>' + esc(titleOf(ep)) + '</span>' + origOf(ep) +
         (canSpeak ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
         '<div class="talk">' + ep.lines.map(function (l) { return lineHtml(l, false); }).join('') + '</div>' +
-        '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">元の記事</a></div></details>';
+        '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">' + (ep.news.kind === 'paper' ? '論文' : '元の記事') + '</a>' + paperLink(ep) + '</div></details>';
     }).join('') || '<p class="empty">まだありません。</p>';
   }
   function render(eps, animate) { stopVoice(); showNow(eps[0], animate); showPast(eps.slice(1)); }

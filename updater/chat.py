@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """さらとしなの茶話（Mac miniで2時間ごとに実行）。
 
-ニュースの見出しを1つ拾い（AI・ローカルLLMの話題を優先し、なければ国内外のまったりした話題）、
+話題を1つ選び（1日1回は論文手帖の論文を解説する「論文コーナー」、ほかはAI・ローカルLLMの
+ニュースを優先し、なければ国内外のまったりした話題）、
 DGX SparkのSarashina2.2-3Bに「さら」と「しな」の雑談を書かせて、
 data/chat.json に追加する。遊びのページなので、人の承認は挟まずに main へ直接pushする。
 そのぶん、次の安全策を入れている。
@@ -31,6 +32,7 @@ from lock import single_run  # noqa: E402
 
 ROOT = u.ROOT
 CHAT = ROOT / "data" / "chat.json"
+PAPERS = ROOT / "data" / "papers.json"
 KEEP = 120  # ページに残す回数
 
 def gnews(q=None, topic=None, lang="ja"):
@@ -100,6 +102,22 @@ def _candidate(it, state_seen, days, need_ai):
     return {"title": title, "link": it["link"], "key": key, "lang": "ja" if JA.search(title) else "en"}
 
 
+def pick_paper(state):
+    """論文コーナー：論文手帖に載っている論文のうち、まだ話していないものを新しい順に。1日1回まで。"""
+    today = dt.datetime.now(u.JST).date().isoformat()
+    if state.get("chat_paper_day") == today:
+        return None
+    done = set(state.get("chat_papers", []))
+    papers = json.loads(PAPERS.read_text(encoding="utf-8"))["papers"]
+    for p in sorted(papers, key=lambda x: x["date"], reverse=True):
+        if p["id"] in done:
+            continue
+        link = (p.get("links") or {}).get("paper") or p["sources"][0]
+        return {"title": p["title_ja"], "link": link, "key": "paper:" + p["id"], "lang": "ja", "kind": "paper",
+                "paper": p}
+    return None
+
+
 def pick_headline(state_seen):
     for feed, need_ai in AI_FEEDS:
         for it in u.rss_items(feed):
@@ -122,6 +140,20 @@ def write_episode(cfg, news, last_lines):
             "properties": {"who": {"type": "string", "enum": SPEAKERS}, "text": {"type": "string"}}}}},
     }
     prev = "\n".join(f"{l['who']}：{l['text']}" for l in last_lines) or "（これが最初の会話です）"
+    if news["kind"] == "paper":
+        p = news["paper"]
+        material = (f"題名：{p['title_ja']}（原題：{p['title']}）\n発表：{p['venue']}（{p['date']}）\n"
+                    f"ひとことで：{p['summary']}\nポイント：" + " / ".join(p["points"]) +
+                    f"\nSarashinaとのつながり：{p['sarashina']}")
+        user = (f"前回の会話の終わり：\n{prev}\n\n"
+                "今日は「論文コーナー」です。SB Intuitionsの研究者の論文を、しなが解説役、さらが聞き役になって、"
+                "やさしく紹介します。下の材料に書かれていることだけを事実として話し、数字や結果を付け足さないでください。"
+                "難しい言葉は、さらが質問して、しながたとえ話で言い換えます。\n\n"
+                f"--- 材料 ---\n{material}\n\n"
+                "8行前後で書きます。最初はさらが「今日は論文コーナー！」のように始め、最後は次の話題につながる一言で終えます。"
+                "1行は60字以内。headline_ja には題名をそのまま書きます。"
+                "JSONで {\"headline_ja\": \"...\", \"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
+        return u.ask_sarashina(cfg, SYSTEM, user, schema, max_tokens=900)
     where = "海外のニュース（英語）" if news["lang"] == "en" else "ニュース"
     topic = ("AIやローカルLLMの話題です。二人もDGX Sparkの上で動くAIなので、そのことに軽く触れてもかまいません。"
              if news["kind"] == "ai" else "肩の力を抜いた、まったりした話題です。")
@@ -172,7 +204,7 @@ def main():
         doc = json.loads(CHAT.read_text(encoding="utf-8"))
         state = u.load_state(cfg)
         seen = set(state.get("chat_keys", []))
-        news = pick_headline(seen)
+        news = pick_paper(state) or pick_headline(seen)
         if not news:
             print("話題になる見出しが見つかりませんでした。")
             return
@@ -185,6 +217,11 @@ def main():
                 print("下書きに失敗:", e)
             if lines:
                 break
+        if news["kind"] == "paper":
+            # 論文は、うまく書けなかった日も「今日の分」として数える（同じ日に何度も挑戦しない）
+            state["chat_paper_day"] = dt.datetime.now(u.JST).date().isoformat()
+            if lines:
+                state.setdefault("chat_papers", []).append(news["paper"]["id"])
         state.setdefault("chat_keys", []).append(news["key"])
         state["chat_keys"] = state["chat_keys"][-2000:]
         if not lines:
@@ -196,6 +233,7 @@ def main():
         now = dt.datetime.now(u.JST)
         ep = {"id": now.strftime("%Y%m%d-%H%M"), "at": now.strftime("%Y-%m-%d %H:%M"),
               "news": {"title": news["title"], "title_ja": head if news["lang"] == "en" else news["title"],
+                       "paper_id": news["paper"]["id"] if news["kind"] == "paper" else None,
                        "lang": news["lang"], "kind": news["kind"], "link": news["link"]}, "lines": lines, "model": cfg["model"]}
         if args.dry_run:
             print(f"【{news['kind']}】{news['title']}" + (f"\n（日本語：{head}）" if news["lang"] == "en" else ""))

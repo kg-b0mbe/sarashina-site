@@ -9,6 +9,7 @@
 <meta name="description" content="SB Intuitionsの研究者が発表した論文を、Sarashinaとのつながりとあわせて日本語でやさしく解説する非公式ページ。">
 <style>
 /*__BASE_CSS__*/
+.paper:target { background: var(--paper-2); box-shadow: 0 0 0 12px var(--paper-2); }
 .paper .orig { font-size: 13px; color: var(--sub); font-style: italic; margin: 0 0 4px; line-height: 1.6; }
 .paper h2 { font-size: 20px; }
 .paper ul { margin: 8px 0; padding-left: 1.2em; }
@@ -50,7 +51,7 @@
   <p class="count" id="count"></p>
   <div id="list"></div>
   <p class="note">
-    解説は論文と公式の技術ブログを読んで書いた要約です。正確な内容は必ず原著をご確認ください。<br>
+    解説は論文と公式の技術ブログを読んで書いた要約です。正確な内容は必ず原著をご確認ください。「Sarashina下書き」の印がある論文は、DGX Spark上のSarashina2.2-3Bが要旨から下書きし、人が確認して載せたものです。<br>
     SB Intuitions所属（発表時）の著者を含む論文を載せています。<br>
     <span id="cite-note"></span>
   </p>
@@ -133,6 +134,10 @@
   }
   document.getElementById('updated').textContent = DATA.updated_at;
   render();
+  if (location.hash) {
+    var t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (t) t.scrollIntoView({ block: 'start' });
+  }
 })();
 </script>
 </body>

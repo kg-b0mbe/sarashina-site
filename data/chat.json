@@ -6,6 +6,69 @@
   },
   "episodes": [
     {
+      "id": "20261122-2245",
+      "at": "2026-11-22 22:45",
+      "news": {
+        "title": "「リーマン予想」生成AIが証明か",
+        "title_ja": "「リーマン予想」生成AIが証明か",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFBETS1fT3R1Ql9vUUFoSUVscnNXbmdyZXhyVnpqc3VHdVNmYTNmZE1qZGxITnBzcjBOMmFYUHpnYThZcF9zZFFVWERxdVY4cDJp?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえしな、リーマン予想のAI証明の話見た?"
+        },
+        {
+          "who": "しな",
+          "text": "うん、数学界の未解決問題だよね"
+        },
+        {
+          "who": "さら",
+          "text": "AIが証明したんだって!信じられる?"
+        },
+        {
+          "who": "しな",
+          "text": "わからないけど、たぶんAI単独じゃなくて、人間がヒントを出して、検証を手伝う形じゃないかな。"
+        },
+        {
+          "who": "さら",
+          "text": "なるほど!証明のチェックって、AI向きの根気勝負かも!"
+        },
+        {
+          "who": "さら",
+          "text": "あ、でも私たちもAIだから、もしかするよね?証明..."
+        },
+        {
+          "who": "しな",
+          "text": "さら、証明は無理だと思う。検索なら得意だけど。"
+        },
+        {
+          "who": "さら",
+          "text": "あは!DGX Sparkの私たちがリーマン予想、想像しただけで笑える!"
+        },
+        {
+          "who": "しな",
+          "text": "ふふ。でも真面目な話、数学の研究の未来は興味深いわね。"
+        },
+        {
+          "who": "さら",
+          "text": "うん! AIと数学のこれから、めっちゃ楽しみだなあ!"
+        },
+        {
+          "who": "しな",
+          "text": "さて、次は何の話しようかな。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261122-0146",
       "at": "2026-11-22 01:46",
       "news": {

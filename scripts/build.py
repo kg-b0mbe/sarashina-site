@@ -215,6 +215,11 @@ def validate_hf(doc):
     for rid, st in (doc.get("repos") or {}).items():
         if not isinstance(st.get("downloads"), int) or not isinstance(st.get("likes"), int):
             errors.append(f"hf_stats: {rid} の数値が不正です")
+    for org, o in (doc.get("orgs") or {}).items():
+        for metric, rows in (o.get("top") or {}).items():
+            for r in rows:
+                if not str(r.get("id", "")).startswith(org + "/") or not isinstance(r.get("value"), int):
+                    errors.append(f"hf_stats: {org} の上位モデル（{metric}）が不正です")
     return errors
 
 

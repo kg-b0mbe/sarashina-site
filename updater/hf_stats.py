@@ -67,6 +67,7 @@ def main():
             print(f"{author} を取得できませんでした: {e}")
             continue
         total = {"label": label, "models": 0, "downloads": 0, "downloads_all_time": 0, "likes": 0}
+        per = []  # 公開元の中で、どのモデルが数字を稼いでいるかを見るため
         for it in items:
             rid = it.get("id") or it.get("modelId")
             d30 = int(it.get("downloads") or 0)
@@ -77,10 +78,16 @@ def main():
             total["likes"] += likes
             if dall is not None:
                 total["downloads_all_time"] += int(dall)
+            per.append({"id": rid, "downloads": d30, "downloads_all_time": None if dall is None else int(dall), "likes": likes})
             if author == "sbintuitions":
                 repos[rid] = {"downloads": d30, "downloads_all_time": None if dall is None else int(dall), "likes": likes}
         if total["downloads_all_time"] == 0:
             total["downloads_all_time"] = None
+        # 物差しごとの上位3モデル
+        total["top"] = {}
+        for metric in ("downloads", "downloads_all_time", "likes"):
+            ranked = sorted((r for r in per if r[metric]), key=lambda r: -r[metric])[:3]
+            total["top"][metric] = [{"id": r["id"], "value": r[metric]} for r in ranked]
         orgs[author] = total
 
     if "sbintuitions" not in orgs:
@@ -99,6 +106,9 @@ def main():
             print(f"{s['downloads']:>9,}  {rid}")
         for a, o in orgs.items():
             print(f"{o['downloads']:>9,}  {o['label']}（{o['models']}モデル）")
+            for t in o["top"]["downloads"]:
+                share = t["value"] / o["downloads"] * 100 if o["downloads"] else 0
+                print(f"{'':>11}{t['value']:>9,}（{share:.0f}%）  {t['id']}")
         return
 
     old = OUT.read_text(encoding="utf-8") if OUT.exists() else ""

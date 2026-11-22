@@ -168,6 +168,9 @@ main { max-width: 980px; margin: 0 auto; padding: 0 22px 72px; }
 .bar .num { font-variant-numeric: tabular-nums; color: var(--sub); white-space: nowrap; }
 .bar .track { grid-column: 2; height: 6px; background: var(--paper-2); margin-top: 4px; }
 .bar .fill { height: 6px; background: var(--hanada); }
+.bar .top { grid-column: 2; font-size: 12px; color: var(--sub); margin-top: 4px; line-height: 1.7; }
+.bar .top a { color: inherit; }
+.bar .top .pct { font-variant-numeric: tabular-nums; }
 .bar.ours .fill { background: var(--kobai); }
 .bar.ours .name b { color: var(--suou); }
 .entry:target { background: var(--paper-2); box-shadow: 0 0 0 12px var(--paper-2); }
@@ -205,7 +208,7 @@ main { max-width: 980px; margin: 0 auto; padding: 0 22px 72px; }
     <h3>Sarashinaの中での順位</h3>
     <div class="bars" id="pop-models"></div>
     <h3>国産オープンモデルの公開元くらべ</h3>
-    <p class="lead">各公開元がHugging Faceに置いている全モデルの合計です。モデルの数や、派生モデル・量子化版の有無で数字は大きく変わります。</p>
+    <p class="lead">各公開元がHugging Faceに置いている全モデルの合計です。モデルの数や、派生モデル・量子化版の有無で数字は大きく変わります。「上位」は、その公開元の中で数字の多い3モデルと、合計に占める割合です。検索用の埋め込みモデルのように、仕組みに組み込まれて何度も取りに来られるモデルは数字が伸びやすい点にご注意ください。</p>
     <div class="bars" id="pop-orgs"></div>
   </section>
   <div class="filters">
@@ -422,6 +425,14 @@ main { max-width: 980px; margin: 0 auto; padding: 0 22px 72px; }
           '<span class="name"><b>' + esc(r.m.name) + '</b><span class="num">' + num(r.h[metric]) + UNIT[metric] + '</span></span>' +
           '<span class="track"><span class="fill" style="display:block;width:' + (r.h[metric] / max * 100).toFixed(1) + '%"></span></span></a>';
       }).join('') || '<p class="count">この物差しの数字はまだありません。</p>';
+      function topOf(o) {
+        var rows = (o.top && o.top[metric]) || [];
+        if (!rows.length || !o[metric]) return '';
+        return '<span class="top">上位：' + rows.map(function (t) {
+          return '<a href="https://huggingface.co/' + esc(t.id) + '" target="_blank" rel="noopener">' + esc(t.id.split('/')[1]) + '</a>' +
+            ' <span class="pct">' + Math.round(t.value / o[metric] * 100) + '%</span>';
+        }).join('・') + '</span>';
+      }
       var orgs = Object.keys(HF.orgs).map(function (k) { return { k: k, o: HF.orgs[k] }; })
         .filter(function (r) { return r.o[metric] !== null; })
         .sort(function (a, b) { return b.o[metric] - a.o[metric]; });
@@ -429,7 +440,8 @@ main { max-width: 980px; margin: 0 auto; padding: 0 22px 72px; }
       document.getElementById('pop-orgs').innerHTML = orgs.map(function (r, i) {
         return '<div class="bar' + (r.k === 'sbintuitions' ? ' ours' : '') + '"><span class="rank">' + (i + 1) + '</span>' +
           '<span class="name"><b>' + esc(r.o.label) + '</b><span class="num">' + num(r.o[metric]) + UNIT[metric] + '・' + r.o.models + 'モデル</span></span>' +
-          '<span class="track"><span class="fill" style="display:block;width:' + (r.o[metric] / omax * 100).toFixed(1) + '%"></span></span></div>';
+          '<span class="track"><span class="fill" style="display:block;width:' + (r.o[metric] / omax * 100).toFixed(1) + '%"></span></span>' +
+          topOf(r.o) + '</div>';
       }).join('') || '<p class="count">この物差しの数字はまだありません。</p>';
     }
     var fm = document.getElementById('f-metric');

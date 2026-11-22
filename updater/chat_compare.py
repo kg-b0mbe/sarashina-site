@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """茶話の聞き比べ（試作）。サイトには何も書き込まず、pushもしない。
 
-同じ話題で、2とおりの台本を作って並べる。
+同じ話題で、4とおりの台本を作って並べる。
   A：いまのやり方（Sarashinaだけで8行前後）
   B：GLMがあらすじ（だれが、何を話すか）を作り、Sarashinaがそれに沿ってセリフを書く。
      最後にGLMが「見出しや材料にない事実を足していないか」を確かめる。
   C：参考として、同じあらすじでセリフもGLMが書く。
+  D：Cの下書きを、Sarashinaがさらとしなの口調に言い直す（中身は変えない）。最後にGLMが確かめる。
 
   python3 updater/chat_compare.py                 # 論文手帖のいちばん新しい論文で比べる
   python3 updater/chat_compare.py --paper <id>    # 論文を指定
@@ -189,6 +190,42 @@ def glm_lines(gcfg, news, plan):
     return [{"who": b["who"], "text": str(l.get("text", "")).strip()} for b, l in zip(plan["beats"], got)]
 
 
+LATIN = re.compile(r"[A-Za-z][A-Za-z0-9.\-]+")
+
+
+def restyle(cfg, news, draft):
+    """D：GLMの下書き（C）を、Sarashinaがさらとしなの口調に言い直す。意味と事実は変えない。"""
+    out, kept = [], 0
+    for i in range(0, len(draft), CHUNK):
+        part = draft[i:i + CHUNK]
+        prev = "\n".join(f"{l['who']}：{l['text']}" for l in out[-4:]) or "（ここから始まります）"
+        todo = "\n".join(f"{k + 1}. {l['who']}：{l['text']}" for k, l in enumerate(part))
+        schema = {"type": "object", "additionalProperties": False, "required": ["lines"], "properties": {
+            "lines": {"type": "array", "minItems": len(part), "maxItems": len(part), "items": {
+                "type": "object", "additionalProperties": False, "required": ["who", "text"],
+                "properties": {"who": {"type": "string", "enum": c.SPEAKERS}, "text": {"type": "string"}}}}}}
+        user = (f"直前までの会話：\n{prev}\n\n"
+                f"次の{len(part)}行の下書きを、さらとしなの話し言葉に言い直してください。\n{todo}\n\n"
+                "守ること：言っている中身・例・数字は一切変えない。新しい例や事実を足さない。英語を混ぜない。"
+                "順番と話者はそのまま。言い回しと語尾だけを、その人らしく自然にする。1行は60字以内。"
+                "JSONで {\"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
+        try:
+            got = u.ask_sarashina(cfg, c.SYSTEM, user, schema, max_tokens=600).get("lines", [])
+        except Exception:
+            got = []
+        for k, d in enumerate(part):
+            text = str(got[k].get("text", "")) if k < len(got) else ""
+            text = re.sub(r"\s+", " ", text).replace("</s>", "").strip()
+            text = re.sub(r"^(さら|しな)[:：]\s*", "", text)
+            text = re.sub(r"Sarashinar(?=\d)", "Sarashina", text)
+            # 言い直しで英単語が増えた・極端に短い/長い行は、下書きのほうを使う
+            new_latin = set(LATIN.findall(text)) - set(LATIN.findall(d["text"] + material(news)))
+            if not (2 <= len(text) <= 120) or new_latin:
+                text, kept = d["text"], kept + 1
+            out.append({"who": d["who"], "text": text})
+    return out, kept
+
+
 def check(gcfg, news, lines):
     schema = {"type": "object", "additionalProperties": False, "required": ["ok", "problems"], "properties": {
         "ok": {"type": "boolean"}, "problems": {"type": "array", "items": {"type": "string"}}}}
@@ -245,6 +282,19 @@ def main():
     tc = time.time() - t
     print(f"=== C：あらすじもセリフもGLM（参考・{tc:.0f}秒）===\n{show(cl)}\n")
 
+    t = time.time()
+    dl, kept, review_d_txt = [], 0, "（下書きがないので作れませんでした）"
+    if cl:
+        dl, kept = restyle(cfg, news, cl)
+        try:
+            rd = check(gcfg, news, dl)
+            review_d_txt = "問題なし" if rd.get("ok") and not rd.get("problems") else "\n".join("- " + p for p in rd["problems"])
+        except Exception as e:
+            review_d_txt = f"確認に失敗: {e}"
+    td = time.time() - t
+    note = f"（{kept}行は言い直しがおかしかったので、GLMの下書きのまま）" if kept else ""
+    print(f"=== D：GLMの下書き → Sarashinaが言い直し（{td:.0f}秒）===\n{show(dl)}\n{note}\n\n[GLMの確認]\n{review_d_txt}\n")
+
     OUT.mkdir(exist_ok=True)
     path = OUT / (dt.datetime.now(u.JST).strftime("%Y%m%d-%H%M") + ".md")
     path.write_text(
@@ -252,7 +302,9 @@ def main():
         f"## A：Sarashinaだけ（{len(a or [])}行・{ta:.0f}秒）\n\n{show(a)}\n\n"
         f"## B：GLMのあらすじ → Sarashinaのセリフ（{len(b)}行・{tb:.0f}秒）\n\n### あらすじ\n\n{plan_txt}\n\n"
         f"### セリフ\n\n{show(b)}\n\n### GLMの確認\n\n{review_txt}\n\n"
-        f"## C：あらすじもセリフもGLM（参考・{len(cl)}行・{tc:.0f}秒）\n\n{show(cl)}\n", encoding="utf-8")
+        f"## C：あらすじもセリフもGLM（参考・{len(cl)}行・{tc:.0f}秒）\n\n{show(cl)}\n\n"
+        f"## D：GLMの下書き → Sarashinaが言い直し（{len(dl)}行・{td:.0f}秒）\n\n{show(dl)}\n\n{note}\n\n"
+        f"### GLMの確認\n\n{review_d_txt}\n", encoding="utf-8")
     print("保存しました:", path)
 
 

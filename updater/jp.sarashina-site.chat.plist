@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  Mac miniで2時間ごとに「さらとしなの茶話」を1回分つくる（launchd）。
+  Mac miniで1日6回（7・10・13・16・19・22時の7分）、「さらとしなの茶話」を1回分つくる（launchd）。
   REPO_PATH をリポジトリの場所に書き換えてから ~/Library/LaunchAgents/ に置く。
-  間隔を変えるときは StartInterval（秒）を変える。止めるときは updater/.env に CHAT_ENABLED=0。
+  時刻を変えるときは、ここと updater/chat.py の PROGRAM（番組表）の両方を変える。止めるときは updater/.env に CHAT_ENABLED=0。
 -->
 <plist version="1.0">
 <dict>
@@ -15,8 +15,15 @@
     <string>-lc</string>
     <string>cd REPO_PATH &amp;&amp; /usr/bin/python3 updater/chat.py</string>
   </array>
-  <key>StartInterval</key>
-  <integer>7200</integer>
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>7</integer></dict>
+    <dict><key>Hour</key><integer>10</integer><key>Minute</key><integer>7</integer></dict>
+    <dict><key>Hour</key><integer>13</integer><key>Minute</key><integer>7</integer></dict>
+    <dict><key>Hour</key><integer>16</integer><key>Minute</key><integer>7</integer></dict>
+    <dict><key>Hour</key><integer>19</integer><key>Minute</key><integer>7</integer></dict>
+    <dict><key>Hour</key><integer>22</integer><key>Minute</key><integer>7</integer></dict>
+  </array>
   <key>StandardOutPath</key>
   <string>/tmp/sarashina-site-chat.log</string>
   <key>StandardErrorPath</key>

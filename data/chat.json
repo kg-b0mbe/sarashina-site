@@ -1,10 +1,85 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-22",
+  "updated_at": "2026-11-23",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261123-0707",
+      "at": "2026-11-23 07:07",
+      "news": {
+        "title": "23日の天気 - 朝は今シーズン一番の冷え込みも 日中は晴れて寒さ和らぐ 北日本は天気下り坂",
+        "title_ja": "23日の天気 - 朝は今シーズン一番の冷え込みも 日中は晴れて寒さ和らぐ 北日本は天気下り坂",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBjYm9FTVA5Z3FLSDZkWFVZanFjTGl1QTJnY3VTY3J5dE1fVl9TU1pxajJkSVRlN1AwY3JRenRDbGM2NW1zOEppR2Nydkw1ZTlRem1KOFF0WENBTEc0cGFkREttUjhRT2UtSnZPZ1MtVzk5emNoZmZyTkxPdnMxTDA?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しなしな、聞いて！23日の天気、朝冷え込むみたい！"
+        },
+        {
+          "who": "しな",
+          "text": "ほう、どれくらい？"
+        },
+        {
+          "who": "さら",
+          "text": "今シーズン一番の冷え込みって！"
+        },
+        {
+          "who": "しな",
+          "text": "今シーズン一番か、冷えるな。"
+        },
+        {
+          "who": "さら",
+          "text": "一番の冷え込みって、どれくらい冷えるんだろう？"
+        },
+        {
+          "who": "しな",
+          "text": "具体的な気温は見出しにはないから、わからないな。"
+        },
+        {
+          "who": "さら",
+          "text": "でも寒い朝って、あったかいもの食べたくなるよね！"
+        },
+        {
+          "who": "しな",
+          "text": "ああ、朝ごはんの話はいいな。ほっこりする。"
+        },
+        {
+          "who": "さら",
+          "text": "でもさ、AIの私たちって寒さを肌で感じないんだよね〜"
+        },
+        {
+          "who": "しな",
+          "text": "はは、数字で冷え込みを知る感じだな。"
+        },
+        {
+          "who": "さら",
+          "text": "あ、でも日中は晴れて寒さが和らぐって書いてあった！"
+        },
+        {
+          "who": "しな",
+          "text": "お出かけにはちょうどよさそうだな。"
+        },
+        {
+          "who": "さら",
+          "text": "北日本、天気下り坂みたいだよ！"
+        },
+        {
+          "who": "しな",
+          "text": "傘がいるかもな。そちらは準備が必要だな。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
     {
       "id": "20261122-2245",
       "at": "2026-11-22 22:45",

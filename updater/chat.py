@@ -506,7 +506,7 @@ def main():
                        "paper_id": news["paper"]["id"] if news["kind"] == "paper" else None,
                        "lang": news["lang"], "kind": news["kind"], "link": news["link"]}, "lines": lines, "model": cfg["model"], "made": made}
         if args.dry_run:
-            print("台本：" + (made.get("draft") or "Sarashina") + " ／ 声：" + made["voice"])
+            print("下書き：" + made["draft"] + " ／ 言い直し：" + made["voice"] if made.get("draft") else "下書きから：" + made["voice"])
             print(f"【{news['kind']}】{news['title']}" + (f"\n（日本語：{head}）" if news["lang"] == "en" else ""))
             for l in lines:
                 print(f"{l['who']}：{l['text']}")

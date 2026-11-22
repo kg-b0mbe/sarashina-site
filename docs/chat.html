@@ -218,7 +218,7 @@ details.past[open] .talk { margin-top: 12px; }
     これはAI同士の雑談です。ニュースについては見出しだけを渡していますが、内容が正確とは限りません。事実は必ず元の記事でご確認ください。<br>
     事件・事故・災害・政治などの見出しは、雑談の話題にしないようにしています。<br>
     「声で聴く」は、お使いの端末に入っている日本語の音声で読み上げます。声は端末によって変わります。<br>
-    台本の下書きは同じDGX Spark上のGLMが書き、それをSarashina2.2-3B-instructがさらとしなの口調に言い直して演じています（GLMが動いていないときは、Sarashinaが台本から書きます）。各回の下に、どちらが担当したかを書いています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
+    会話の下書きは同じDGX Spark上のGLMが書き、それをSarashina2.2-3B-instructがさらとしなの口調に言い直しています（GLMが動いていないときは、Sarashinaが下書きから書きます）。各回の下に、どちらが担当したかを書いています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
   </p>
 </main>
 <footer class="colophon"><div class="colophon-inner">国産AI「Sarashina」の情報を個人でまとめている非公式のサイトです。SB Intuitions株式会社とは関係ありません。正確な最新情報は公式サイトとHugging Faceをご確認ください。<br>データ更新日：<span id="updated"></span><div class="irome-title">このサイトの色　紅梅と縹の匂（上から）</div><div class="irome"><span style="--c:var(--suou)"><i></i>蘇芳</span><span style="--c:var(--kobai)"><i></i>紅梅</span><span style="--c:var(--usubeni)"><i></i>薄紅</span><span style="--c:var(--shiro)"><i></i>白</span><span style="--c:var(--usuhanada)"><i></i>薄縹</span><span style="--c:var(--hanada)"><i></i>縹</span></div></div></footer>
@@ -249,7 +249,7 @@ details.past[open] .talk { margin-top: 12px; }
     return ep.news.paper_id ? '<a href="papers.html#p-' + esc(ep.news.paper_id) + '">論文手帖で読む</a>' : '';
   }
   function madeOf(ep) {
-    return '<span class="made">' + (ep.made && ep.made.draft ? '台本：GLM ／ 声：Sarashina' : '台本も声も：Sarashina') + '</span>';
+    return '<span class="made">' + (ep.made && ep.made.draft ? '下書き：GLM ／ 言い直し：Sarashina' : '下書きから：Sarashina') + '</span>';
   }
   function titleOf(ep) { return ep.news.title_ja || ep.news.title; }
   function origOf(ep) { return ep.news.lang === 'en' ? '<span class="orig">原題：' + esc(ep.news.title) + '（日本語の見出しはSarashinaによる意訳）</span>' : ''; }

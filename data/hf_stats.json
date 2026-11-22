@@ -8,168 +8,168 @@
       "likes": 4
     },
     "sbintuitions/diafill-llm-jp-3.1-13b-instruct4": {
-      "downloads": 146,
-      "downloads_all_time": 594,
+      "downloads": 148,
+      "downloads_all_time": 600,
       "likes": 6
     },
     "sbintuitions/diafill-sarashina2.2-3b-instruct": {
-      "downloads": 174,
-      "downloads_all_time": 5370,
+      "downloads": 167,
+      "downloads_all_time": 5373,
       "likes": 4
     },
     "sbintuitions/hikari-medium": {
-      "downloads": 220,
-      "downloads_all_time": 450,
+      "downloads": 223,
+      "downloads_all_time": 457,
       "likes": 2
     },
     "sbintuitions/kana-whisper": {
-      "downloads": 38302,
-      "downloads_all_time": 157466,
+      "downloads": 38108,
+      "downloads_all_time": 159096,
       "likes": 22
     },
     "sbintuitions/modernbert-ja-130m": {
-      "downloads": 12314,
-      "downloads_all_time": 498761,
+      "downloads": 12474,
+      "downloads_all_time": 499178,
       "likes": 51
     },
     "sbintuitions/modernbert-ja-30m": {
-      "downloads": 3075,
-      "downloads_all_time": 250628,
+      "downloads": 2921,
+      "downloads_all_time": 250675,
       "likes": 9
     },
     "sbintuitions/modernbert-ja-310m": {
-      "downloads": 36036,
-      "downloads_all_time": 359052,
+      "downloads": 33511,
+      "downloads_all_time": 359573,
       "likes": 33
     },
     "sbintuitions/modernbert-ja-70m": {
-      "downloads": 2556,
-      "downloads_all_time": 448956,
+      "downloads": 2373,
+      "downloads_all_time": 448973,
       "likes": 9
     },
     "sbintuitions/nest-ja-0.1b": {
-      "downloads": 145,
-      "downloads_all_time": 2265,
+      "downloads": 146,
+      "downloads_all_time": 2269,
       "likes": 7
     },
     "sbintuitions/nest-ja-0.6b": {
-      "downloads": 283,
-      "downloads_all_time": 1569,
+      "downloads": 286,
+      "downloads_all_time": 1575,
       "likes": 11
     },
     "sbintuitions/sarashina-embedding-v1-1b": {
-      "downloads": 741,
-      "downloads_all_time": 550265,
+      "downloads": 753,
+      "downloads_all_time": 550283,
       "likes": 38
     },
     "sbintuitions/sarashina-embedding-v2-1b": {
-      "downloads": 1766,
-      "downloads_all_time": 82909,
+      "downloads": 1757,
+      "downloads_all_time": 82935,
       "likes": 28
     },
     "sbintuitions/sarashina1-13b": {
-      "downloads": 740,
-      "downloads_all_time": 14850,
+      "downloads": 741,
+      "downloads_all_time": 14868,
       "likes": 1
     },
     "sbintuitions/sarashina1-65b": {
-      "downloads": 79,
-      "downloads_all_time": 14993,
+      "downloads": 81,
+      "downloads_all_time": 14996,
       "likes": 6
     },
     "sbintuitions/sarashina1-7b": {
-      "downloads": 120,
-      "downloads_all_time": 14968,
+      "downloads": 122,
+      "downloads_all_time": 14974,
       "likes": 1
     },
     "sbintuitions/sarashina2-13b": {
-      "downloads": 1580,
-      "downloads_all_time": 30750,
+      "downloads": 1759,
+      "downloads_all_time": 30953,
       "likes": 19
     },
     "sbintuitions/sarashina2-70b": {
-      "downloads": 113,
-      "downloads_all_time": 23111,
+      "downloads": 116,
+      "downloads_all_time": 23115,
       "likes": 17
     },
     "sbintuitions/sarashina2-7b": {
-      "downloads": 1815,
-      "downloads_all_time": 57486,
+      "downloads": 2060,
+      "downloads_all_time": 57798,
       "likes": 29
     },
     "sbintuitions/sarashina2-8x70b": {
-      "downloads": 162,
-      "downloads_all_time": 1167,
+      "downloads": 160,
+      "downloads_all_time": 1169,
       "likes": 34
     },
     "sbintuitions/sarashina2-vision-14b": {
-      "downloads": 84,
-      "downloads_all_time": 8454,
+      "downloads": 83,
+      "downloads_all_time": 8457,
       "likes": 13
     },
     "sbintuitions/sarashina2-vision-8b": {
-      "downloads": 132,
-      "downloads_all_time": 19056,
+      "downloads": 127,
+      "downloads_all_time": 19057,
       "likes": 13
     },
     "sbintuitions/sarashina2.1-1b": {
-      "downloads": 101,
-      "downloads_all_time": 5607,
+      "downloads": 104,
+      "downloads_all_time": 5610,
       "likes": 21
     },
     "sbintuitions/sarashina2.2-0.5b": {
-      "downloads": 1361,
-      "downloads_all_time": 83171,
+      "downloads": 1357,
+      "downloads_all_time": 83208,
       "likes": 16
     },
     "sbintuitions/sarashina2.2-0.5b-instruct-v0.1": {
-      "downloads": 2669,
-      "downloads_all_time": 336676,
+      "downloads": 2775,
+      "downloads_all_time": 336811,
       "likes": 16
     },
     "sbintuitions/sarashina2.2-1b": {
-      "downloads": 1011,
-      "downloads_all_time": 22209,
+      "downloads": 973,
+      "downloads_all_time": 22236,
       "likes": 14
     },
     "sbintuitions/sarashina2.2-1b-instruct-v0.1": {
       "downloads": 2411,
-      "downloads_all_time": 42650,
+      "downloads_all_time": 42765,
       "likes": 17
     },
     "sbintuitions/sarashina2.2-3b": {
-      "downloads": 1359,
-      "downloads_all_time": 26937,
+      "downloads": 1419,
+      "downloads_all_time": 27027,
       "likes": 22
     },
     "sbintuitions/sarashina2.2-3b-instruct-v0.1": {
-      "downloads": 15968,
-      "downloads_all_time": 183037,
+      "downloads": 16357,
+      "downloads_all_time": 183695,
       "likes": 39
     },
     "sbintuitions/sarashina2.2-ocr": {
-      "downloads": 1290,
-      "downloads_all_time": 11010,
+      "downloads": 1274,
+      "downloads_all_time": 11030,
       "likes": 34
     },
     "sbintuitions/sarashina2.2-tts": {
-      "downloads": 2076,
-      "downloads_all_time": 85028,
+      "downloads": 1968,
+      "downloads_all_time": 85053,
       "likes": 76
     },
     "sbintuitions/sarashina2.2-vision-3b": {
-      "downloads": 973,
-      "downloads_all_time": 22034,
+      "downloads": 950,
+      "downloads_all_time": 22037,
       "likes": 20
     },
     "sbintuitions/tiny-lm": {
-      "downloads": 10899,
-      "downloads_all_time": 193686,
+      "downloads": 10728,
+      "downloads_all_time": 193962,
       "likes": 2
     },
     "sbintuitions/tiny-lm-chat": {
-      "downloads": 2355,
-      "downloads_all_time": 62721,
+      "downloads": 2328,
+      "downloads_all_time": 62808,
       "likes": 2
     }
   },
@@ -177,44 +177,308 @@
     "sbintuitions": {
       "label": "SB Intuitions（Sarashina）",
       "models": 34,
-      "downloads": 143056,
-      "downloads_all_time": 3617886,
-      "likes": 636
+      "downloads": 140760,
+      "downloads_all_time": 3622616,
+      "likes": 636,
+      "top": {
+        "downloads": [
+          {
+            "id": "sbintuitions/kana-whisper",
+            "value": 38108
+          },
+          {
+            "id": "sbintuitions/modernbert-ja-310m",
+            "value": 33511
+          },
+          {
+            "id": "sbintuitions/sarashina2.2-3b-instruct-v0.1",
+            "value": 16357
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "sbintuitions/sarashina-embedding-v1-1b",
+            "value": 550283
+          },
+          {
+            "id": "sbintuitions/modernbert-ja-130m",
+            "value": 499178
+          },
+          {
+            "id": "sbintuitions/modernbert-ja-70m",
+            "value": 448973
+          }
+        ],
+        "likes": [
+          {
+            "id": "sbintuitions/sarashina2.2-tts",
+            "value": 76
+          },
+          {
+            "id": "sbintuitions/modernbert-ja-130m",
+            "value": 51
+          },
+          {
+            "id": "sbintuitions/sarashina2.2-3b-instruct-v0.1",
+            "value": 39
+          }
+        ]
+      }
     },
     "llm-jp": {
       "label": "LLM-jp（国立情報学研究所）",
       "models": 278,
-      "downloads": 625312,
-      "downloads_all_time": 6691605,
-      "likes": 862
+      "downloads": 632019,
+      "downloads_all_time": 6718767,
+      "likes": 862,
+      "top": {
+        "downloads": [
+          {
+            "id": "llm-jp/llm-jp-4-33b-thinking-gguf",
+            "value": 270794
+          },
+          {
+            "id": "llm-jp/llm-jp-4.1-8b-thinking",
+            "value": 113401
+          },
+          {
+            "id": "llm-jp/llm-jp-3-150m",
+            "value": 73748
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "llm-jp/llm-jp-3-3.7b-instruct",
+            "value": 2363173
+          },
+          {
+            "id": "llm-jp/llm-jp-4-33b-thinking-gguf",
+            "value": 788864
+          },
+          {
+            "id": "llm-jp/llm-jp-3-150m",
+            "value": 608699
+          }
+        ],
+        "likes": [
+          {
+            "id": "llm-jp/llm-jp-4-8b-thinking",
+            "value": 52
+          },
+          {
+            "id": "llm-jp/llm-jp-moshi-v1",
+            "value": 49
+          },
+          {
+            "id": "llm-jp/llm-jp-4-33b-thinking",
+            "value": 45
+          }
+        ]
+      }
     },
     "pfnet": {
       "label": "Preferred Networks（PLaMo）",
       "models": 59,
-      "downloads": 764316,
-      "downloads_all_time": 3238912,
-      "likes": 790
+      "downloads": 766767,
+      "downloads_all_time": 3273641,
+      "likes": 792,
+      "top": {
+        "downloads": [
+          {
+            "id": "pfnet/plamo-embedding-1b",
+            "value": 407717
+          },
+          {
+            "id": "pfnet/plamo-3-translate-0.8b-GGUF",
+            "value": 105096
+          },
+          {
+            "id": "pfnet/plamo-3-translate-2b-GGUF",
+            "value": 77390
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "pfnet/plamo-embedding-1b",
+            "value": 1521681
+          },
+          {
+            "id": "pfnet/plamo-2-1b",
+            "value": 647280
+          },
+          {
+            "id": "pfnet/plamo-2-translate",
+            "value": 216031
+          }
+        ],
+        "likes": [
+          {
+            "id": "pfnet/plamo-2-translate",
+            "value": 130
+          },
+          {
+            "id": "pfnet/plamo-13b",
+            "value": 86
+          },
+          {
+            "id": "pfnet/plamo-3-translate-0.8b",
+            "value": 50
+          }
+        ]
+      }
     },
     "tokyotech-llm": {
       "label": "Swallow（東京科学大学など）",
       "models": 138,
-      "downloads": 55310,
-      "downloads_all_time": 3138238,
-      "likes": 559
+      "downloads": 55688,
+      "downloads_all_time": 3140227,
+      "likes": 559,
+      "top": {
+        "downloads": [
+          {
+            "id": "tokyotech-llm/Llama-3-Swallow-8B-Instruct-v0.1",
+            "value": 9442
+          },
+          {
+            "id": "tokyotech-llm/Qwen3-Swallow-8B-RL-v0.2",
+            "value": 5323
+          },
+          {
+            "id": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+            "value": 5276
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "tokyotech-llm/Llama-3-Swallow-8B-Instruct-v0.1",
+            "value": 371922
+          },
+          {
+            "id": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+            "value": 291478
+          },
+          {
+            "id": "tokyotech-llm/Swallow-7b-instruct-hf",
+            "value": 234825
+          }
+        ],
+        "likes": [
+          {
+            "id": "tokyotech-llm/Swallow-7b-instruct-hf",
+            "value": 44
+          },
+          {
+            "id": "tokyotech-llm/Swallow-70b-instruct-hf",
+            "value": 37
+          },
+          {
+            "id": "tokyotech-llm/Swallow-MS-7b-v0.1",
+            "value": 29
+          }
+        ]
+      }
     },
     "elyza": {
       "label": "ELYZA",
       "models": 20,
-      "downloads": 68050,
-      "downloads_all_time": 3111748,
-      "likes": 695
+      "downloads": 68182,
+      "downloads_all_time": 3112371,
+      "likes": 695,
+      "top": {
+        "downloads": [
+          {
+            "id": "elyza/ELYZA-Shortcut-1.0-Qwen-7B",
+            "value": 49274
+          },
+          {
+            "id": "elyza/Llama-3-ELYZA-JP-8B",
+            "value": 4063
+          },
+          {
+            "id": "elyza/Llama-3-ELYZA-JP-8B-GGUF",
+            "value": 2685
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "elyza/Llama-3-ELYZA-JP-8B",
+            "value": 1080490
+          },
+          {
+            "id": "elyza/ELYZA-japanese-Llama-2-7b-instruct",
+            "value": 897703
+          },
+          {
+            "id": "elyza/ELYZA-japanese-Llama-2-7b-fast-instruct",
+            "value": 203493
+          }
+        ],
+        "likes": [
+          {
+            "id": "elyza/Llama-3-ELYZA-JP-8B",
+            "value": 150
+          },
+          {
+            "id": "elyza/ELYZA-japanese-Llama-2-7b",
+            "value": 95
+          },
+          {
+            "id": "elyza/ELYZA-japanese-Llama-2-7b-fast-instruct",
+            "value": 83
+          }
+        ]
+      }
     },
     "stockmark": {
       "label": "ストックマーク",
       "models": 14,
-      "downloads": 3440,
-      "downloads_all_time": 175970,
-      "likes": 189
+      "downloads": 3411,
+      "downloads_all_time": 176049,
+      "likes": 189,
+      "top": {
+        "downloads": [
+          {
+            "id": "stockmark/gpt-neox-japanese-1.4b",
+            "value": 945
+          },
+          {
+            "id": "stockmark/stockmark-13b",
+            "value": 847
+          },
+          {
+            "id": "stockmark/Stockmark-DocReasoner-Qwen2.5-VL-32B-FP8-dynamic",
+            "value": 526
+          }
+        ],
+        "downloads_all_time": [
+          {
+            "id": "stockmark/stockmark-13b",
+            "value": 63063
+          },
+          {
+            "id": "stockmark/stockmark-100b",
+            "value": 27577
+          },
+          {
+            "id": "stockmark/gpt-neox-japanese-1.4b",
+            "value": 27486
+          }
+        ],
+        "likes": [
+          {
+            "id": "stockmark/stockmark-13b",
+            "value": 40
+          },
+          {
+            "id": "stockmark/stockmark-100b",
+            "value": 34
+          },
+          {
+            "id": "stockmark/gpt-neox-japanese-1.4b",
+            "value": 26
+          }
+        ]
+      }
     }
   }
 }

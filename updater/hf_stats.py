@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "hf_stats.json"
 MODELS = ROOT / "data" / "models.json"
 JST = dt.timezone(dt.timedelta(hours=9))
-UA = "sarashina-fan-site-updater/1.0"
+UA = "sarashina-site-updater/1.0"
 
 # 比べる国産オープンモデルの公開元（Hugging Faceのアカウント名）
 ORGS = {

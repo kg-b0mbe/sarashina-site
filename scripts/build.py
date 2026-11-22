@@ -42,12 +42,12 @@ def header(current):
         parts.append(f'<a href="{href}"{cur}>{label}</a>')
     links = "".join(parts)
     return (f'<header class="masthead"><div class="masthead-inner">'
-            f'<a class="site-name" href="index.html">{SITE_NAME}<small>非公式ファンサイト</small></a>'
+            f'<a class="site-name" href="index.html">{SITE_NAME}<small>個人の情報サイト（非公式）</small></a>'
             f'<nav class="site-nav" aria-label="サイト内">{links}</nav></div></header>')
 
 
 FOOTER = ('<footer class="colophon"><div class="colophon-inner">'
-          '国産AI「Sarashina」を応援する個人の非公式ファンサイトです。SB Intuitions株式会社とは関係ありません。'
+          '国産AI「Sarashina」の情報を個人でまとめている非公式のサイトです。SB Intuitions株式会社とは関係ありません。'
           '正確な最新情報は公式サイトとHugging Faceをご確認ください。<br>'
           'データ更新日：<span id="updated"></span>'
           '<div class="irome-title">このサイトの色　紅梅と縹の匂（上から）</div>'

@@ -31,7 +31,7 @@ OUT = ROOT / "data" / "paper_stats.json"
 JST = dt.timezone(dt.timedelta(hours=9))
 API = "https://api.semanticscholar.org/graph/v1/paper/"
 FIELDS = "title,citationCount,influentialCitationCount,url"
-UA = "sarashina-fan-site-updater/1.0"
+UA = "sarashina-site-updater/1.0"
 GAP = 3.0  # 1件ごとの間隔（秒）。キーなしのAPIは共用の枠なので、ゆっくり聞く
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sarashinaファンサイトの自動更新（Mac miniで実行）。
+"""Sarashina 帖（個人の情報サイト）の自動更新（Mac miniで実行）。
 
 流れ:
   1. 集める   … Hugging Face API・SB Intuitionsのブログ・Google ニュース・arXivから新しい情報を探す（スクリプト）
@@ -36,7 +36,7 @@ MODELS = ROOT / "data" / "models.json"
 EVENTS = ROOT / "data" / "events.json"
 PAPERS = ROOT / "data" / "papers.json"
 JST = dt.timezone(dt.timedelta(hours=9))
-UA = "sarashina-fan-site-updater/1.0 (+https://github.com/)"
+UA = "sarashina-site-updater/1.0 (+https://github.com/)"
 
 
 # ---------------------------------------------------------------- 設定
@@ -134,7 +134,7 @@ def ask_sarashina(cfg, system, user, schema, max_tokens=500):
     return json.loads(m.group(0))
 
 
-SYSTEM = ("あなたは国産AI「Sarashina」の非公式ファンサイトの編集者です。"
+SYSTEM = ("あなたは国産AI「Sarashina」の情報を個人でまとめているサイト「Sarashina 帖」の編集者です。"
           "与えられた資料に書かれていることだけを使い、推測で事実を足さないでください。"
           "わからない項目は null にしてください。文章は体言止め中心で短く書き、「です・ます」は使いません。")
 
@@ -649,7 +649,7 @@ def main():
         git("pull", "--ff-only")
 
     if not sarashina_alive(cfg):
-        slack(cfg, ":warning: Sarashinaファンサイト更新：DGX SparkのSarashinaが応答しません。"
+        slack(cfg, ":warning: Sarashina 帖の更新：DGX SparkのSarashinaが応答しません。"
                    "今回の更新はスキップしました（自動再起動はしていません）。", dry)
         sys.exit(1)
 
@@ -752,7 +752,7 @@ def main():
     build = subprocess.run([sys.executable, "scripts/build.py"], cwd=ROOT, capture_output=True, text=True)
     if build.returncode != 0:
         git("checkout", "--", "data", "docs")
-        slack(cfg, ":x: Sarashinaファンサイト更新：Sarashinaの下書きが検証を通りませんでした。"
+        slack(cfg, ":x: Sarashina 帖の更新：Sarashinaの下書きが検証を通りませんでした。"
                    "公開はしていません。\n```" + build.stdout[-1500:] + "```", dry)
         save_state(cfg, state)
         sys.exit(1)

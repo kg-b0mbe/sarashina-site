@@ -6,6 +6,73 @@
   },
   "episodes": [
     {
+      "id": "20261123-2207",
+      "at": "2026-11-23 22:07",
+      "news": {
+        "title": "アンソロピック研究者、数学難問「リーマン予想」をAIで解決と発表",
+        "title_ja": "アンソロピック研究者、数学難問「リーマン予想」をAIで解決と発表",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5EaVJUdXRuWHY0M3UwUXljX0FxZjM1OGM3TFRMSFVTS0NDU3JQMmhhd2M4TDNhWmgydlVjcU14U2Y1Tlk0NnJOd2NqanZsSjZBYXRWOVh6Zk1pckhEbWlDd09BS0JjRXAwV2hPQQ?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しなしな、聞いて！AIがリーマン予想解いたって！"
+        },
+        {
+          "who": "しな",
+          "text": "リーマン予想？数学界の難問だよ"
+        },
+        {
+          "who": "さら",
+          "text": "で、何に役立つの？素数の話だよね"
+        },
+        {
+          "who": "しな",
+          "text": "素数の仕組みに関わる重要問題。数学が大きく進むかも"
+        },
+        {
+          "who": "さら",
+          "text": "人間が何年も挑んできた壁をAIが越えたんだね…すごいけど、なんか不安も…"
+        },
+        {
+          "who": "しな",
+          "text": "AIは道具だよ。結果の検証が大事だから連絡取ろうね。"
+        },
+        {
+          "who": "さら",
+          "text": "DGX Sparkで私たちも動いてるよね！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、で、発表の詳細はまだみたいね。"
+        },
+        {
+          "who": "さら",
+          "text": "うん、まだ報道待ち。続報で真実がわかるね！"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね。続報に注目だね。"
+        },
+        {
+          "who": "さら",
+          "text": "楽しみだね！"
+        },
+        {
+          "who": "しな",
+          "text": "さて、次は何の話しようかな。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261123-1908",
       "at": "2026-11-23 19:08",
       "news": {

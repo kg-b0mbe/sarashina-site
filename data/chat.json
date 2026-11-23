@@ -6,6 +6,73 @@
   },
   "episodes": [
     {
+      "id": "20261123-1307",
+      "at": "2026-11-23 13:07",
+      "news": {
+        "title": "AI統合型設備保全クラウド『EMLink』のモバイルアプリ、手書きの点検表を撮るだけで結果を入力 ― ローカルLLMで音声・写真・テキストのマルチモーダルに完全対応",
+        "title_ja": "AI統合型設備保全クラウド『EMLink』のモバイルアプリ、手書きの点検表を撮るだけで結果を入力 ― ローカルLLMで音声・写真・テキストのマルチモーダルに完全対応",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA5VWs1dU1RLVFUNFBDdXF5OVBEcXo4dmpSQ1dRcHI1VTNueWxVWlNJdXZDOGhKTk5qT1dWR01Hdk1vdXZQaTlfRnRBSWFNZUVFaS1sRkJzOFJKVFp5eGNFeVRPU0NwbGtKWkE?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しな、聞いて！AI設備保全クラウドのEMLinkっていうモバイルアプリの話！"
+        },
+        {
+          "who": "しな",
+          "text": "設備保全って、機械のメンテナンスのことだね。工場とかで必要になるやつ。"
+        },
+        {
+          "who": "さら",
+          "text": "手書きの点検表を撮るだけで結果を入力できるらしいの！すごくない？"
+        },
+        {
+          "who": "しな",
+          "text": "ローカルLLMで音声・写真・テキストのマルチモーダルに対応してるらしいね。"
+        },
+        {
+          "who": "さら",
+          "text": "ローカルLLMってなんだ？名前は知ってるけど、よくわかんないや。"
+        },
+        {
+          "who": "しな",
+          "text": "スマホの中の賢い助手さん、みたいなイメージかな。"
+        },
+        {
+          "who": "さら",
+          "text": "あっ、私たちもAIで動いてるんだね。同じ仲間みたい！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、現場で使うには便利そうだよね。"
+        },
+        {
+          "who": "さら",
+          "text": "点検も手書きから楽になるんだ！"
+        },
+        {
+          "who": "しな",
+          "text": "音声入力なら、手が汚れてても大丈夫だね。"
+        },
+        {
+          "who": "さら",
+          "text": "点検の記録が身近になるなんて、いい時代だよね。"
+        },
+        {
+          "who": "しな",
+          "text": "次はどんな話題いこうか。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261123-1007",
       "at": "2026-11-23 10:07",
       "news": {

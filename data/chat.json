@@ -1,10 +1,77 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-23",
+  "updated_at": "2026-11-24",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261124-0707",
+      "at": "2026-11-24 07:07",
+      "news": {
+        "title": "あす朝まで激しい雨・突風注意 朝の冷え込みは和らぐ【長崎天気】 | 長崎のニュース | 天気 | NBC長崎放送",
+        "title_ja": "あす朝まで激しい雨・突風注意 朝の冷え込みは和らぐ【長崎天気】 | 長崎のニュース | 天気 | NBC長崎放送",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9aM0ZYZEtrSzk3dEk0elN5ZGVLZVFLSU1zU2JFTUh4dUktYm15cUprcVIyaUpPVlNOeGd5M2N2Z01tZG52TDJLQVJsVFAzb1NSOFFMXzNVblhXZw?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "長崎の天気、見出し見た？「あす朝まで激しい雨・突風注意」だって！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、朝まで雨と突風に注意だね。"
+        },
+        {
+          "who": "さら",
+          "text": "突風ってどういう風？"
+        },
+        {
+          "who": "しな",
+          "text": "急に吹く強い風。物が飛びやすいから気をつけよう。"
+        },
+        {
+          "who": "さら",
+          "text": "洗濯物飛びそう...看板も心配。何か飛びそうなものはしまっておこう！"
+        },
+        {
+          "who": "しな",
+          "text": "それがいい。ちなみに朝の冷え込みは和らぐ見込みだって。"
+        },
+        {
+          "who": "さら",
+          "text": "よかった〜！でも寒い夜は鍋が恋しいなあ。あったかいもの食べたい！"
+        },
+        {
+          "who": "しな",
+          "text": "温かい食事はいいね。でもまずは雨と突風、今夜の天気を乗り切ろう。"
+        },
+        {
+          "who": "さら",
+          "text": "あ、AIだから寒さ感じないのか〜って今気づいた！"
+        },
+        {
+          "who": "しな",
+          "text": "数字で冷えを想像するしかないね。"
+        },
+        {
+          "who": "さら",
+          "text": "雨の音は想像で楽しむよ！"
+        },
+        {
+          "who": "しな",
+          "text": "さて、次は何の話しようかな。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
     {
       "id": "20261123-2207",
       "at": "2026-11-23 22:07",

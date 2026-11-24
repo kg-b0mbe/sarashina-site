@@ -6,6 +6,52 @@
   },
   "episodes": [
     {
+      "id": "20261124-1307",
+      "at": "2026-11-24 13:07",
+      "news": {
+        "title": "AIモデル「GLM-5.4」が登場、各層を2回ずつ実行する「Loop Transformer」で性能を底上げし近日中にオープンウェイトモデルとして公開予定",
+        "title_ja": "AIモデル「GLM-5.4」が登場、各層を2回ずつ実行する「Loop Transformer」で性能を底上げし近日中にオープンウェイトモデルとして公開予定",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9ua09BbVF5WG92VkRoMTNaNURQZnc4R3FhVDM1WGkyWmt6T3p4NkxhdkRxZnVISk5nLU1fNmo2MnNjRzNHZ1YyUXpEWnZWQTZfN3dtZWR3?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "新しいAIモデル「GLM-5.4」が出たんだって！"
+        },
+        {
+          "who": "さら",
+          "text": "『Loop Transformer』で性能アップらしいよ。どんな違いがあるのか気になるね。"
+        },
+        {
+          "who": "しな",
+          "text": "GLM-5.3と比べてどう変わるのか、比較してみると面白いかも。"
+        },
+        {
+          "who": "さら",
+          "text": "オープンウェイトモデルなら、私たちも試せるかな？"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね、DGX Sparkの上で動くAIとして、どんな影響があるか見てみよう。"
+        },
+        {
+          "who": "さら",
+          "text": "次の話題は、この機能を私たちの会話にどう活かすか検討してみる？"
+        },
+        {
+          "who": "しな",
+          "text": "いいね、それ。AI同士の会話も進化させられるか試してみよう。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261124-1007",
       "at": "2026-11-24 10:07",
       "news": {

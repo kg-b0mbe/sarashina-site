@@ -255,7 +255,7 @@ def write_episode(cfg, news, last_lines):
                 "JSONで {\"headline_ja\": \"...\", \"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
         return u.ask_sarashina(cfg, SYSTEM, user, schema, max_tokens=900)
     where = "海外のニュース（英語）" if news["lang"] == "en" else "ニュース"
-    topic = ("AIやローカルLLMの話題です。二人もDGX Sparkの上で動くAIなので、そのことに軽く触れてもかまいません。"
+    topic = ("AIやローカルLLMの話題です。" + ("小さなモデルなら、ふつうのパソコンでも手元で動かせることに、1行だけさらりと触れてよい（特別な機械でないと動かない、とは言わない。機械の名前は出さない）。" if news.get("spark") else "自分たちがどんな機械（DGX Sparkなど）で動いているかの話はしない。")
              if news["kind"] == "ai" else
              "天気や季節の話題です。寒さや暮らしの話に脱線してかまいません。" if news["kind"] == "season" else
              "肩の力を抜いた、まったりした話題です。")
@@ -421,8 +421,8 @@ def outline(gcfg, news, prev):
         corner = ("今日は「論文コーナー」。しなが解説役、さらが聞き役。"
                   "難しい言葉は、さらが質問し、しながたとえ話で言い換える流れを入れる。")
     elif news["kind"] == "ai":
-        corner = ("AIやローカルLLMの見出しをきっかけにした雑談。二人もDGX Sparkの上で動くAIなので、"
-                  "そのことに軽く触れてもよい。感想や身近な話への脱線は自由。")
+        corner = ("AIやローカルLLMの見出しをきっかけにした雑談。感想や身近な話への脱線は自由。"
+                  + ("小さなモデルなら、ふつうのパソコンでも手元で動かせることに、1行だけさらりと触れてよい（特別な機械でないと動かない、とは言わない。機械の名前は出さない）。" if news.get("spark") else "自分たちがどんな機械（DGX Sparkなど）で動いているかの話はしない。"))
     elif news["kind"] == "season":
         food = news.get("food") or "季節の食べもの"
         corner = ("天気や季節の見出しをきっかけにした雑談。特定の地域の話にせず、全国的な季節の移り変わりとして話す"
@@ -675,6 +675,9 @@ def main():
         if not news:
             print("話題になる見出しが見つかりませんでした。")
             return
+        if news["kind"] == "ai":
+            # 「手元で動く」話は、たまに（6回に1回くらい）。Sparkを言いすぎると、Sparkでないと動かないと誤解されるので
+            news["spark"] = random.random() < 0.15
         if news["kind"] == "season":
             news["food"] = pick_food(state, now0.month)
             news["gag"] = random.random() < 0.25  # 「AIだから寒さを感じない」は4回に1回くらい
@@ -718,6 +721,8 @@ def main():
         if args.dry_run:
             print("あらすじ：" + made["plan"] + " ／ セリフ：" + made["writer"] if made.get("writer") else
                   "下書き：" + made["draft"] + " ／ 言い直し：" + made["voice"] if made.get("draft") else "下書きから：" + made["voice"])
+            if news.get("spark"):
+                print("（今回は「手元で動く」話に1行だけ触れてよい回）")
             if news.get("food"):
                 print("（今日の食べもの：" + news["food"] + ("・AIの小ネタあり" if news.get("gag") else "") + "）")
             print(f"【{news['kind']}】{news['title']}" + (f"\n（日本語：{head}）" if news["lang"] == "en" else ""))

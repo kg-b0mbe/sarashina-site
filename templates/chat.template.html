@@ -59,6 +59,17 @@ details.past summary .when { font-size: 12px; color: var(--sub); display: block;
 details.past summary .t { font-family: var(--mincho); font-weight: 600; font-size: 15px; }
 details.past[open] .talk { margin-top: 12px; }
 .empty { color: var(--sub); padding: 18px 0; }
+details.group { border: 1px solid var(--rule); border-radius: 6px; margin: 14px 0; padding: 0 16px; background: rgba(255,255,255,.35); }
+details.group > summary { cursor: pointer; list-style: none; padding: 14px 0; }
+details.group > summary::-webkit-details-marker { display: none; }
+details.group > summary .g-label { font-family: var(--fude); font-size: 20px; letter-spacing: .06em; margin-right: 10px; }
+details.group > summary .g-range { font-size: 12px; color: var(--sub); }
+details.group > summary .g-meta { display: block; font-size: 13px; color: var(--sub); margin-top: 4px; }
+details.group > summary .g-pick { display: block; font-family: var(--mincho); font-size: 14px; margin-top: 6px; line-height: 1.7; }
+details.group > summary .g-open { font-size: 12px; color: var(--accent); margin-top: 6px; display: inline-block; border-bottom: 1px solid var(--rule); }
+details.group[open] > summary .g-open { display: none; }
+details.group > summary .g-pick span::before { content: "・"; color: var(--sub); }
+details.group details.past:last-child { border-bottom: 0; }
 @media (prefers-reduced-motion: reduce) { .typing { display: none; } }
 </style>
 </head>
@@ -172,13 +183,54 @@ details.past[open] .talk { margin-top: 12px; }
     }
     next();
   }
+  function pastHtml(ep, i) {
+    return '<details class="past"><summary><span class="when">' + esc(ep.at) + '</span><span class="t"><span class="tag">' + tagOf(ep) + '</span>' + esc(titleOf(ep)) + '</span>' + origOf(ep) +
+      (canSpeak ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
+      '<div class="talk">' + ep.lines.map(function (l) { return lineHtml(l, false); }).join('') + '</div>' +
+      '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">' + (ep.news.kind === 'paper' ? '論文' : '元の記事') + '</a>' + paperLink(ep) + madeOf(ep) + '</div></details>';
+  }
+  // 今週の分はそのまま並べ、先週・先々週・それより前（月ごと）は、まとめカードにする
+  function atOf(ep) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ep.at || '');
+    return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(0);
+  }
+  function groupOf(d, weekStart) {
+    var day = 86400000;
+    if (d >= weekStart) return { key: 'w0', label: '今週' };
+    if (d >= new Date(weekStart - 7 * day)) return { key: 'w1', label: '先週' };
+    if (d >= new Date(weekStart - 14 * day)) return { key: 'w2', label: '先々週' };
+    return { key: 'm' + d.getFullYear() + '-' + (d.getMonth() + 1), label: d.getFullYear() + '年' + (d.getMonth() + 1) + '月' };
+  }
+  function md(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+  function groupCard(g, items) {
+    var counts = {}, order = ['論文のはなし', 'AIのはなし', '季節のはなし', 'よもやま', '海外のよもやま'];
+    items.forEach(function (x) { var t = tagOf(x.ep); counts[t] = (counts[t] || 0) + 1; });
+    var meta = order.filter(function (t) { return counts[t]; }).map(function (t) { return t.replace('のはなし', '') + ' ' + counts[t]; }).join('　');
+    // 見どころ：論文とAIの回を優先して3つ
+    var picks = items.slice().sort(function (a, b) {
+      var r = function (x) { return x.ep.news.kind === 'paper' ? 0 : x.ep.news.kind === 'ai' ? 1 : 2; };
+      return r(a) - r(b);
+    }).slice(0, 3);
+    var first = atOf(items[items.length - 1].ep), last = atOf(items[0].ep);
+    return '<details class="group"><summary><span class="g-label">' + esc(g.label) + '</span>' +
+      '<span class="g-range">' + md(first) + '〜' + md(last) + '</span>' +
+      '<span class="g-meta">' + items.length + '回　' + esc(meta) + '</span>' +
+      '<span class="g-pick">' + picks.map(function (x) { return '<span>' + esc(titleOf(x.ep)) + '</span>'; }).join('<br>') + '</span>' +
+      '<span class="g-open">ぜんぶ見る</span></summary>' +
+      items.map(function (x) { return pastHtml(x.ep, x.i); }).join('') + '</details>';
+  }
   function showPast(eps) {
     pastEps = eps;
-    document.getElementById('past').innerHTML = eps.map(function (ep, i) {
-      return '<details class="past"><summary><span class="when">' + esc(ep.at) + '</span><span class="t"><span class="tag">' + tagOf(ep) + '</span>' + esc(titleOf(ep)) + '</span>' + origOf(ep) +
-        (canSpeak ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
-        '<div class="talk">' + ep.lines.map(function (l) { return lineHtml(l, false); }).join('') + '</div>' +
-        '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">' + (ep.news.kind === 'paper' ? '論文' : '元の記事') + '</a>' + paperLink(ep) + madeOf(ep) + '</div></details>';
+    var now = new Date(), wd = (now.getDay() + 6) % 7;  // 月曜はじまり
+    var weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - wd);
+    var groups = [], byKey = {};
+    eps.forEach(function (ep, i) {
+      var g = groupOf(atOf(ep), weekStart);
+      if (!byKey[g.key]) { byKey[g.key] = { g: g, items: [] }; groups.push(byKey[g.key]); }
+      byKey[g.key].items.push({ ep: ep, i: i });
+    });
+    document.getElementById('past').innerHTML = groups.map(function (x) {
+      return x.g.key === 'w0' ? x.items.map(function (y) { return pastHtml(y.ep, y.i); }).join('') : groupCard(x.g, x.items);
     }).join('') || '<p class="empty">まだありません。</p>';
   }
   function render(eps, animate) { stopVoice(); showNow(eps[0], animate); showPast(eps.slice(1)); }
@@ -230,6 +282,7 @@ details.past[open] .talk { margin-top: 12px; }
       e.preventDefault();  // 見出しの開閉はさせない
       if (speakingBtn === b) { stopVoice(); return; }
       var d = b.closest('details'); d.open = true;
+      var g = d.parentElement && d.parentElement.closest('details.group'); if (g) g.open = true;
       speak(pastEps[Number(b.dataset.i)], d.querySelector('.talk'), b, false);
     });
   }

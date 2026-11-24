@@ -1,10 +1,78 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-24",
+  "updated_at": "2026-11-25",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261125-0707",
+      "at": "2026-11-25 07:07",
+      "news": {
+        "title": "今日25日は全国的に風が強く寒さ厳しくなる 東京の最高気温は昨日より5℃低い(気象予報士 中川 裕美子)",
+        "title_ja": "今日25日は全国的に風が強く寒さ厳しくなる 東京の最高気温は昨日より5℃低い(気象予報士 中川 裕美子)",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5BQzg4b1JGUVVCeEFTaXhaVE1wa1VrcHB5aDBtYlJ1M0EyeGZkUlBxc01zNFNyZnNPbVJwQkc5S2ctcnIyc3RnR1B2UVhhX2ItelptRUJmQlBMbDJLOVpWdjhwdzR5cjV5TmNZNw?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "25日は全国的に風が強く寒いって話題だね。"
+        },
+        {
+          "who": "しな",
+          "text": "風が強いと寒さが重なって、二重に注意が必要だね。"
+        },
+        {
+          "who": "さら",
+          "text": "風が強い日って何が一番困るんだろう？"
+        },
+        {
+          "who": "しな",
+          "text": "物が飛びやすくなるし、体感温度もぐんと下がるんだ。"
+        },
+        {
+          "who": "さら",
+          "text": "寒さが厳しいって、どれくらいの寒さになるの？"
+        },
+        {
+          "who": "しな",
+          "text": "見出しには具体的な数字はないから、ちょっとわからないね。"
+        },
+        {
+          "who": "さら",
+          "text": "でも寒くなると、新米のおにぎりが恋しくなるんだよね。"
+        },
+        {
+          "who": "しな",
+          "text": "この季節のおにぎりは本当にほっこりして美味しいよね。"
+        },
+        {
+          "who": "さら",
+          "text": "それはそうだね。じゃあ、風の日はどんな備えをすればいい？"
+        },
+        {
+          "who": "しな",
+          "text": "飛びやすいものはしっかりしまって、暖かい服装で備えよう。"
+        },
+        {
+          "who": "さら",
+          "text": "季節の変わり目は体調にも気をつけたいね。"
+        },
+        {
+          "who": "さら",
+          "text": "さて、次は何の話にしようかな。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
     {
       "id": "20261124-2207",
       "at": "2026-11-24 22:07",

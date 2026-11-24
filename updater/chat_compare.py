@@ -1,20 +1,28 @@
 #!/usr/bin/env python3
 """茶話の聞き比べ（試作）。サイトには何も書き込まず、pushもしない。
 
-同じ話題で、4とおりの台本を作って並べる。
-  A：いまのやり方（Sarashinaだけで8行前後）
-  B：GLMがあらすじ（だれが、何を話すか）を作り、Sarashinaがそれに沿ってセリフを書く。
-     最後にGLMが「見出しや材料にない事実を足していないか」を確かめる。
-  C：参考として、同じあらすじでセリフもGLMが書く。
-  D：Cの下書きを、Sarashinaがさらとしなの口調に言い直す（中身は変えない）。最後にGLMが確かめる。
+同じ話題・同じあらすじで、作り方の違う台本を並べる。
+  A：Sarashina2.2-3B（手元）だけで書く                 … GLMが止まったときの予備の形
+  C：GLMが下書きをそのまま使う                         … 参考
+  D：GLMの下書き → Sarashina2.2-3B（手元）が言い直す   … いまの茶話の形
+  E：Sarashina3.2 mini thinking（API）が、あらすじから書く
+  F：GLMの下書き → Sarashina3.2 mini thinking（API）が言い直す
+D・E・F は、最後にGLMが「材料にない事実を足していないか」を確かめる。
 
   python3 updater/chat_compare.py                 # 論文手帖のいちばん新しい論文で比べる
   python3 updater/chat_compare.py --paper <id>    # 論文を指定
-  python3 updater/chat_compare.py --news          # いまのニュースの見出しから1つ選んで比べる
-  python3 updater/chat_compare.py --headline "見出し"  # 見出しを手で渡す
+  python3 updater/chat_compare.py --news ai       # 番組表の棚（ai / local / season / light）から見出しを1つ
+  python3 updater/chat_compare.py --headline "見出し"
+  python3 updater/chat_compare.py --only A,D      # 一部だけ比べる
 
 結果は画面に出し、~/sarashina-compare/ にMarkdownでも保存する。
-GLMの接続先は updater/.env に GLM_BASE_URL / GLM_API_KEY / GLM_MODEL（空なら自動）を書く。
+
+Sarashina3.2（API）を使うときは updater/.env に書く（書かなければ E・F は飛ばす）：
+  SARASHINA_CLOUD_API_KEY=…            # sarashina.ai で発行したキー（手元用の SARASHINA_API_KEY とは別）
+  SARASHINA_CLOUD_MODEL=sarashina3.2-mini-thinking
+  SARASHINA_CLOUD_BASE_URL=https://api.sarashina.ai/v1
+  SARASHINA_CLOUD_EXTRA={"reasoning_effort":"low"}   # 思考の深さ low / medium / high（JSON・任意）
+無償ベータは入力・出力が学習に使われる場合があるので、個人の情報は送らない（ニュースの見出しと論文の要約だけを送る）。
 """
 import argparse
 import datetime as dt
@@ -32,209 +40,129 @@ import update as u  # noqa: E402
 import chat as c  # noqa: E402
 
 OUT = Path.home() / "sarashina-compare"
-CHUNK = 4  # Sarashinaに一度に書かせるセリフの数（小さいモデルなので少しずつ）
+CLOUD_GAP = 3  # 1分あたりの回数に上限がある（mini thinkingは30回）ので、APIを呼ぶ間を少しあける（秒）
+_last_cloud = [0.0]
 
 
-# ---------------------------------------------------------------- GLM
+# ---------------------------------------------------------------- Sarashina3.2（API）
 
-def glm_cfg():
-    base = os.environ.get("GLM_BASE_URL", "").rstrip("/")
-    if not base:
-        sys.exit("updater/.env に GLM_BASE_URL がありません（例：http://spark-a436:8888/v1）")
-    cfg = {"base_url": base, "api_key": os.environ.get("GLM_API_KEY", ""), "model": os.environ.get("GLM_MODEL", "")}
-    if not cfg["model"]:  # 指定がなければ、サーバーが出しているモデルの1つ目を使う
-        req = urllib.request.Request(base + "/models", headers={"Authorization": "Bearer " + cfg["api_key"]})
-        with urllib.request.urlopen(req, timeout=15) as r:
-            cfg["model"] = json.loads(r.read().decode("utf-8"))["data"][0]["id"]
-    return cfg
+def cloud_cfg():
+    key = os.environ.get("SARASHINA_CLOUD_API_KEY", "")
+    model = os.environ.get("SARASHINA_CLOUD_MODEL", "")
+    if not key or not model:
+        return None
+    extra = os.environ.get("SARASHINA_CLOUD_EXTRA", "").strip()
+    return {"base_url": os.environ.get("SARASHINA_CLOUD_BASE_URL", "https://api.sarashina.ai/v1").rstrip("/"),
+            "api_key": key, "model": model, "extra": json.loads(extra) if extra else {}}
 
 
-def ask_glm(cfg, system, user, schema, max_tokens=6000):
-    payload = {
+def ask_cloud(cfg, system, user, schema, max_tokens=16000):
+    # 思考モデルは考えた分も max_completion_tokens に数えられる（上限32768）ので、多めにとる
+    """APIのSarashinaにJSONで答えさせる。思考の部分は外し、本文からJSONを取り出す。"""
+    payload = dict({
         "model": cfg["model"],
-        "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-        "temperature": 0.6,
-        "max_tokens": max_tokens,
+        "messages": [{"role": "system", "content": system},
+                     {"role": "user", "content": user + "\n\nJSONだけを出力してください。"}],
+        "max_completion_tokens": max_tokens,
         "response_format": {"type": "json_schema", "json_schema": {"name": "answer", "schema": schema, "strict": True}},
-    }
+    }, **cfg["extra"])
 
     def call(p):
+        wait = CLOUD_GAP - (time.time() - _last_cloud[0])
+        if wait > 0:
+            time.sleep(wait)
         req = urllib.request.Request(
             cfg["base_url"] + "/chat/completions", data=json.dumps(p).encode("utf-8"),
             headers={"Content-Type": "application/json", "Authorization": "Bearer " + cfg["api_key"]})
-        with urllib.request.urlopen(req, timeout=600) as r:
-            msg = json.loads(r.read().decode("utf-8"))["choices"][0]["message"]
-        return msg.get("content") or ""
+        try:
+            with urllib.request.urlopen(req, timeout=600) as r:
+                body = json.loads(r.read().decode("utf-8"))
+        finally:
+            _last_cloud[0] = time.time()
+        msg = body["choices"][0]["message"]
+        return msg.get("content") or "", body.get("usage") or {}
 
-    try:
-        text = call(payload)
-    except urllib.error.HTTPError:
-        payload.pop("response_format")
-        payload["messages"][1]["content"] += "\n\n考えた過程は書かず、JSONだけを出力してください。"
-        text = call(payload)
-    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)  # 考える途中が混ざっていたら外す
+    for attempt in range(3):
+        try:
+            text, usage = call(payload)
+            break
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:  # 回数の上限にかかったら、Retry-After の秒数だけ待ってやり直す
+                time.sleep(int(e.headers.get("Retry-After") or 30) + 1)
+                continue
+            if e.code in (400, 422) and "response_format" in payload:  # 構造化出力に未対応なら外す
+                payload.pop("response_format")
+                continue
+            raise RuntimeError(f"Sarashina APIがエラーを返しました: {e.code} {e.read().decode('utf-8', 'replace')[:200]}")
+    else:
+        raise RuntimeError("Sarashina APIの回数上限が続いたので、あきらめました")
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
-        raise ValueError("GLMがJSONを返しませんでした: " + text[:200])
-    return json.loads(m.group(0))
+        raise ValueError("JSONが返りませんでした: " + text[:200])
+    return json.loads(m.group(0)), usage
 
 
-# ---------------------------------------------------------------- 材料
+def cloud_write(ccfg, news, plan):
+    """E：あらすじの要点どおりに、Sarashina3.2がセリフを書く。"""
+    n = len(plan["beats"])
+    schema = {"type": "object", "additionalProperties": False, "required": ["lines"],
+              "properties": {"lines": c.line_schema(n, n)}}
+    todo = "\n".join(f"{k + 1}. {b['who']}：{b['point']}" for k, b in enumerate(plan["beats"]))
+    user = (f"--- 材料 ---\n{c.material(news)}\n\n全体の流れ：{plan['flow']}\n\n"
+            f"次の要点どおりの順番と話者で、二人の話し言葉のセリフにしてください。\n{todo}\n\n"
+            "要点は「何を言うか」のメモです。そのまま書き写さず、その人が実際に口にするセリフにしてください。"
+            "例：要点「報酬とは何かと質問」→ セリフ「報酬って何？テストの点数みたいなもの？」。"
+            "質問の次の行は、その質問にきちんと答えます。1行は60字以内。材料にない数字や事実は足しません。"
+            "JSONで {\"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
+    d, usage = ask_cloud(ccfg, c.SYSTEM, user, schema)
+    lines = [{"who": b["who"], "text": c.tidy(l.get("text", ""))} for b, l in zip(plan["beats"], d.get("lines", []))]
+    # 要点をそのまま書き写していないか（セリフになっていない）を数える
+    import difflib
+    copied = sum(1 for b, l in zip(plan["beats"], lines)
+                 if difflib.SequenceMatcher(None, b["point"], l["text"]).ratio() > 0.8)
+    if copied:
+        usage = dict(usage or {}, 要点の書き写し=f"{copied}/{len(lines)}行")
+    return lines, usage
 
-def material(news):
-    if news["kind"] == "paper":
-        p = news["paper"]
-        return (f"題名：{p['title_ja']}（原題：{p['title']}）\n発表：{p['venue']}（{p['date']}）\n"
-                f"ひとことで：{p['summary']}\nポイント：" + " / ".join(p["points"]) +
-                f"\nSarashinaとのつながり：{p['sarashina']}")
-    return f"見出し：「{news['title']}」（{'英語' if news['lang'] == 'en' else '日本語'}のニュース）"
 
+def cloud_restyle(ccfg, news, draft):
+    """F：GLMの下書きを、Sarashina3.2がさらとしなの口調に言い直す（中身は変えない）。"""
+    n = len(draft)
+    schema = {"type": "object", "additionalProperties": False, "required": ["lines"],
+              "properties": {"lines": c.line_schema(n, n)}}
+    todo = "\n".join(f"{k + 1}. {l['who']}：{l['text']}" for k, l in enumerate(draft))
+    user = (f"次の{n}行の下書きを、さらとしなの話し言葉に言い直してください。\n{todo}\n\n"
+            "守ること：言っている中身・例・数字は一切変えない。新しい例や事実を足さない。英語を混ぜない。"
+            "順番と話者はそのまま。言い回しと語尾だけを、その人らしく自然にする。1行は60字以内。"
+            "JSONで {\"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
+    d, usage = ask_cloud(ccfg, c.SYSTEM, user, schema)
+    got = d.get("lines", [])
+    out = []
+    for k, l in enumerate(draft):
+        text = c.tidy(got[k].get("text", "")) if k < len(got) else ""
+        out.append({"who": l["who"], "text": text if 2 <= len(text) <= 120 else l["text"]})
+    return out, usage
+
+
+# ---------------------------------------------------------------- 話題
 
 def pick(args):
     if args.headline:
-        return {"title": args.headline, "link": "", "key": "manual", "lang": "ja" if c.JA.search(args.headline) else "en",
-                "kind": "ai"}
+        return {"title": args.headline, "link": "", "key": "manual",
+                "lang": "ja" if re.search(r"[ぁ-んァ-ン一-龥]", args.headline) else "en", "kind": "ai"}
     if args.news:
-        n = c.pick_headline(set())
+        n = c.pick_headline(set(), args.news)
         if not n:
-            sys.exit("見出しが見つかりませんでした。")
+            sys.exit("その棚に新しい見出しが見つかりませんでした。")
         return n
     papers = json.loads(c.PAPERS.read_text(encoding="utf-8"))["papers"]
-    if args.paper:
-        ps = [p for p in papers if p["id"] == args.paper]
-        if not ps:
-            sys.exit("その id の論文はありません: " + args.paper)
-        p = ps[0]
-    else:
-        p = sorted(papers, key=lambda x: x["date"], reverse=True)[0]
+    p = next((x for x in papers if x["id"] == args.paper), None) if args.paper else \
+        sorted(papers, key=lambda x: x["date"], reverse=True)[0]
+    if not p:
+        sys.exit("その id の論文はありません: " + args.paper)
     link = (p.get("links") or {}).get("paper") or p["sources"][0]
     return {"title": p["title_ja"], "link": link, "key": "paper:" + p["id"], "lang": "ja", "kind": "paper", "paper": p}
-
-
-# ---------------------------------------------------------------- A：いまのやり方
-
-def version_a(cfg, news):
-    c.WHY.clear()
-    for _ in range(3):
-        try:
-            head, lines = c.clean(c.write_episode(cfg, news, []))
-        except Exception as e:
-            c.WHY.append(f"下書きに失敗: {e}")
-            continue
-        if lines:
-            return lines, list(c.WHY)
-    return None, list(c.WHY)
-
-
-# ---------------------------------------------------------------- B：GLMのあらすじ → Sarashinaのセリフ
-
-OUTLINE_SYSTEM = (
-    "あなたはラジオの構成作家です。「さら」と「しな」の二人が話す短い番組のあらすじを作ります。\n"
-    "さら：好奇心旺盛な聞き役。ちょっとおっちょこちょいで、素朴な質問をする。\n"
-    "しな：落ち着いた物知りのツッコミ役。知らないことは「わからない」と正直に言う。\n"
-    "セリフそのものは書かず、一行ごとに「だれが」「何を言うか（要点）」だけを決めます。"
-    "材料に書かれていない数字・人名・出来事は要点に入れません。誰かを悪く言いません。")
-
-
-def outline(gcfg, news):
-    schema = {"type": "object", "additionalProperties": False, "required": ["flow", "beats"], "properties": {
-        "flow": {"type": "string"},
-        "beats": {"type": "array", "minItems": 10, "maxItems": 16, "items": {
-            "type": "object", "additionalProperties": False, "required": ["who", "point"],
-            "properties": {"who": {"type": "string", "enum": c.SPEAKERS}, "point": {"type": "string"}}}}}}
-    corner = ("今日は「論文コーナー」。しなが解説役、さらが聞き役。難しい言葉は、さらが質問し、しながたとえ話で言い換える流れを入れる。"
-              if news["kind"] == "paper" else "見出しをきっかけにした雑談。感想や身近な話への脱線は自由。")
-    user = (f"{corner}\n\n--- 材料 ---\n{material(news)}\n\n"
-            "12行前後のあらすじを作ってください。最初はさらが話題を紹介し、途中で一度は話が身近なことに脱線して戻り、"
-            "最後は次の話題につながる一言で終えます。前の行を受けて返す、掛け合いになるようにします。"
-            "flow には全体の流れを1〜2文で、beats の point には各行の要点を30字以内で書きます。")
-    return ask_glm(gcfg, OUTLINE_SYSTEM, user, schema)
-
-
-def lines_from_outline(cfg, news, plan):
-    beats = plan["beats"]
-    lines = []
-    for i in range(0, len(beats), CHUNK):
-        part = beats[i:i + CHUNK]
-        prev = "\n".join(f"{l['who']}：{l['text']}" for l in lines[-4:]) or "（ここから始まります）"
-        todo = "\n".join(f"{k + 1}. {b['who']}：{b['point']}" for k, b in enumerate(part))
-        schema = {"type": "object", "additionalProperties": False, "required": ["lines"], "properties": {
-            "lines": {"type": "array", "minItems": len(part), "maxItems": len(part), "items": {
-                "type": "object", "additionalProperties": False, "required": ["who", "text"],
-                "properties": {"who": {"type": "string", "enum": c.SPEAKERS}, "text": {"type": "string"}}}}}}
-        user = (f"--- 材料 ---\n{material(news)}\n\n全体の流れ：{plan['flow']}\n\n"
-                f"直前までの会話：\n{prev}\n\n"
-                f"続きの{len(part)}行を、次の要点どおりの順番と話者で、二人の話し言葉のセリフにしてください。\n{todo}\n\n"
-                "1行は60字以内。材料にない数字や事実は足しません。"
-                "JSONで {\"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
-        got = u.ask_sarashina(cfg, c.SYSTEM, user, schema, max_tokens=600).get("lines", [])
-        for b, l in zip(part, got):
-            text = re.sub(r"\s+", " ", str(l.get("text", ""))).replace("</s>", "").strip()
-            text = re.sub(r"^(さら|しな)[:：]\s*", "", text)
-            text = re.sub(r"Sarashinar(?=\d)", "Sarashina", text)
-            lines.append({"who": b["who"], "text": text})  # 話者はあらすじのほうを正とする
-    return lines
-
-
-def glm_lines(gcfg, news, plan):
-    """C：同じあらすじのまま、セリフもGLMが書く（比べるための参考）。"""
-    schema = {"type": "object", "additionalProperties": False, "required": ["lines"], "properties": {
-        "lines": {"type": "array", "minItems": len(plan["beats"]), "maxItems": len(plan["beats"]), "items": {
-            "type": "object", "additionalProperties": False, "required": ["who", "text"],
-            "properties": {"who": {"type": "string", "enum": c.SPEAKERS}, "text": {"type": "string"}}}}}}
-    todo = "\n".join(f"{k + 1}. {b['who']}：{b['point']}" for k, b in enumerate(plan["beats"]))
-    user = (f"--- 材料 ---\n{material(news)}\n\n全体の流れ：{plan['flow']}\n\n"
-            f"次の要点どおりの順番と話者で、二人の話し言葉のセリフにしてください。\n{todo}\n\n"
-            "1行は60字以内。材料にない数字や事実は足しません。")
-    got = ask_glm(gcfg, c.SYSTEM, user, schema).get("lines", [])
-    return [{"who": b["who"], "text": str(l.get("text", "")).strip()} for b, l in zip(plan["beats"], got)]
-
-
-LATIN = re.compile(r"[A-Za-z][A-Za-z0-9.\-]+")
-
-
-def restyle(cfg, news, draft):
-    """D：GLMの下書き（C）を、Sarashinaがさらとしなの口調に言い直す。意味と事実は変えない。"""
-    out, kept = [], 0
-    for i in range(0, len(draft), CHUNK):
-        part = draft[i:i + CHUNK]
-        prev = "\n".join(f"{l['who']}：{l['text']}" for l in out[-4:]) or "（ここから始まります）"
-        todo = "\n".join(f"{k + 1}. {l['who']}：{l['text']}" for k, l in enumerate(part))
-        schema = {"type": "object", "additionalProperties": False, "required": ["lines"], "properties": {
-            "lines": {"type": "array", "minItems": len(part), "maxItems": len(part), "items": {
-                "type": "object", "additionalProperties": False, "required": ["who", "text"],
-                "properties": {"who": {"type": "string", "enum": c.SPEAKERS}, "text": {"type": "string"}}}}}}
-        user = (f"直前までの会話：\n{prev}\n\n"
-                f"次の{len(part)}行の下書きを、さらとしなの話し言葉に言い直してください。\n{todo}\n\n"
-                "守ること：言っている中身・例・数字は一切変えない。新しい例や事実を足さない。英語を混ぜない。"
-                "順番と話者はそのまま。言い回しと語尾だけを、その人らしく自然にする。1行は60字以内。"
-                "JSONで {\"lines\": [{\"who\": \"さら\", \"text\": \"...\"}, ...]} の形にします。")
-        try:
-            got = u.ask_sarashina(cfg, c.SYSTEM, user, schema, max_tokens=600).get("lines", [])
-        except Exception:
-            got = []
-        for k, d in enumerate(part):
-            text = str(got[k].get("text", "")) if k < len(got) else ""
-            text = re.sub(r"\s+", " ", text).replace("</s>", "").strip()
-            text = re.sub(r"^(さら|しな)[:：]\s*", "", text)
-            text = re.sub(r"Sarashinar(?=\d)", "Sarashina", text)
-            # 言い直しで英単語が増えた・極端に短い/長い行は、下書きのほうを使う
-            new_latin = set(LATIN.findall(text)) - set(LATIN.findall(d["text"] + material(news)))
-            if not (2 <= len(text) <= 120) or new_latin:
-                text, kept = d["text"], kept + 1
-            out.append({"who": d["who"], "text": text})
-    return out, kept
-
-
-def check(gcfg, news, lines):
-    schema = {"type": "object", "additionalProperties": False, "required": ["ok", "problems"], "properties": {
-        "ok": {"type": "boolean"}, "problems": {"type": "array", "items": {"type": "string"}}}}
-    talk = "\n".join(f"{l['who']}：{l['text']}" for l in lines)
-    user = (f"--- 材料 ---\n{material(news)}\n\n--- 会話 ---\n{talk}\n\n"
-            "この会話について、(1)材料にない数字・人名・出来事を事実として話していないか、"
-            "(2)話がかみ合わない行や、文が途中で切れている行がないか、を確かめてください。"
-            "問題があれば problems に「何行目：どこがおかしいか」を短く書き、なければ空にして ok を true にします。")
-    return ask_glm(gcfg, "あなたは丁寧な校閲者です。", user, schema, max_tokens=3000)
 
 
 # ---------------------------------------------------------------- 出力
@@ -243,68 +171,104 @@ def show(lines):
     return "\n".join(f"{l['who']}：{l['text']}" for l in lines) if lines else "（うまく書けませんでした）"
 
 
+def run(label, fn):
+    t = time.time()
+    try:
+        lines, note = fn()
+    except Exception as e:
+        lines, note = [], f"失敗: {e}"
+    return {"label": label, "lines": lines, "note": note, "sec": time.time() - t}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--paper")
-    ap.add_argument("--news", action="store_true")
+    ap.add_argument("--news", choices=["ai", "local", "season", "light"])
     ap.add_argument("--headline")
+    ap.add_argument("--only", default="A,C,D,E,F")
     args = ap.parse_args()
+    want = set(args.only.upper().split(","))
+
     cfg = u.load_env()
-    gcfg = glm_cfg()
+    gcfg = c.glm_cfg()
+    ccfg = cloud_cfg()
     if not u.sarashina_alive(cfg):
-        sys.exit("Sarashinaに接続できません。")
+        sys.exit("手元のSarashinaに接続できません。")
+    if not gcfg:
+        sys.exit("GLMに接続できません（updater/.env の GLM_BASE_URL を確認）。")
+    if not ccfg and want & {"E", "F"}:
+        print("（SARASHINA_CLOUD_API_KEY / SARASHINA_CLOUD_MODEL がないので、E・F は飛ばします）\n")
+        want -= {"E", "F"}
+
     news = pick(args)
-    print(f"話題：【{news['kind']}】{news['title']}\nGLM：{gcfg['model']}\n")
+    print(f"話題：【{news['kind']}】{news['title']}\nGLM：{gcfg['model']} / 手元：{cfg['model']}"
+          + (f" / API：{ccfg['model']}" if ccfg else "") + "\n")
 
     t = time.time()
-    a, why = version_a(cfg, news)
-    ta = time.time() - t
-    print(f"=== A：Sarashinaだけ（{ta:.0f}秒）===\n{show(a)}\n")
-    if why:
-        print("（捨てた下書きの理由：" + " / ".join(why) + "）\n")
-
-    t = time.time()
-    plan = outline(gcfg, news)
-    b = lines_from_outline(cfg, news, plan)
-    review = check(gcfg, news, b)
-    tb = time.time() - t
+    plan = c.outline(gcfg, news, "（これが最初の会話です）")
+    draft = c.glm_draft(gcfg, news, plan)
+    t_plan = time.time() - t
     plan_txt = plan["flow"] + "\n" + "\n".join(f"{i + 1}. {x['who']}：{x['point']}" for i, x in enumerate(plan["beats"]))
-    review_txt = "問題なし" if review.get("ok") and not review.get("problems") else "\n".join("- " + p for p in review["problems"])
-    print(f"=== B：GLMのあらすじ → Sarashinaのセリフ（{tb:.0f}秒）===\n[あらすじ]\n{plan_txt}\n\n[セリフ]\n{show(b)}\n\n"
-          f"[GLMの確認]\n{review_txt}\n")
+    print(f"[GLMのあらすじ（下書きまで {t_plan:.0f}秒）]\n{plan_txt}\n")
 
-    t = time.time()
-    try:
-        cl = glm_lines(gcfg, news, plan)
-    except Exception as e:
-        print("Cの生成に失敗:", e)
-        cl = []
-    tc = time.time() - t
-    print(f"=== C：あらすじもセリフもGLM（参考・{tc:.0f}秒）===\n{show(cl)}\n")
+    def a():
+        c.WHY.clear()
+        for _ in range(3):
+            try:
+                _, lines = c.clean(c.write_episode(cfg, news, []))
+            except Exception as e:
+                c.WHY.append(str(e))
+                continue
+            if lines:
+                return lines, ""
+        return [], "捨てた理由：" + " / ".join(c.WHY)
 
-    t = time.time()
-    dl, kept, review_d_txt = [], 0, "（下書きがないので作れませんでした）"
-    if cl:
-        dl, kept = restyle(cfg, news, cl)
-        try:
-            rd = check(gcfg, news, dl)
-            review_d_txt = "問題なし" if rd.get("ok") and not rd.get("problems") else "\n".join("- " + p for p in rd["problems"])
-        except Exception as e:
-            review_d_txt = f"確認に失敗: {e}"
-    td = time.time() - t
-    note = f"（{kept}行は言い直しがおかしかったので、GLMの下書きのまま）" if kept else ""
-    print(f"=== D：GLMの下書き → Sarashinaが言い直し（{td:.0f}秒）===\n{show(dl)}\n{note}\n\n[GLMの確認]\n{review_d_txt}\n")
+    def d():
+        lines, kept = c.restyle(cfg, news, draft)
+        return lines, (f"{kept}行は下書きのまま" if kept else "")
+
+    def e():
+        lines, usage = cloud_write(ccfg, news, plan)
+        return lines, f"トークン：{usage}" if usage else ""
+
+    def f():
+        lines, usage = cloud_restyle(ccfg, news, draft)
+        return lines, f"トークン：{usage}" if usage else ""
+
+    jobs = [("A", "Sarashina2.2-3B（手元）だけ", a), ("C", "GLMの下書きのまま（参考）", lambda: (draft, "")),
+            ("D", "GLMの下書き → Sarashina2.2-3B（手元）が言い直し", d),
+            ("E", "Sarashina3.2（API）があらすじから書く", e), ("F", "GLMの下書き → Sarashina3.2（API）が言い直し", f)]
+    results = []
+    for key, label, fn in jobs:
+        if key not in want:
+            continue
+        r = run(f"{key}：{label}", fn)
+        if key in "DEF" and r["lines"]:
+            try:
+                ok, problems = c.glm_check(gcfg, news, r["lines"])
+                r["check"] = "問題なし" if ok else "\n".join("- " + p for p in problems)
+            except Exception as ex:
+                r["check"] = f"確認に失敗: {ex}"
+        results.append(r)
+        print(f"=== {r['label']}（{r['sec']:.0f}秒）===\n{show(r['lines'])}")
+        if r["note"]:
+            print(f"（{r['note']}）")
+        if r.get("check"):
+            print(f"[GLMの確認] {r['check']}")
+        print()
 
     OUT.mkdir(exist_ok=True)
     path = OUT / (dt.datetime.now(u.JST).strftime("%Y%m%d-%H%M") + ".md")
-    path.write_text(
-        f"# 茶話の聞き比べ\n\n話題：【{news['kind']}】{news['title']}\n\nGLM：{gcfg['model']} / Sarashina：{cfg['model']}\n\n"
-        f"## A：Sarashinaだけ（{len(a or [])}行・{ta:.0f}秒）\n\n{show(a)}\n\n"
-        f"## B：GLMのあらすじ → Sarashinaのセリフ（{len(b)}行・{tb:.0f}秒）\n\n### あらすじ\n\n{plan_txt}\n\n"
-        f"### セリフ\n\n{show(b)}\n\n### GLMの確認\n\n{review_txt}\n\n"
-        f"## C：あらすじもセリフもGLM（参考・{len(cl)}行・{tc:.0f}秒）\n\n{show(cl)}\n\n"
-        f"## D：GLMの下書き → Sarashinaが言い直し（{len(dl)}行・{td:.0f}秒）\n\n{show(dl)}\n\n{note}\n\n"
-        f"### GLMの確認\n\n{review_d_txt}\n", encoding="utf-8")
+    body = [f"# 茶話の聞き比べ\n\n話題：【{news['kind']}】{news['title']}\n",
+            f"GLM：{gcfg['model']} / 手元：{cfg['model']}" + (f" / API：{ccfg['model']}" if ccfg else ""),
+            f"\n## GLMのあらすじ\n\n{plan_txt}\n"]
+    for r in results:
+        body.append(f"## {r['label']}（{len(r['lines'])}行・{r['sec']:.0f}秒）\n\n{show(r['lines'])}\n")
+        if r["note"]:
+            body.append(f"（{r['note']}）\n")
+        if r.get("check"):
+            body.append(f"GLMの確認：{r['check']}\n")
+    path.write_text("\n".join(body), encoding="utf-8")
     print("保存しました:", path)
 
 

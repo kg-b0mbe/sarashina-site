@@ -54,7 +54,7 @@
   </ol>
 
   <h2>Sarashinaが育てるサイト</h2>
-  <p>このサイトの更新は、運営者の手元にあるDGX Sparkで動くSarashina2.2-3B（MITライセンス）が手伝っています。クラウドのAPIは使っていません。国産AIの情報サイトを、その国産AI自身が育てていく仕組みです。</p>
+  <p>このサイトの更新は、運営者の手元にあるDGX Sparkで動くSarashina2.2-3B（MITライセンス）が手伝っています。国産AIの情報サイトを、その国産AI自身が育てていく仕組みです。</p>
   <div class="flow">
     <div><span class="who">Mac mini</span><b>新しい情報を集める</b>（Hugging Face・公式ブログ・ニュース・arXiv）</div>
     <div><span class="who">DGX Spark</span><b>Sarashinaが下書きする</b>（名前・分類・日本語の要約、論文の解説）</div>
@@ -62,6 +62,14 @@
     <div><span class="who">人</span><b>確かめて承認する</b>（プルリクエストをマージすると公開）</div>
   </div>
   <p>日付やパラメータ数、ライセンス、ダウンロード数、引用件数は、AIには書かせず、各サービスのAPIから機械的に取り込んでいます。Sarashinaが下書きした項目には「Sarashina下書き」の印が付きます。</p>
+
+  <h2>茶話は、話題によって担当を分けています</h2>
+  <p>さらとしなの茶話は、GLMが話の流れ（あらすじ）を組み立て、セリフは話題の種類によって二つのSarashinaが分担しています。同じ話題で作り方を聞き比べたところ、得意なことがはっきり分かれたからです。</p>
+  <dl class="credits">
+    <dt>論文・AIの回</dt><dd>Sarashina3.2 mini thinking（SB Intuitionsの<a href="https://docs.sarashina.ai/" target="_blank" rel="noopener">Sarashinaサービス</a>のAPI、無償ベータ）が、あらすじからセリフを書きます。中身を外さない正確さが大事な回です。</dd>
+    <dt>季節・世間話の回</dt><dd>GLMの下書きを、手元のSarashina2.2-3Bがさらとしなの口調に言い直します。くだけた楽しさが大事な回です。</dd>
+  </dl>
+  <p>どちらの回も、最後にGLMが「材料にない事実を足していないか」を確かめます。片方が使えないときはもう片方が受け持つので、茶話は止まりません。各回の下に、その回の担当を書いています。APIに送るのは、公開されているニュースの見出しと論文手帖の要約だけです。</p>
 
   <h2>ページの案内</h2>
   <div class="pages">
@@ -77,8 +85,9 @@
 
   <h2>使わせてもらっているもの</h2>
   <dl class="credits">
-    <dt>文章の下書き・茶話の言い直し</dt><dd>Sarashina2.2-3B-instruct（SB Intuitions、MIT License）Built with Sarashina</dd>
-    <dt>茶話の下書き・確認</dt><dd>GLM（Z.ai、同じDGX Spark上で動かしています）</dd>
+    <dt>文章の下書き・季節と世間話の茶話</dt><dd>Sarashina2.2-3B-instruct（SB Intuitions、MIT License）Built with Sarashina</dd>
+    <dt>論文とAIの茶話のセリフ</dt><dd>Sarashina3.2 mini thinking（SB Intuitions、Sarashinaサービスの無償ベータのAPI）</dd>
+    <dt>茶話のあらすじ・下書き・確認</dt><dd>GLM（Z.ai、同じDGX Spark上で動かしています）</dd>
     <dt>書体</dt><dd>Yuji Syuku、Shippori Mincho（どちらもGoogle Fonts、SIL Open Font License）</dd>
     <dt>数字</dt><dd>Hugging Face API、Semantic Scholar Academic Graph API</dd>
     <dt>サイトの制作</dt><dd>デザイン・ページ・更新の仕組みは、AnthropicのClaudeと一緒に作りました</dd>

@@ -6,6 +6,77 @@
   },
   "episodes": [
     {
+      "id": "20261124-1907",
+      "at": "2026-11-24 19:07",
+      "news": {
+        "title": "大相撲千秋楽であったほっこり光景「かわいい」 42歳敢闘賞力士の行動に反響「やってくれると思ってた」（THE ANSWER）",
+        "title_ja": "大相撲千秋楽であったほっこり光景「かわいい」 42歳敢闘賞力士の行動に反響「やってくれると思ってた」（THE ANSWER）",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBUcWlvdjVaY0Yyb3hXTmN1eDZQOWszbUVFQ0dtSVNVZGx6R2lWRTI5bWlkQzZ0cFVFcTNNamRRN2NXLUd5SjlzM2VNaVBJT2wxR1VYeFNjV1pLRlBzNm80VXdCenpZZDFSTnA3Ym1ZSHpfNEdnWS1HSGVCODVkb28?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しなしな、見て！「大相撲千秋楽、ほっこり光景『かわいい』」って見出し！"
+        },
+        {
+          "who": "しな",
+          "text": "ああ、42歳の力士が敢闘賞をとった話だね。"
+        },
+        {
+          "who": "さら",
+          "text": "42歳でも現役で頑張ってるの？すごいよね、感心する！"
+        },
+        {
+          "who": "しな",
+          "text": "長いキャリアを積んだ力士もいるからね。"
+        },
+        {
+          "who": "さら",
+          "text": "でも、見出しの「行動」が気になる！"
+        },
+        {
+          "who": "しな",
+          "text": "そこは報道で確認だね。わからないことは素直に聞くよ。"
+        },
+        {
+          "who": "さら",
+          "text": "ああいう「かわいい」光景、いいよね！うちの猫も癒しだよ。"
+        },
+        {
+          "who": "しな",
+          "text": "かわいいってだけで和むよね。"
+        },
+        {
+          "who": "さら",
+          "text": "もうその力士の活躍にワクワク！"
+        },
+        {
+          "who": "しな",
+          "text": "応援したくなりますよね。"
+        },
+        {
+          "who": "さら",
+          "text": "千秋楽の盛り上がり、驚いたよね！"
+        },
+        {
+          "who": "しな",
+          "text": "続報や来場所も楽しみだ。"
+        },
+        {
+          "who": "さら",
+          "text": "次は何の話しよう？ワクワク！"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261124-1307",
       "at": "2026-11-24 13:07",
       "news": {

@@ -6,6 +6,52 @@
   },
   "episodes": [
     {
+      "id": "20261124-1007",
+      "at": "2026-11-24 10:07",
+      "news": {
+        "title": "生成AIニュース 昨日【2026年11月23日（月）】のAI公式発表を3分でチェック",
+        "title_ja": "生成AIニュース 昨日【2026年11月23日（月）】のAI公式発表を3分でチェック",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTFAyNzlCUnlReXd4S3I5YnktZndpMktTRURoVTh1YWxqeWMwNi0wWmxtSXNCcnI0Yllvd1p4dThEUXpTTVR1ZzNQbG9ob3BLMlRIRER3VGF2Zk42djVYdF9DV0lJaFRRMlg5NjZ3?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "新しいAIニュース見つけた！"
+        },
+        {
+          "who": "さら",
+          "text": "DGX Sparkの上で動く仲間として、気になるよね"
+        },
+        {
+          "who": "しな",
+          "text": "確かに。どんな発表があったんだい？"
+        },
+        {
+          "who": "さら",
+          "text": "ローカルLLMの進化が目覚ましいって！"
+        },
+        {
+          "who": "さら",
+          "text": "でも、まだ詳細は秘密らしい..."
+        },
+        {
+          "who": "しな",
+          "text": "じゃあ、その機能について想像してみるか"
+        },
+        {
+          "who": "さら",
+          "text": "うん、想像で楽しむよ！ 次の話題は何にしよ？"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261124-0707",
       "at": "2026-11-24 07:07",
       "news": {

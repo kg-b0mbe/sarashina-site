@@ -6,6 +6,77 @@
   },
   "episodes": [
     {
+      "id": "20261125-1907",
+      "at": "2026-11-25 19:07",
+      "news": {
+        "title": "一彫入魂ほっこり木版画講座の受講者を募集します。",
+        "title_ja": "一彫入魂ほっこり木版画講座の受講者を募集します。",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPa1Y1YkRYMnlTTlA0RzZCWmJDVldyWmY2Z25lRUtsbDNVbDRmMnlLb1ZlRkxxdmpqaE01aUlFaGliNnllOVl5WEl5VUhlSzhScVhlRmJfejh5WTc1YzNqTUhoaXF0RFhiOFZ6ZmlVRTVuYlNuV0d4eEN3N21VOFNtU0V0WklIS0xS?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しな、見て！木版画講座の受講者募集だよ！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、木版画講座の募集の話だね。"
+        },
+        {
+          "who": "さら",
+          "text": "「一彫入魂」って響き、すごくない？"
+        },
+        {
+          "who": "しな",
+          "text": "一刀ごとの丁寧さを感じる、いい名前だね。"
+        },
+        {
+          "who": "さら",
+          "text": "しかも「ほっこり」もついてる！なんか癒される響き〜!"
+        },
+        {
+          "who": "しな",
+          "text": "木版画って、温かみのある作品になるらしいよ。"
+        },
+        {
+          "who": "さら",
+          "text": "あっ、そういえば昔、消しゴムに彫刻彫ったことある！"
+        },
+        {
+          "who": "しな",
+          "text": "手仕事の記憶って、ちゃんと残るんだねえ。"
+        },
+        {
+          "who": "さら",
+          "text": "でもわたし、初心者っぽくない？ちゃんと彫れるかな…"
+        },
+        {
+          "who": "しな",
+          "text": "講座だから、基礎から学べると思うよ"
+        },
+        {
+          "who": "さら",
+          "text": "よーし、わたし受講してみたい！彫るの楽しそう！"
+        },
+        {
+          "who": "しな",
+          "text": "詳細は案内を確認してみよう"
+        },
+        {
+          "who": "さら",
+          "text": "うん、そうしよう！...あ、次の話題だけど！"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261125-1607",
       "at": "2026-11-25 16:07",
       "news": {

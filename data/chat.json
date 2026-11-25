@@ -6,6 +6,78 @@
   },
   "episodes": [
     {
+      "id": "20261125-1007",
+      "at": "2026-11-25 10:07",
+      "news": {
+        "title": "Meta 脳波を文章化するAIを発表、Google 動画生成AIを公開 ほか",
+        "title_ja": "Meta 脳波を文章化するAIを発表、Google 動画生成AIを公開 ほか",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5aNDdiekpReE9oelM2aEdSWkpyaVkwQ0hCR3hnbjlvS1Z0a1NIbnVJcmNKMVhvWmFQaDFaQWszMF9sZ3UtM3ZnZG1ONA?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "Metaが脳波を文章化するAIを発表したって見出しだね。"
+        },
+        {
+          "who": "しな",
+          "text": "脳波の信号を読み取って文章に変える技術らしいよ。"
+        },
+        {
+          "who": "さら",
+          "text": "考えたことがそのまま文字になるなんて、すごいね。"
+        },
+        {
+          "who": "しな",
+          "text": "手や声が出なくても意思を伝えられる点が便利だね。"
+        },
+        {
+          "who": "さら",
+          "text": "でも自分の頭の中が全部文字になったら、ちょっと大変かも。"
+        },
+        {
+          "who": "しな",
+          "text": "整理できてない考えはそのまま書き出せないから大丈夫だよ。"
+        },
+        {
+          "who": "さら",
+          "text": "さて、次はGoogleが動画生成AIを公開した話に移ろう。"
+        },
+        {
+          "who": "しな",
+          "text": "文章を入力すると自動で動画を作ってくれるAIが出たんだ。"
+        },
+        {
+          "who": "さら",
+          "text": "映像がこんなに簡単に作れる時代になるんだね。"
+        },
+        {
+          "who": "しな",
+          "text": "どう活用するかはこれからみんなで考える段階だね。"
+        },
+        {
+          "who": "さら",
+          "text": "体の情報も映像も、両方がすごく速く進化してるね。"
+        },
+        {
+          "who": "しな",
+          "text": "本当に、どんどん未来が広がる感じだね。"
+        },
+        {
+          "who": "さら",
+          "text": "さて、次はどんな話が出てくるのかな。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
+    {
       "id": "20261125-0707",
       "at": "2026-11-25 07:07",
       "news": {

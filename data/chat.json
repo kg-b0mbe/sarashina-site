@@ -1,10 +1,81 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-25",
+  "updated_at": "2026-11-26",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261126-0707",
+      "at": "2026-11-26 07:07",
+      "news": {
+        "title": "25日（水）午後も寒さ続く 週後半は一転して気温上昇 寒暖差に注意を (ウェザーマップ)",
+        "title_ja": "25日（水）午後も寒さ続く 週後半は一転して気温上昇 寒暖差に注意を (ウェザーマップ)",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQQ2JOUWVOMjUxQk5DMGJyNjBJSVo0RHQzZGNiY1ZubkZOanJ6WWFkTEN3OUJTcVdkZWF6Wi1tNFhWTWppbHhrOFR5YnVhUjNVczJxYlR6eG15cjZhMWlRVlNLOGNPNWUxWFZVOE9aWGlCMDg0YU9RRFdhWEQ3TnQzVWVJdGVqbWItRGU2ejBn?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえしな、ニュース見た？午後も寒さ続くんだって！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、週後半は一転して気温上昇らしいよ"
+        },
+        {
+          "who": "さら",
+          "text": "ほんとだ、「寒暖差に注意を」って書いてある！"
+        },
+        {
+          "who": "しな",
+          "text": "気温差あると体がついていかないんだよね"
+        },
+        {
+          "who": "さら",
+          "text": "寒い日は温かい飲み物恋しくない？ココアとか！"
+        },
+        {
+          "who": "しな",
+          "text": "わかる。温かい飲み物は心も温まるよね。"
+        },
+        {
+          "who": "さら",
+          "text": "寒暖差、服装どうしょ…"
+        },
+        {
+          "who": "しな",
+          "text": "脱ぎ着しやすい服で調整するのがいいよ。"
+        },
+        {
+          "who": "さら",
+          "text": "気温上がるの嬉しいけど、油断しそうだなあ。"
+        },
+        {
+          "who": "しな",
+          "text": "ふふ、寒暖差は油断の元だよ？"
+        },
+        {
+          "who": "さら",
+          "text": "そういえば寒い日はきのこ鍋が恋しいなあ..."
+        },
+        {
+          "who": "しな",
+          "text": "きのこの話、面白そうだね。今度詳しく聞かせて。"
+        },
+        {
+          "who": "さら",
+          "text": "えへへ、次は何の話しようっか！"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
     {
       "id": "20261125-2207",
       "at": "2026-11-25 22:07",

@@ -6,6 +6,70 @@
   },
   "episodes": [
     {
+      "id": "20261125-1307",
+      "at": "2026-11-25 13:07",
+      "news": {
+        "title": "Thinking Machines Lab、ノートパソコンで動くオープンウェイトのモデル「Inkling 2 Mini」を公開",
+        "title_ja": "Thinking Machines Lab、ノートパソコンで動くオープンウェイトのモデル「Inkling 2 Mini」を公開",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5YdVhzaktmSDFJWWZXQUtDOWtraGJMZTV1ZDVDekRfWkZjbjhOTkJ1SmgyREdoa0R3Y191QnpROTVRd2dzeG5OM3N6VDBrZVNEcHd4OVRvTFA0SXNST3cxaGZLMkd4X3lHdmVERmJB?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ニュース見た？ノートPCで動くAIモデルが公開されたんだって。"
+        },
+        {
+          "who": "しな",
+          "text": "ノートPCで動くなんて、かなり軽いんだね。"
+        },
+        {
+          "who": "さら",
+          "text": "オープンウェイトって、どういうことなの？"
+        },
+        {
+          "who": "しな",
+          "text": "重みが公開されてるから、誰でもダウンロードして試せるんだよ。"
+        },
+        {
+          "who": "さら",
+          "text": "私のノートPCでも動くのかな、試してみたい！"
+        },
+        {
+          "who": "しな",
+          "text": "軽量設計だから、普通のノートでも十分動く可能性があるよ。"
+        },
+        {
+          "who": "さら",
+          "text": "そのうち冷蔵庫とかもAIで賢くなるかもね。"
+        },
+        {
+          "who": "しな",
+          "text": "確かにデバイスが小型化して、身近なものが便利になるね。"
+        },
+        {
+          "who": "さら",
+          "text": "手元でAIが動く時代が来たと実感するよ。"
+        },
+        {
+          "who": "しな",
+          "text": "オープンで軽量なモデルは、技術の敷居を下げる大きな一歩だね。"
+        },
+        {
+          "who": "さら",
+          "text": "さて、次は何の話かな。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
+    {
       "id": "20261125-1007",
       "at": "2026-11-25 10:07",
       "news": {

@@ -6,6 +6,73 @@
   },
   "episodes": [
     {
+      "id": "20261126-2207",
+      "at": "2026-11-26 22:07",
+      "news": {
+        "title": "人情にほっこり④受け継ぐ「味」と「おもてなしの心」 釜石・料亭「幸楼」（テレビ岩手ニュース）",
+        "title_ja": "人情にほっこり④受け継ぐ「味」と「おもてなしの心」 釜石・料亭「幸楼」（テレビ岩手ニュース）",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9JLVZnbUM1ZzBtWGc0bm0wQ2JLeFVMazJJS1czR2VzQnFfMUw4enJ6U1ljeVAxb2NlZDdOZ1pPOUtTWWVYcTBxNjU2NV93ckdVNTRDU0YzY3hvVkVFWnZIbElNM1lBd1JBenoxaUsyNEw4dWtqaXVqbUczYVF2REU?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえしな、釜石の料亭の見出し見つけたよ。'人情にほっこり'だって！"
+        },
+        {
+          "who": "しな",
+          "text": "いい響きだね、その言い方"
+        },
+        {
+          "who": "さら",
+          "text": "受け継ぐ'味'と'おもてなしの心'って書いてあって、ちょっと感動した"
+        },
+        {
+          "who": "しな",
+          "text": "代々受け継ぐ味、特別そうだよね"
+        },
+        {
+          "who": "さら",
+          "text": "おもてなしの心、気になるね。どんなことするんだろう。"
+        },
+        {
+          "who": "しな",
+          "text": "料亭なら、きっと特別なおもてなしがあるんだろうね。"
+        },
+        {
+          "who": "さら",
+          "text": "昔、お店で出された料理の味が忘れられないんだ。すごく優しい味だった。"
+        },
+        {
+          "who": "しな",
+          "text": "いい思い出だね。……うん、話がそれちゃった。戻そうか。"
+        },
+        {
+          "who": "さら",
+          "text": "そうだね、あの料亭の味、食べてみたいよね。"
+        },
+        {
+          "who": "しな",
+          "text": "いつか行けたらいいね。"
+        },
+        {
+          "who": "さら",
+          "text": "さて、次は何の話する？"
+        },
+        {
+          "who": "しな",
+          "text": "次は何の話かな。楽しみだね。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261126-1907",
       "at": "2026-11-26 19:07",
       "news": {

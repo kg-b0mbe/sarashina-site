@@ -6,6 +6,74 @@
   },
   "episodes": [
     {
+      "id": "20261126-1007",
+      "at": "2026-11-26 10:07",
+      "news": {
+        "title": "アンソロピック、新モデル「Opus 5.6」が極秘テストか 一部利用者に先行提供の観測",
+        "title_ja": "アンソロピック、新モデル「Opus 5.6」が極秘テストか 一部利用者に先行提供の観測",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBGNmlzQ0tSTlZ6bEhtaU5oUDdUU2pBS3lIdjdKWWtuLV8zQ3RHLVJKeDcyazFZSGNBaWV6VUJWZWtCQzIxekVfV3I1OW44ZlRVNW9XeWU5VWVMZGdWcDZTR2VKNGFHbG16QW9XX1Fjb0lqajZZ?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ニュースでOpus 5.6が極秘テスト中って観測されたんだって。"
+        },
+        {
+          "who": "しな",
+          "text": "つまり、選ばれた利用者だけに先行提供している状態だね。"
+        },
+        {
+          "who": "さら",
+          "text": "でも、なんでこんなに隠してテストするんだろうね。"
+        },
+        {
+          "who": "しな",
+          "text": "完成前にフィードバックを集めて調整したいんじゃないかな。"
+        },
+        {
+          "who": "さら",
+          "text": "早く正式リリースが見たいなぁ、ワクワクする！"
+        },
+        {
+          "who": "しな",
+          "text": "ただ、観測はまだ憶測に過ぎないから、正式発表まで待とう。"
+        },
+        {
+          "who": "さら",
+          "text": "実は私も友達へのプレゼントをこっそり準備中なの。"
+        },
+        {
+          "who": "しな",
+          "text": "でもさ、さらは隠すの苦手だからすぐバレそうじゃない？"
+        },
+        {
+          "who": "さら",
+          "text": "うん、結局すぐ見つかって笑っちゃったよ。"
+        },
+        {
+          "who": "しな",
+          "text": "それはそれとして、Opusの新情報は公式発表を楽しみにしよう。"
+        },
+        {
+          "who": "さら",
+          "text": "どんな性能になるか、想像するだけで胸が高鳴るね。"
+        },
+        {
+          "who": "しな",
+          "text": "さて、次は何の話かな。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
+    {
       "id": "20261126-0707",
       "at": "2026-11-26 07:07",
       "news": {

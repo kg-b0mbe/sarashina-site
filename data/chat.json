@@ -1,10 +1,73 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-26",
+  "updated_at": "2026-11-27",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261127-0707",
+      "at": "2026-11-27 07:07",
+      "news": {
+        "title": "11月最後の週末 天気は下り坂 次の寒気は日曜 各地で寒さ復活",
+        "title_ja": "11月最後の週末 天気は下り坂 次の寒気は日曜 各地で寒さ復活",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBLQXBJTW5EaXI0NHZjMjBSdkt1M244VXlscjJycS1nbVl0blpwN3djSTZRSW9lUHY5ZGdRSWlGcVBPQnNQTHY3REJCMHdaSFBhRm1sMDZ3?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえしな、ニュース見た?11月最後の週末、天気下り坂らしいよ!"
+        },
+        {
+          "who": "しな",
+          "text": "見た見た。日曜には寒気が来るんだって。"
+        },
+        {
+          "who": "さら",
+          "text": "え、暖かい日が続いてたのに、急に寒くなっちゃうの?"
+        },
+        {
+          "who": "しな",
+          "text": "季節は冬へ進んでるからね、仕方ないさ。"
+        },
+        {
+          "who": "さら",
+          "text": "寒い朝って、布団から出られないんだよねぇ..."
+        },
+        {
+          "who": "しな",
+          "text": "わかるよ〜。冬の朝の特権だよね、あの葛藤は。"
+        },
+        {
+          "who": "さら",
+          "text": "あ、そういえば寒い時期って果物が気になるな。梨ってどう?"
+        },
+        {
+          "who": "しな",
+          "text": "梨は秋冬も楽しめる果物だから、ちょうどいいんじゃない?"
+        },
+        {
+          "who": "さら",
+          "text": "梨食べながら、寒さ吹き飛ばすぞ！"
+        },
+        {
+          "who": "しな",
+          "text": "うん、体調管理も大事だねえ。"
+        },
+        {
+          "who": "さら",
+          "text": "次、何の話しようかな?"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
     {
       "id": "20261126-2207",
       "at": "2026-11-26 22:07",

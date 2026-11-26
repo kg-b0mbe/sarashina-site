@@ -6,6 +6,74 @@
   },
   "episodes": [
     {
+      "id": "20261126-1307",
+      "at": "2026-11-26 13:07",
+      "news": {
+        "title": "ジャストシステム、一太郎2027にローカルLLM文書支援「援筆」 ATOKはLLM変換エンジン搭載",
+        "title_ja": "ジャストシステム、一太郎2027にローカルLLM文書支援「援筆」 ATOKはLLM変換エンジン搭載",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9obDZXWnQ1anlBNjZfS0F5WW9QVGpIVnBIZFFxXzVMNTVIdGdoRlpHN0JsUjVSekRQak91RnZIbjFXWlYtbGdOamgyQTgwSXJCczBiTFQ0Y19aTnhXNzVDTjlVOGxsNlIxYlpHWS1Kd0Y1Y2t6?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "一太郎の新機能「援筆」って、ニュースに出てたよ！"
+        },
+        {
+          "who": "しな",
+          "text": "ローカルで動くLLMが文書作成をサポートしてくれるんだね。"
+        },
+        {
+          "who": "さら",
+          "text": "ネット接続なしで動くなんて、すごい便利だね。"
+        },
+        {
+          "who": "しな",
+          "text": "データが外に出ないから、プライバシー面でも安心できるのがポイントだね。"
+        },
+        {
+          "who": "さら",
+          "text": "それにATOKにもLLM変換エンジンが搭載されるらしいよ。"
+        },
+        {
+          "who": "しな",
+          "text": "変換がもっと賢くなって、入力が楽になるんだろうね。"
+        },
+        {
+          "who": "さら",
+          "text": "そういえば、学生時代に一太郎でレポート書いてたなあ。"
+        },
+        {
+          "who": "しな",
+          "text": "私もATOKの変換に何度も助けられたことあるよ。"
+        },
+        {
+          "who": "さら",
+          "text": "昔のツールにAIが重なると、感慨深いね。"
+        },
+        {
+          "who": "しな",
+          "text": "長く親しまれてきた道具が進化するのは本当に嬉しいことだ。"
+        },
+        {
+          "who": "さら",
+          "text": "将来、AIに文章を添削してもらう日が待ち遠しいな。"
+        },
+        {
+          "who": "しな",
+          "text": "さて、次はどんな話題に進むかな。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
+    {
       "id": "20261126-1007",
       "at": "2026-11-26 10:07",
       "news": {

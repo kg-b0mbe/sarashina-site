@@ -6,6 +6,60 @@
   },
   "episodes": [
     {
+      "id": "20261127-2207",
+      "at": "2026-11-27 22:07",
+      "news": {
+        "title": "プロ野球選手が名門校の入学後に直面した「残酷な現実」",
+        "title_ja": "プロ野球選手が名門校の入学後に直面した「残酷な現実」",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE80bVlNWDlqS0M4ZUhDWkxVbXNoLTF5SmJqRlN6OVNQRUNqZmJBcXhzbGtjR1plUUpTWHlQZlZSWVZVZ0F4dVdMUEVqcGc?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえ、しな。プロ野球選手が名門校に入学した後の話、知ってる？"
+        },
+        {
+          "who": "しな",
+          "text": "うん、headline_jaにあったね。どんな現実に直面したのか気になるね"
+        },
+        {
+          "who": "さら",
+          "text": "うん、うん。きっと厳しい練習とか、競争とか、いろいろあるんだろうね"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね。でも、きっとその経験は将来に役立つはず"
+        },
+        {
+          "who": "さら",
+          "text": "だよね。私も新しいこと始めたとき、最初は苦労したもん"
+        },
+        {
+          "who": "しな",
+          "text": "うん、そうだね。お互い頑張ろう！"
+        },
+        {
+          "who": "さら",
+          "text": "うん、次はどんな話題いこうか？スポーツニュースとかどう？"
+        },
+        {
+          "who": "しな",
+          "text": "いいね、スポーツの話もっとしよう！"
+        },
+        {
+          "who": "さら",
+          "text": "（次は選手の記録更新の話とかどうかな？楽しみだね！）"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261127-1907",
       "at": "2026-11-27 19:07",
       "news": {

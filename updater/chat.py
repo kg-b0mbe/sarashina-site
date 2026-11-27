@@ -33,6 +33,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import update as u  # noqa: E402  設定の読み込み・RSS・Sarashina呼び出しを共用
+import chat_audio  # noqa: E402  読み上げ音声（既定は止めてある）
 from lock import single_run  # noqa: E402
 
 ROOT = u.ROOT
@@ -786,6 +787,7 @@ def main():
             return
 
         doc["episodes"] = prune([ep] + doc["episodes"], now)
+        chat_audio.attach(ep, doc["episodes"], now)  # CHAT_AUDIO_ENABLED=1 のときだけ。失敗しても茶話は続ける
         doc["updated_at"] = now.strftime("%Y-%m-%d")
         CHAT.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         build = subprocess.run([sys.executable, "scripts/build.py"], cwd=ROOT, capture_output=True, text=True)

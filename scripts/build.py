@@ -275,6 +275,10 @@ def validate_chat(doc):
             if ln.get("who") not in ("さら", "しな") or not str(ln.get("text", "")).strip():
                 errors.append(f"{where}: 話者か台詞が不正です")
                 break
+        au = ep.get("audio")
+        if au is not None:
+            if not str(au.get("base", "")).startswith("https://") or len(au.get("files") or []) != len(lines) + 1:
+                errors.append(f"{where}: 音声の指定が不正です（URLか、ファイル数が行数+1でない）")
     return errors
 
 

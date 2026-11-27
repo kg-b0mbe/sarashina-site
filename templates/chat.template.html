@@ -101,7 +101,7 @@ details.group details.past:last-child { border-bottom: 0; }
   <p class="note">
     これはAI同士の雑談です。ニュースについては見出しだけを渡していますが、内容が正確とは限りません。事実は必ず元の記事でご確認ください。<br>
     事件・事故・災害・政治などの見出しは、雑談の話題にしないようにしています。<br>
-    「声で聴く」は、お使いの端末に入っている日本語の音声で読み上げます。声は端末によって変わります。<br>
+    「声で聴く」は、音声の付いた回ではSarashina3.2 TTS（SB Intuitions）で作った声を流します。音声のない回は、お使いの端末に入っている日本語の音声で読み上げます（声は端末によって変わります）。<br>
     話の流れ（あらすじ）はDGX Spark 2台で動かしているGLMが組み立て、セリフは話題で担当を分けています。論文とAIの回はSarashina3.2 mini thinking（APIの無償ベータ）が書き、季節と世間話の回はGLMの下書きを、Mac miniで動かしているSarashina2.2-3B-instructがさらとしなの口調に言い直します。各回の下に、その回の担当を書いています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
   </p>
 </main>
@@ -133,7 +133,7 @@ details.group details.past:last-child { border-bottom: 0; }
     return ep.news.paper_id ? '<a href="papers.html#p-' + esc(ep.news.paper_id) + '">論文手帖で読む</a>' : '';
   }
   function madeOf(ep) {
-    return '<span class="made">' + (ep.made && ep.made.writer ? 'あらすじ：GLM ／ セリフ：' + esc(ep.made.writer_label || 'Sarashina') : ep.made && ep.made.draft ? '下書き：GLM ／ 言い直し：Sarashina' : '下書きから：Sarashina') + '</span>';
+    return '<span class="made">' + (ep.made && ep.made.writer ? 'あらすじ：GLM ／ セリフ：' + esc(ep.made.writer_label || 'Sarashina') : ep.made && ep.made.draft ? '下書き：GLM ／ 言い直し：Sarashina' : '下書きから：Sarashina') + (ep.audio ? ' ／ 声：' + esc(ep.audio.by || 'Sarashina3.2 TTS') : '') + '</span>';
   }
   function titleOf(ep) { return ep.news.title_ja || ep.news.title; }
   function origOf(ep) { return ep.news.lang === 'en' ? '<span class="orig">原題：' + esc(ep.news.title) + '（日本語の見出しはSarashinaによる意訳）</span>' : ''; }
@@ -148,11 +148,11 @@ details.group details.past:last-child { border-bottom: 0; }
       '<div class="talk" id="now-talk">' + ep.lines.map(function (l) { return lineHtml(l, animate); }).join('') + '</div>' +
       '<div class="links">' + paperLink(ep) + madeOf(ep) + '</div>' +
       '<div class="typing" id="typing" hidden>・・・</div>' +
-      '<div class="controls-row">' + (canSpeak ? '<button class="listen" id="listen">声で聴く</button>' : '') +
+      '<div class="controls-row">' + (canVoice(ep) ? '<button class="listen" id="listen">声で聴く</button>' : '') +
       '<button id="replay">もう一度読む</button><button id="skip">全部表示</button></div></div>';
     document.getElementById('replay').onclick = function () { stopVoice(); play(); };
     document.getElementById('skip').onclick = function () { stopVoice(); reveal(true); };
-    if (canSpeak) document.getElementById('listen').onclick = function () {
+    if (canVoice(ep)) document.getElementById('listen').onclick = function () {
       if (speakingBtn === this) { stopVoice(); reveal(true); return; }
       if (timer) { clearTimeout(timer); timer = null; }
       document.getElementById('typing').hidden = true;
@@ -185,7 +185,7 @@ details.group details.past:last-child { border-bottom: 0; }
   }
   function pastHtml(ep, i) {
     return '<details class="past"><summary><span class="when">' + esc(ep.at) + '</span><span class="t"><span class="tag">' + tagOf(ep) + '</span>' + esc(titleOf(ep)) + '</span>' + origOf(ep) +
-      (canSpeak ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
+      (canVoice(ep) ? '<button class="listen-past" data-i="' + i + '">声で聴く</button>' : '') + '</summary>' +
       '<div class="talk">' + ep.lines.map(function (l) { return lineHtml(l, false); }).join('') + '</div>' +
       '<div class="links"><a href="' + esc(ep.news.link) + '" target="_blank" rel="noopener">' + (ep.news.kind === 'paper' ? '論文' : '元の記事') + '</a>' + paperLink(ep) + madeOf(ep) + '</div></details>';
   }
@@ -238,6 +238,10 @@ details.group details.past:last-child { border-bottom: 0; }
   // ---- 声で聴く（ブラウザに入っている日本語の音声で読み上げる。サーバーも費用も不要） ----
   var synth = null, canSpeak = false, speakingBtn = null, pastEps = [];
   try { synth = window.speechSynthesis; canSpeak = !!(synth && window.SpeechSynthesisUtterance); } catch (e) {}
+  // 音声ファイルが付いた回は、それを順に流す（Sarashina3.2 TTSで作った声）。ない回はブラウザの読み上げ
+  var canAudio = false, player = null, playToken = 0;
+  try { canAudio = typeof Audio !== 'undefined'; } catch (e) {}
+  function canVoice(ep) { return canSpeak || !!(canAudio && ep && ep.audio && ep.audio.files && ep.audio.files.length); }
   function jaVoices() {
     try { return synth.getVoices().filter(function (v) { return /^ja/i.test(v.lang); }); } catch (e) { return []; }
   }
@@ -275,16 +279,48 @@ details.group details.past:last-child { border-bottom: 0; }
     return u;
   }
   function stopVoice() {
-    if (!canSpeak) return;
-    try { synth.cancel(); } catch (e) {}
+    playToken++;
+    if (player) { try { player.pause(); } catch (e) {} player = null; }
+    if (canSpeak) { try { synth.cancel(); } catch (e) {} }
     document.querySelectorAll('.line.speaking').forEach(function (n) { n.classList.remove('speaking'); });
     if (speakingBtn) { speakingBtn.classList.remove('on'); speakingBtn.textContent = '声で聴く'; speakingBtn = null; }
+  }
+  function mark(nodes, i) {
+    nodes.forEach(function (n) { n.classList.remove('speaking'); });
+    if (nodes[i]) { nodes[i].classList.remove('hidden'); nodes[i].classList.add('speaking'); }
+  }
+  // 0番は番組の頭、1番からが各セリフ。読み込めなかったら、そこからブラウザの読み上げに切り替える
+  function playFiles(ep, nodes, token) {
+    var files = ep.audio.files, i = 0;
+    function next() {
+      if (token !== playToken) return;
+      if (i >= files.length) { setTimeout(stopVoice, 400); return; }
+      var k = i++;
+      player = new Audio(ep.audio.base + files[k]);
+      player.onended = function () { setTimeout(next, 120); };
+      player.onerror = function () { if (token === playToken) synthFrom(ep, nodes, Math.max(0, k - 1)); };
+      if (k > 0) mark(nodes, k - 1);
+      var p = player.play();
+      if (p && p.catch) p.catch(function () { if (token === playToken) synthFrom(ep, nodes, Math.max(0, k - 1)); });
+    }
+    next();
+  }
+  function synthFrom(ep, nodes, start) {
+    if (player) { try { player.pause(); } catch (e) {} player = null; }
+    if (!canSpeak) { nodes.forEach(function (n) { n.classList.remove('hidden'); }); setTimeout(stopVoice, 400); return; }
+    ep.lines.slice(start).forEach(function (l, j) {
+      var i = start + j;
+      var u = utter(l.text, l.who, function () { mark(nodes, i); });
+      if (i === ep.lines.length - 1) u.onend = function () { setTimeout(stopVoice, 400); };
+      synth.speak(u);
+    });
   }
   function speak(ep, box, btn, revealAsYouGo) {
     stopVoice();
     var nodes = Array.prototype.slice.call(box.querySelectorAll('.line'));
     if (revealAsYouGo) nodes.forEach(function (n) { n.classList.add('hidden'); });
     speakingBtn = btn; btn.classList.add('on'); btn.textContent = '止める';
+    if (canAudio && ep.audio && ep.audio.files && ep.audio.files.length) { playFiles(ep, nodes, playToken); return; }
     // 番組の頭：しなが今日の話題を読む
     synth.speak(utter('さらとしなの茶話。今日の話題は、' + titleOf(ep) + '。', 'しな'));
     ep.lines.forEach(function (l, i) {
@@ -296,8 +332,8 @@ details.group details.past:last-child { border-bottom: 0; }
       synth.speak(u);
     });
   }
-  if (canSpeak) {
-    try { synth.getVoices(); synth.onvoiceschanged = function () { chosen = null; }; } catch (e) {}
+  if (canSpeak) { try { synth.getVoices(); synth.onvoiceschanged = function () { chosen = null; }; } catch (e) {} }
+  {
     document.getElementById('past').addEventListener('click', function (e) {
       var b = e.target.closest('.listen-past'); if (!b) return;
       e.preventDefault();  // 見出しの開閉はさせない

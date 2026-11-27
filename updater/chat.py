@@ -73,17 +73,23 @@ FEEDS = {
         (gnews("紅葉 見頃 OR 初雪 OR 初霜 OR 桜 開花"), False),
         (gnews("季節の話題 暮らし"), False),
     ],
-    # 国内外のまったりした話題（世間話）
-    "light": [
-        (gnews("ほっこり"), False),
-        (gnews("新商品 スイーツ OR グルメ"), False),
-        (gnews("話題 動物 OR 水族館 OR 動物園"), False),
-        (gnews("旅行 話題 OR 観光 人気"), False),
-        (gnews(topic="SCIENCE"), False),
-        ("https://rss.upi.com/news/odd_news.rss", False),
-        (gnews("quirky news", lang="en"), False),
-    ],
+    # 世間話は LIGHT_THEMES（スポーツ・乗り物・生きもの・宇宙と空・旅と行事）から、テーマを回して選ぶ
+    "light": [],
 }
+# 世間話のテーマ。直近に使ったテーマを避けて、順に回す（同じテーマが続かないように）
+LIGHT_THEMES = {
+    "スポーツ": [gnews("プロ野球 OR Jリーグ OR 大相撲 OR フィギュアスケート"), gnews(topic="SPORTS"),
+              gnews("駅伝 OR マラソン OR バレーボール OR バスケットボール")],
+    "乗り物": [gnews("新型車両 OR 新幹線 OR 鉄道 新しい"), gnews("新型 飛行機 OR 就航 OR 旅客機"),
+             gnews("新型車 発表 OR 自転車 話題 OR フェリー")],
+    "生きもの": [gnews("水族館 OR 動物園 赤ちゃん"), gnews("パンダ OR ペンギン OR ラッコ"), gnews("珍しい 生きもの 発見")],
+    "宇宙と空": [gnews("流星群 OR 月食 OR 天体ショー"), gnews("ロケット 打ち上げ OR 宇宙"), gnews("オーロラ OR 虹 OR 星空")],
+    "旅と行事": [gnews("祭り OR イルミネーション OR 花火"), gnews("紅葉 OR 桜 名所"), gnews("世界遺産 OR 観光地 話題")],
+}
+# 宣伝・募集・買いもの・ファッションの見出しは、世間話には使わない（一部の人にしか関係しないので）
+PROMO = re.compile(r"募集|受講|講座|キャンペーン|セール|クーポン|割引|ポイント|プレゼント|応募|申し?込|予約受付|"
+                   r"発売|販売開始|新商品|限定|お得|PR|広告|コーデ|着こなし|ファッション|理由$|ランキング|まとめ|"
+                   r"生協|コープ|株価|決算|求人|署名")
 FRESH_DAYS = {"ai": 2, "local": 3, "season": 2, "light": 3}
 
 # 1日の番組表（時:話題）。launchd の時刻（jp.sarashina-site.chat.plist）と合わせる。
@@ -173,6 +179,8 @@ def _candidate(it, state_seen, days, need_ai, recent=(), shelf=""):
         return None
     if shelf == "season" and LOCAL_WEATHER.search(title) and "全国" not in title:
         return None
+    if shelf == "light" and PROMO.search(title):
+        return None
     if similar(title, recent):  # 最近話したのと同じ話題（リーマン予想が続く、など）は避ける
         return None
     if need_ai and not AI_WORDS.search(title):
@@ -224,9 +232,24 @@ def pick_headline(state_seen, shelf, recent=()):
     return None
 
 
+def pick_light(state, seen, recent=()):
+    """世間話：直近に使ったテーマを後回しにして、テーマごとに見出しを探す。"""
+    used = state.get("light_themes", [])
+    themes = sorted(LIGHT_THEMES, key=lambda t: (used[::-1].index(t) * -1 if t in used else -99, random.random()))
+    for theme in themes:
+        for feed in LIGHT_THEMES[theme]:
+            for it in u.rss_items(feed):
+                cand = _candidate(it, seen, FRESH_DAYS["light"], False, recent, "light")
+                if cand:
+                    state["light_themes"] = (used + [theme])[-10:]
+                    return dict(cand, kind="light", theme=theme)
+    return None
+
+
 def pick(state, seen, order, recent=()):
     for shelf in order:
-        news = pick_paper(state) if shelf == "paper" else pick_headline(seen, shelf, recent)
+        news = (pick_paper(state) if shelf == "paper" else pick_light(state, seen, recent) if shelf == "light"
+                else pick_headline(seen, shelf, recent))
         if news:
             return news
     return None
@@ -258,7 +281,7 @@ def write_episode(cfg, news, last_lines):
     topic = ("AIやローカルLLMの話題です。" + ("小さなモデルなら、ふつうのパソコンでも手元で動かせることに、1行だけさらりと触れてよい（特別な機械でないと動かない、とは言わない。機械の名前は出さない）。" if news.get("spark") else "自分たちがどんな機械（DGX Sparkなど）で動いているかの話はしない。")
              if news["kind"] == "ai" else
              "天気や季節の話題です。寒さや暮らしの話に脱線してかまいません。" if news["kind"] == "season" else
-             "肩の力を抜いた、まったりした話題です。")
+             f"肩の力を抜いた世間話です（テーマ：{news.get('theme', 'よもやま')}）。誰でも楽しめる明るい話にしてください。")
     user = (f"前回の会話の終わり：\n{prev}\n\n"
             f"さらが、さっき見つけた{where}の見出しを持ってきました。{topic}\n見出し：「{news['title']}」\n\n"
             "この見出しをきっかけに、二人の雑談を8行前後で書いてください。"
@@ -431,8 +454,9 @@ def outline(gcfg, news, prev):
                   + ("二人はAIなので寒さや暑さを肌で感じない、という小ネタを1行だけ入れてよい。" if news.get("gag")
                      else "二人がAIで寒さや暑さを感じない、という話は今回は入れない。"))
     else:
-        corner = ("肩の力を抜いた世間話。見出しをきっかけに、感想、好きなもの、ちょっとした思い出話など、"
-                  "身近な話への脱線は自由。AIや技術の話には寄せない。")
+        corner = (f"肩の力を抜いた世間話（今日のテーマ：{news.get('theme', 'よもやま')}）。見出しをきっかけに、"
+                  "「見てみたい」「乗ってみたい」「応援したい」のような素直な感想や、好きなもの、ちょっとした思い出話へ"
+                  "脱線は自由。誰でも楽しめる明るい話にする。AIや技術の話には寄せない。")
     if news.get("avoid"):
         corner += "\n最近の回で使った言い回し（下）と同じ表現・同じ冗談・同じ食べものは避ける：\n" + news["avoid"]
     user = (f"前回の会話の終わり：\n{prev}\n\n{corner}\n\n--- 材料 ---\n{material(news)}\n\n"

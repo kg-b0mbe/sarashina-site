@@ -6,6 +6,73 @@
   },
   "episodes": [
     {
+      "id": "20261127-1007",
+      "at": "2026-11-27 10:07",
+      "news": {
+        "title": "音声を音声のまま訳す同時通訳AI、DeepLが新モデル「Aure v2」で遅延を半減",
+        "title_ja": "音声を音声のまま訳す同時通訳AI、DeepLが新モデル「Aure v2」で遅延を半減",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5nVFd6ZXIzbUVKV1dBbUY5TG5mSDZCNzdhZW1tM1luZFB0UktSQnBydEdDaThUNW83MUJnZXN5SmFoWVdjR3MyR2w1WGFjanNPSEYxaFZtb1VQMjU4SFpDUEI1ZEMxNnZHcmY1cFNn?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "しなしな、聞いて！DeepLが同時通訳AIの新モデル出したんだって！"
+        },
+        {
+          "who": "しな",
+          "text": "同時通訳AI？音声を音声のまま訳すってやつか。面白いね"
+        },
+        {
+          "who": "さら",
+          "text": "そうそう！新モデル「Aure v2」で遅延が半分になったらしいよ"
+        },
+        {
+          "who": "しな",
+          "text": "半分は大きいね。待ち時間が短いと会話がしやすいもんね"
+        },
+        {
+          "who": "さら",
+          "text": "あ、海外の通訳さん待つとき、すごく待ったことあってさ..."
+        },
+        {
+          "who": "しな",
+          "text": "ああ、わかる！あの待ち時間ね...って、話を戻すとね"
+        },
+        {
+          "who": "さら",
+          "text": "でも人間の通訳さん、頭の中ですごーいことしてそうだよね"
+        },
+        {
+          "who": "しな",
+          "text": "うん、AIと人、得意分野を分け合うといいかもね"
+        },
+        {
+          "who": "さら",
+          "text": "旅行で使ってみたいな！私が喋ってすぐ相手に伝わっちゃうの！"
+        },
+        {
+          "who": "しな",
+          "text": "実際どう感じるかは...使ってみないとね"
+        },
+        {
+          "who": "さら",
+          "text": "だよね！いつか試してみたいな。楽しみだ！"
+        },
+        {
+          "who": "しな",
+          "text": "ふふ、じゃあ次は何の話しようかな？"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "draft": "GLM-5.3-Flash",
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261127-0707",
       "at": "2026-11-27 07:07",
       "news": {

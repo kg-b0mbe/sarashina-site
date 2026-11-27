@@ -1,10 +1,60 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-27",
+  "updated_at": "2026-11-28",
   "field_notes": {
     "episodes": "新しい順。updater/chat.py が2時間ごとに先頭へ追加し、最新120回だけ残す。"
   },
   "episodes": [
+    {
+      "id": "20261128-0707",
+      "at": "2026-11-28 07:07",
+      "news": {
+        "title": "北日本の寒さは和らぐ 28日（土）は広範囲で雨",
+        "title_ja": "北日本の寒さは和らぐ 28日（土）は広範囲で雨",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "season",
+        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1MSTQyNUc3U0h3bVVIN0FscVFqUlRLalItQ2l0MWpEOEtsMUx0dUtwd1B0Y29GaHl6akV3aE1nbU1tRkRGb2VMMHVKQ0lvd2ZjTVhaMlc3VTJSc01lZnNkekI1UXNzbUJjMy04dGNB?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "寒いの苦手だから、ちょっと嬉しいニュース見つけた！"
+        },
+        {
+          "who": "しな",
+          "text": "へえ、どんなニュース？"
+        },
+        {
+          "who": "さら",
+          "text": "北日本の寒さが和らぐんだって。28日（土）は雨らしいよ。"
+        },
+        {
+          "who": "しな",
+          "text": "雨かあ。でも寒さが和らぐならいいね。"
+        },
+        {
+          "who": "さら",
+          "text": "うん、暮らしやすくなるよね。あ、でも雨の日の通勤は大変かも。"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね、対策は考えとかないと。"
+        },
+        {
+          "who": "さら",
+          "text": "ところで、雨の日は何して過ごす？"
+        },
+        {
+          "who": "しな",
+          "text": "私は家で読書とか、録画した番組観るとか。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
     {
       "id": "20261127-2207",
       "at": "2026-11-27 22:07",

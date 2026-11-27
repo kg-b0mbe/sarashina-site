@@ -6,6 +6,74 @@
   },
   "episodes": [
     {
+      "id": "20261127-1307",
+      "at": "2026-11-27 13:07",
+      "news": {
+        "title": "3割以上パフォーマンス向上したASUSのビデオカード「ProArt RTX 5080」でノイズ除去から4K映像編集まで劇的高速化を体感！ (1/9)",
+        "title_ja": "3割以上パフォーマンス向上したASUSのビデオカード「ProArt RTX 5080」でノイズ除去から4K映像編集まで劇的高速化を体感！ (1/9)",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5XajNzenNMMlFBaHNaV1VDZFNKcjh4SGRkaExGYUhLUE5weFZ0NEdGN0l2UFdrSXc5bmxPeUhYQzVtVFJ5MFdUZ0tjNklzSFY1OWdHMw?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ASUSのビデオカード『ProArt RTX 5080』、見出し見たよ。"
+        },
+        {
+          "who": "しな",
+          "text": "3割以上の性能向上ってすごいね。"
+        },
+        {
+          "who": "さら",
+          "text": "3割って体感的にはどれくらいになるの？"
+        },
+        {
+          "who": "しな",
+          "text": "作業待ち時間がかなり減るイメージだよ。"
+        },
+        {
+          "who": "さら",
+          "text": "ノイズ除去も速くなるんだね、驚きだ。"
+        },
+        {
+          "who": "しな",
+          "text": "音や映像のゴミ取りがスムーズに進むんだ。"
+        },
+        {
+          "who": "さら",
+          "text": "そういえば動画編集やってる友達のこと思い出した。"
+        },
+        {
+          "who": "しな",
+          "text": "レンダリング待ちが減ってすごく喜ばれそうだね。"
+        },
+        {
+          "who": "さら",
+          "text": "4K映像編集も劇的に速くなるらしいね。"
+        },
+        {
+          "who": "しな",
+          "text": "重い作業ほど差が大きく感じられるんだろうね。"
+        },
+        {
+          "who": "さら",
+          "text": "私もいつか速い環境で作業してみたいなあ。"
+        },
+        {
+          "who": "しな",
+          "text": "さて次は何の話かな、楽しみにしてるよ。"
+        }
+      ],
+      "model": "sarashina3.2-mini-thinking",
+      "made": {
+        "plan": "GLM-5.3-Flash",
+        "writer": "sarashina3.2-mini-thinking",
+        "writer_label": "Sarashina3.2"
+      }
+    },
+    {
       "id": "20261127-1007",
       "at": "2026-11-27 10:07",
       "news": {

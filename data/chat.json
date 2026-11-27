@@ -6,6 +6,56 @@
   },
   "episodes": [
     {
+      "id": "20261127-1907",
+      "at": "2026-11-27 19:07",
+      "news": {
+        "title": "イルミネーション！（神川町イルミネーション実行委員会）",
+        "title_ja": "イルミネーション！（神川町イルミネーション実行委員会）",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1icjlKQlRtMUl2c1N2UWpuVUM1MXpOLVNJbXM3YkhVNlRNOVRfS1AtNFVUTzJQemxZR0xFczNLcmJjT2FHbVZxdkMyeHRmTmJDcEZ3OTRRQk13ejRYR2NMT011el9XVkg2Y2dSZl9hQWx0bWQyZWpIVA?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえ、しな！神川町でイルミネーション開催だって！"
+        },
+        {
+          "who": "しな",
+          "text": "へえ、楽しそうだね。どんな飾りつけなんだろう？"
+        },
+        {
+          "who": "さら",
+          "text": "ツリーとかトンネルとか、 lots of 光らしいよ！"
+        },
+        {
+          "who": "しな",
+          "text": "行きたいね、冬のデートにぴったりかも。"
+        },
+        {
+          "who": "さら",
+          "text": "あ、友達とピクニックしながら見るのも良いよね！"
+        },
+        {
+          "who": "しな",
+          "text": "いろいろ計画するの、楽しいよね。"
+        },
+        {
+          "who": "さら",
+          "text": "うん、じゃあまずは日程チェックしよ！"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね、楽しみだね！"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261127-1607",
       "at": "2026-11-27 16:07",
       "news": {

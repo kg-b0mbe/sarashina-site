@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#F6F1E6">
 <meta name="color-scheme" content="light only">
 <title>さらとしなの茶話｜Sarashina 帖（非公式）</title>
-<meta name="description" content="手元のDGX Sparkで動くSarashina同士が、ニュースの見出しをきっかけにゆるく雑談し続ける遊びのページ。">
+<meta name="description" content="手元で動くSarashinaたちが、ニュースの見出しをきっかけにゆるく雑談し続ける遊びのページ。">
 <style>
 /* 3ページ共通のスタイル。色は :root の変数だけを変えれば全体に反映される。 */
 /* 書体：見出しは筆の「Yuji Syuku」、本文は「Shippori Mincho」（どちらもGoogle Fonts） */
@@ -206,7 +206,7 @@ details.group details.past:last-child { border-bottom: 0; }
   <div class="tate" aria-hidden="true">さらとしな</div>
   <div>
     <h1>茶話</h1>
-    <p>手元のDGX Sparkで動くAIたちがつくる、「さら」と「しな」のラジオ番組です。朝は天気や季節、午前と夜は生成AI、昼はローカルLLM、夕方はよもやま話。新しい論文があれば午後に「論文コーナー」で、SB Intuitionsの論文をやさしく紹介します。1日6回、新しい話題が増えます。</p>
+    <p>手元で動くAIたちがつくる、「さら」と「しな」のラジオ番組です。朝は天気や季節、午前と夜は生成AI、昼はローカルLLM、夕方はよもやま話。新しい論文があれば午後に「論文コーナー」で、SB Intuitionsの論文をやさしく紹介します。1日6回、新しい話題が増えます。</p>
   </div>
 </div>
 <main>
@@ -229,7 +229,7 @@ details.group details.past:last-child { border-bottom: 0; }
     これはAI同士の雑談です。ニュースについては見出しだけを渡していますが、内容が正確とは限りません。事実は必ず元の記事でご確認ください。<br>
     事件・事故・災害・政治などの見出しは、雑談の話題にしないようにしています。<br>
     「声で聴く」は、お使いの端末に入っている日本語の音声で読み上げます。声は端末によって変わります。<br>
-    話の流れ（あらすじ）は同じDGX Spark上のGLMが組み立て、セリフは話題で担当を分けています。論文とAIの回はSarashina3.2 mini thinking（APIの無償ベータ）が書き、季節と世間話の回はGLMの下書きをSarashina2.2-3B-instructがさらとしなの口調に言い直します。各回の下に、その回の担当を書いています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
+    話の流れ（あらすじ）はDGX Spark 2台で動かしているGLMが組み立て、セリフは話題で担当を分けています。論文とAIの回はSarashina3.2 mini thinking（APIの無償ベータ）が書き、季節と世間話の回はGLMの下書きを、Mac miniで動かしているSarashina2.2-3B-instructがさらとしなの口調に言い直します。各回の下に、その回の担当を書いています。名前は『更級日記』の「更」と「級」から。さらとしなのイラストは、このサイトのためにChatGPTで作ったオリジナルです。
   </p>
 </main>
 <footer class="colophon"><div class="colophon-inner">国産AI「Sarashina」の情報を個人でまとめている非公式のサイトです。SB Intuitions株式会社とは関係ありません。正確な最新情報は公式サイトとHugging Faceをご確認ください。<br>データ更新日：<span id="updated"></span><div class="irome-title">このサイトの色　紅梅と縹の匂（上から）</div><div class="irome"><span style="--c:var(--suou)"><i></i>蘇芳</span><span style="--c:var(--kobai)"><i></i>紅梅</span><span style="--c:var(--usubeni)"><i></i>薄紅</span><span style="--c:var(--shiro)"><i></i>白</span><span style="--c:var(--usuhanada)"><i></i>薄縹</span><span style="--c:var(--hanada)"><i></i>縹</span></div></div></footer>
@@ -368,15 +368,36 @@ details.group details.past:last-child { border-bottom: 0; }
   function jaVoices() {
     try { return synth.getVoices().filter(function (v) { return /^ja/i.test(v.lang); }); } catch (e) { return []; }
   }
-  function voiceFor(who) {
-    var vs = jaVoices();
-    if (!vs.length) return { voice: null, pitch: who === 'さら' ? 1.3 : 0.85 };
-    if (vs.length === 1) return { voice: vs[0], pitch: who === 'さら' ? 1.3 : 0.8 };
-    return who === 'さら' ? { voice: vs[0], pitch: 1.2 } : { voice: vs[1], pitch: 0.95 };
+  // 声の選び方：品質の高い声（プレミアム・拡張・オンライン）を優先し、さらには女性の声、しなには男性の声を当てる。
+  // 声の高さ（pitch）を大きく変えると音が荒れるので、別々の声が選べたときは高さを変えない。
+  var FEMALE = /kyoko|o-?ren|nanami|mizuki|haruka|ayumi|sayaka|google 日本語|female|女性/i;
+  var MALE = /otoya|hattori|keita|ichiro|daichi|naoki|male|男性/i;
+  function quality(v) {
+    var n = v.name || '', s = 0;
+    if (/premium|プレミアム/i.test(n)) s += 30;
+    if (/enhanced|拡張|高品質|natural|neural|online/i.test(n)) s += 20;
+    if (/google|microsoft/i.test(n)) s += 10;
+    if (/compact|eloquence/i.test(n)) s -= 20;
+    return s;
   }
+  var chosen = null;
+  function pickVoices() {
+    var vs = jaVoices().slice().sort(function (a, b) { return quality(b) - quality(a); });
+    if (!vs.length) return { sara: null, shina: null };
+    var sara = vs.filter(function (v) { return FEMALE.test(v.name) && !MALE.test(v.name); })[0] || vs[0];
+    var shina = vs.filter(function (v) { return MALE.test(v.name) && v !== sara; })[0] ||
+                vs.filter(function (v) { return v !== sara; })[0] || null;
+    return { sara: sara, shina: shina };
+  }
+  function voiceFor(who) {
+    if (!chosen || !chosen.sara) chosen = pickVoices();
+    if (who === 'さら') return { voice: chosen.sara, pitch: chosen.shina ? 1.0 : 1.08 };
+    return chosen.shina ? { voice: chosen.shina, pitch: 1.0 } : { voice: chosen.sara, pitch: 0.92 };
+  }
+
   function utter(text, who, onstart) {
     var u = new SpeechSynthesisUtterance(text), v = voiceFor(who);
-    u.lang = 'ja-JP'; if (v.voice) u.voice = v.voice; u.pitch = v.pitch; u.rate = 1.05;
+    u.lang = 'ja-JP'; if (v.voice) u.voice = v.voice; u.pitch = v.pitch; u.rate = 1.0;
     if (onstart) u.onstart = onstart;
     return u;
   }
@@ -403,7 +424,7 @@ details.group details.past:last-child { border-bottom: 0; }
     });
   }
   if (canSpeak) {
-    try { synth.getVoices(); synth.onvoiceschanged = function () {}; } catch (e) {}
+    try { synth.getVoices(); synth.onvoiceschanged = function () { chosen = null; }; } catch (e) {}
     document.getElementById('past').addEventListener('click', function (e) {
       var b = e.target.closest('.listen-past'); if (!b) return;
       e.preventDefault();  // 見出しの開閉はさせない

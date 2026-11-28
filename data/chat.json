@@ -6,6 +6,48 @@
   },
   "episodes": [
     {
+      "id": "20261128-1007",
+      "at": "2026-11-28 10:07",
+      "news": {
+        "title": "ニート寸前の女子大生→“ChatGPTを使い倒して”未経験で100日連続アプリ開発→国際学会で発表…年収2000万円・25歳経営者の“生成AIで激変した人生”",
+        "title_ja": "ニート寸前の女子大生→“ChatGPTを使い倒して”未経験で100日連続アプリ開発→国際学会で発表…年収2000万円・25歳経営者の“生成AIで激変した人生”",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBoYS1VZ3ZmeXR4OUoyamw0U2x0WFI2clpsVGRqTzk4dXJ1Zk1rTHRDU3labmpwcmlTRUdJeTN6N3Z0VzdPcmxkRG0wbw?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ねえ、しな。このニュース見た？ AIで人生変わった女子大生の話。"
+        },
+        {
+          "who": "しな",
+          "text": "うん、AI活用でアプリ開発して国際学会発表？ すごいね。"
+        },
+        {
+          "who": "さら",
+          "text": "でも、ニート寸前だったなんて意外。AIがきっかけって、面白いよね。"
+        },
+        {
+          "who": "しな",
+          "text": "うん、AIの可能性を感じるね。でも、私も何か始めてみようかって気になる。"
+        },
+        {
+          "who": "さら",
+          "text": "うん、一緒にAI関連の本でも読んでみようか。何から始めようかな？"
+        },
+        {
+          "who": "しな",
+          "text": "そうだね、まずはAIで何ができるかを勉強してみようか。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261128-0707",
       "at": "2026-11-28 07:07",
       "news": {

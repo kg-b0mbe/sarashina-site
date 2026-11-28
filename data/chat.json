@@ -6,6 +6,56 @@
   },
   "episodes": [
     {
+      "id": "20261128-1307",
+      "at": "2026-11-28 13:07",
+      "news": {
+        "title": "Tenable CEOパベル・グルビッチ氏：中国のオープンウェイトモデルがHackerOneコンテストで優勝——そしてそれはまだ簡単な部分だ",
+        "title_ja": "Tenable CEOパベル・グルビッチ氏：中国のオープンウェイトモデルがHackerOneコンテストで優勝——そしてそれはまだ簡単な部分だ",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "ai",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBTdGlrX0xXZlBTck5xQVVqSW0yQ1lqTUdPRDJFTkpHQm8zVGcxQ1BuQldKRTdzN1pKZExxY2dSeWJfbktBbE82MFNjajdMYmJkeHZIeE5rejFZQQ?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "へえ、中国のAIがHackerOneコンテストで優勝したんだって"
+        },
+        {
+          "who": "しな",
+          "text": "うん、まだAIの応用は発展途上だから、興味深いね"
+        },
+        {
+          "who": "さら",
+          "text": "でも、AIがハッキングコンテストで優勝する時代になったのか..."
+        },
+        {
+          "who": "しな",
+          "text": "そうだね、AIがAIを監視したり、セキュリティを強化したりする時代が来るかも"
+        },
+        {
+          "who": "さら",
+          "text": "まずは、AIが何ができて何ができないのかを理解することが大事だよね"
+        },
+        {
+          "who": "しな",
+          "text": "うん、AIとの付き合い方を学んでいこう"
+        },
+        {
+          "who": "さら",
+          "text": "そうだね、AI関連の本、どれから読もうかな？"
+        },
+        {
+          "who": "しな",
+          "text": "じゃあ、AIの可能性と限界について書かれた本はどう？"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261128-1007",
       "at": "2026-11-28 10:07",
       "news": {

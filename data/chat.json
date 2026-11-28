@@ -6,6 +6,48 @@
   },
   "episodes": [
     {
+      "id": "20261128-2207",
+      "at": "2026-11-28 22:07",
+      "news": {
+        "title": "今夜の星空：今週見られる天文現象",
+        "title_ja": "今夜の星空：今週見られる天文現象",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE8ySV9tdzRkSG5TRTZZMFd6a3dQLUlSeDZJdE4tMGhzcmlQd1lwaE1pQXFDMW9paGUyM01RdGFBaXVEQUx5ZkJMd3dMZ2d4aWtRblVnVWtleGhkVFE2?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "ね、しな。今夜の星空、どんなfascinatingな現象が見られるか知ってる？"
+        },
+        {
+          "who": "しな",
+          "text": "うん、月と木星が接近するらしいよ。観察しやすいね"
+        },
+        {
+          "who": "さら",
+          "text": "へえ、木星ってあの大きい星？どんな風見えるの？"
+        },
+        {
+          "who": "しな",
+          "text": "木星は明るく輝くから、すぐにわかるよ。月と一緒に観察すれば、楽しさ倍増！"
+        },
+        {
+          "who": "さら",
+          "text": "じゃあ、ちょっと外に出て見てみようっと。どんな世界が広がるかな？"
+        },
+        {
+          "who": "しな",
+          "text": "楽しみだね。他にも何か発見があるかも..."
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261128-1907",
       "at": "2026-11-28 19:07",
       "news": {

@@ -6,6 +6,52 @@
   },
   "episodes": [
     {
+      "id": "20261128-1907",
+      "at": "2026-11-28 19:07",
+      "news": {
+        "title": "レッサーパンダの赤ちゃん2頭 一般公開スタート 群馬・桐生が岡動物園",
+        "title_ja": "レッサーパンダの赤ちゃん2頭 一般公開スタート 群馬・桐生が岡動物園",
+        "paper_id": null,
+        "lang": "ja",
+        "kind": "light",
+        "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9iV1I3MGtybmhqRWJDenhfRm5ubHNxVkVzaTE1SktpS2RTZjVCMm9YQkxqQWJsS2xWZ2Y5bkJhampNX2lTS3VScklIN0ZyWFRC?oc=5"
+      },
+      "lines": [
+        {
+          "who": "さら",
+          "text": "レッサーパンダの赤ちゃん、一般公開始まったんだって！"
+        },
+        {
+          "who": "しな",
+          "text": "へえ、かわいいだろうね。群馬の桐生が岡動物園か。"
+        },
+        {
+          "who": "さら",
+          "text": "うん、写真見たんだけど、ふわふわでadorable！"
+        },
+        {
+          "who": "しな",
+          "text": "一般公開スタート、どんな反応があるか楽しみだね。"
+        },
+        {
+          "who": "さら",
+          "text": "私も見に行きたいな。赤ちゃんパンダに癒されたい！"
+        },
+        {
+          "who": "しな",
+          "text": "じゃあ、次はレッサーパンダの生態について調べてみようか。"
+        },
+        {
+          "who": "さら",
+          "text": "いいね、それ！どんなfascinatingな秘密があるんだろう。"
+        }
+      ],
+      "model": "sarashina2.2-3b",
+      "made": {
+        "voice": "sarashina2.2-3b"
+      }
+    },
+    {
       "id": "20261128-1607",
       "at": "2026-11-28 16:07",
       "news": {
